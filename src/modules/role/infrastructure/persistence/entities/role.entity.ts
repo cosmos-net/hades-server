@@ -7,6 +7,11 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
+import {
+  MAX_ROLE_NAME_LENGTH,
+  MAX_ROLE_DESCRIPTION_LENGTH,
+} from '@role/domain/constants/general-rules';
+
 @Entity('roles')
 export class RoleEntity {
   @PrimaryGeneratedColumn()
@@ -15,10 +20,10 @@ export class RoleEntity {
   @Column({ unique: true })
   uuid: string;
 
-  @Column({ unique: true, length: 50 })
+  @Column({ unique: true, length: MAX_ROLE_NAME_LENGTH })
   name: string;
 
-  @Column({ type: 'varchar', nullable: true, length: 200 })
+  @Column({ type: 'varchar', nullable: true, length: MAX_ROLE_DESCRIPTION_LENGTH })
   description: string | null;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
