@@ -22,7 +22,9 @@ export default class Name extends NameValueObject {
     const isInValidValue = this._regex.test(this._value);
 
     if (isInValidValue) {
-      throw new RoleNameException(`Invalid value for role name: ${this._value}`);
+      throw new RoleNameException(
+        `Invalid value for role name: ${this._value}`,
+      );
     }
   }
 }

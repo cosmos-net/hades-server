@@ -22,7 +22,9 @@ export default class Description extends DescriptionValueObject {
     const isInValidValue = this._regex.test(this._value);
 
     if (isInValidValue) {
-      throw new RoleDescriptionException(`Invalid value for role description: ${this._value}`);
+      throw new RoleDescriptionException(
+        `Invalid value for role description: ${this._value}`,
+      );
     }
   }
 }

@@ -1,10 +1,9 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
-import { validateNulishString } from '@common/domain/rules/helper';
 import Description from '@common/domain/value-object/vos/description.vo';
-// import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { validateNullishString } from '@helpers/string/validations-helper';
 import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-re-describe.event';
 import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-re-name.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
@@ -48,12 +47,12 @@ export class RoleModel extends AggregateRoot {
   }
 
   public reDescribe(name?: string, description?: string) {
-    if (validateNulishString(name)) {
+    if (validateNullishString(name)) {
       this._entityRoot.name = new Name(name);
       this.apply(new RoleReNameEvent(this._entityRoot.uuid._value, name));
     }
 
-    if (validateNulishString(description)) {
+    if (validateNullishString(description)) {
       this._entityRoot.description = new Description(description);
       this.apply(new RoleReDescribeEvent(this._entityRoot.uuid._value, description));
     }
