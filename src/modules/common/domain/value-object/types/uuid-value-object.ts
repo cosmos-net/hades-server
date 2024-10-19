@@ -13,7 +13,9 @@ export class UUIDValueObject extends ValueObject<string> {
     );
 
     if (!regex.test(id)) {
-      throw new Error(`<${this.constructor.name}> does not allow the value <${id}>`);
+      throw new Error(
+        `<${this.constructor.name}> does not allow the value <${id}>`,
+      );
     }
   }
 }

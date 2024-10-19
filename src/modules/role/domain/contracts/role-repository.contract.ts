@@ -1,7 +1,6 @@
+import { RoleModel } from '@role/domain/models/role.model';
+
 export interface IRoleRepositoryContract {
-  getAll(): Promise<any[]>;
-  getById(id: string): Promise<any>;
-  create(data: any): Promise<any>;
-  update(id: string, data: any): Promise<any>;
-  delete(id: string): Promise<any>;
+  isNameAvailable(name: string): Promise<boolean>;
+  persist(role: RoleModel): Promise<RoleModel>;
 }

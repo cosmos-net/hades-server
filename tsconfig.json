@@ -60,6 +60,12 @@
       "@policy/*": [
         "src/modules/policy/*"
       ],
+      "@helpers": [
+        "src/helpers/"
+      ],
+      "@helpers/*": [
+        "src/helpers/*"
+      ],
     }
   }
 }

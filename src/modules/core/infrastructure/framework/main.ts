@@ -10,12 +10,15 @@ import { TransformInterceptor } from '@core/infrastructure/framework/globals/tra
 import { ValidationPipeWithExceptionFactory } from '@core/infrastructure/framework/globals/validation-pipe.global';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(CoreModule, {
-    transport: Transport.NATS,
-    options: {
-      url: 'nats://localhost:4222',
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    CoreModule,
+    {
+      transport: Transport.NATS,
+      options: {
+        url: 'nats://localhost:4222',
+      },
     },
-  });
+  );
 
   const configService = app.get(ConfigService);
 
@@ -24,7 +27,10 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({ forbidUnknownValues: true }),
   );
 
-  app.useGlobalInterceptors(new TransformInterceptor(), new TimeOutInterceptor());
+  app.useGlobalInterceptors(
+    new TransformInterceptor(),
+    new TimeOutInterceptor(),
+  );
   app.useGlobalFilters(new ExceptionFilter(configService));
 
   await app.listen();

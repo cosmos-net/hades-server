@@ -2,19 +2,18 @@ import { AggregateRoot } from '@nestjs/cqrs';
 
 import { validateNulishString } from '@common/domain/rules/helper';
 import Description from '@common/domain/value-object/vos/description.vo';
-import Id from '@common/domain/value-object/vos/id.vo';
+// import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { IRoleSchema } from '@role/domain/aggregate/role.schema';
-import { RoleReDescribeEvent } from '@role/domain/events/role-re-describe.event';
-import { RoleReNameEvent } from '@role/domain/events/role-re-name.event';
+import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-re-describe.event';
+import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-re-name.event';
+import { IRoleSchema } from '@role/domain/schemas/role.schema';
 
-export class RoleAggegate extends AggregateRoot {
-  private _entityRoot: IRoleSchema;
+export class RoleModel extends AggregateRoot {
+  private readonly _entityRoot: IRoleSchema;
 
-  constructor(id: number, uuid: string, name: string, description?: string) {
+  constructor(uuid: string, name: string, description?: string) {
     super();
-    this._entityRoot.id = new Id(id);
     this._entityRoot.uuid = new UUID(uuid);
     this._entityRoot.name = new Name(name);
     this._entityRoot.description = new Description(description);
@@ -58,7 +57,5 @@ export class RoleAggegate extends AggregateRoot {
       this._entityRoot.description = new Description(description);
       this.apply(new RoleReDescribeEvent(this._entityRoot.uuid._value, description));
     }
-
-    // TODO: use events
   }
 }

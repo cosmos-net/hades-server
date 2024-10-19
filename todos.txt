@@ -1,0 +1,55 @@
+Role modulo
+
+Pendienteeeee
+
+Domain
+- Servicios de dominio
+  - Update -> id, nombre o descripcion
+  - Archive -> id
+  - Delete -> id
+  - List -> (Pendiente por patron criteria)
+  - Get -> id
+
+- Consideraciónes
+ - Actualización de ExceptionFactory (Para agregar más casos)
+ - Nuevos metodos de comportamiento 
+ - Nuevos eventos satisfactorios
+ - Nuevas exceptions
+ - Nuevos eventos con errores
+ -Actualizaciones del contrato
+
+Application
+- Actualización de casos de uso y comandos.
+Infra
+- Nuevos Controladores de comandos y consultas
+- Nuevos dtos de entrada y salida
+- Adaptacion de la implementacion de el repository
+
+
+========================================================================
+Controladores
+- Manejan los endpoints
+
+Que maneja un controlador
+- Son puntos de entrada para que el exterior se comunique con ellos
+- Se pueden manejar servicios REST API
+- Se pueden manejar puntos de entrada para microservicios
+- El control de datos (DTOS)
+ - Entradas > Son los paremetros que recive el punto de entrada
+ - Salidas > Son los paremtros de salida que se le contestan al que se comunico del exterior
+- La comunicación con la capa de aplicación
+
+Que maneja los eventos
+- Listeners/Handlers/Subscribers de las publicaciónes/emmiters/senders de los eventos de dominio
+ - Ej. Error de dominio
+ - Ej. Evento de dominio satisfactorio
+ - Creacion de un rol, actualización de un rol
+
+Que maneja el framework
+ - Modulos
+ - Funciones que meramente son del framework
+
+Que maneja la carpeta de persistencia
+- Interaccion con base datos
+- Entidades > Mapean la representación de una tabla de base datos
+- Repositorios > Interacciona con las operaciones que puede tener el ORM con la base de datos y se basa bajo una implementacion de una interfaz o una clase abstracta o un contrato

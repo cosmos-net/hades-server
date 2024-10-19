@@ -70,7 +70,7 @@ module.exports = {
       'error',
       {
         selector: 'default',
-        format: ['camelCase', 'PascalCase'],
+        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
         leadingUnderscore: 'allow',
         trailingUnderscore: 'allow',
       },

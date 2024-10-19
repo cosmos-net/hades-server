@@ -1,4 +1,9 @@
-import { Catch, ArgumentsHost, Logger, RpcExceptionFilter } from '@nestjs/common';
+import {
+  Catch,
+  ArgumentsHost,
+  Logger,
+  RpcExceptionFilter,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RpcException } from '@nestjs/microservices';
 import { Request } from 'express';
@@ -28,7 +33,8 @@ export class ExceptionFilter implements RpcExceptionFilter<RpcException> {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
     const error = exception.getError();
-    const isProduction = this.config.get<string>('servers.serverEnv') === 'production';
+    const isProduction =
+      this.config.get<string>('servers.serverEnv') === 'production';
 
     let bodyResponse: IBodyResponse = {
       data: {},
