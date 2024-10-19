@@ -1,19 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
 import { CreateRoleCommand } from '@role/application/commands/use-cases/create-rol/create-rol.command';
+import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
-import { RoleDomainService } from '@role/domain/services/role.domain-service';
+import { CreateRoleDomainService } from '@role/domain/services/create-role.domain-service';
 
 @Injectable()
-export class CreateRolUseCase {
-  constructor(private readonly roleDomainService: RoleDomainService) {}
+@CommandHandler(CreateRoleCommand)
+export class CreateRolUseCase implements ICommandHandler<CreateRoleCommand> {
+  constructor(
+    private readonly createRoleDomainService: CreateRoleDomainService,
+    private readonly publisher: EventPublisher,
+    private readonly repository: IRoleRepositoryContract,
+  ) {}
 
   async execute(command: CreateRoleCommand): Promise<RoleModel> {
     const { uuid, name, description } = command;
 
-    const role = new RoleModel(uuid, name, description);
+    const roleModel = await this.createRoleDomainService.go(uuid, name, description);
+    const role = this.publisher.mergeObjectContext(roleModel);
 
-    await this.roleDomainService.createRole(role);
+    await this.repository.persist(roleModel);
+
+    role.commit();
 
     return role;
   }
