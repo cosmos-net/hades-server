@@ -13,9 +13,13 @@ export class CreateRoleController {
 
   // TODO: chane cmd to const variable
   @MessagePattern({ cmd: 'hades.create.rol' })
-  async create(@Payload() createRoleDto: CreateRoleInput): Promise<CreateRoleOutputDto> {
+  async create(
+    @Payload() createRoleDto: CreateRoleInput,
+  ): Promise<CreateRoleOutputDto> {
     const uuid = UUIDv4();
 
-    return this.commandBus.execute(new CreateRoleCommand({ ...createRoleDto, uuid }));
+    return this.commandBus.execute(
+      new CreateRoleCommand({ ...createRoleDto, uuid }),
+    );
   }
 }
