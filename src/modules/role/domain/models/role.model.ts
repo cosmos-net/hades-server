@@ -5,8 +5,8 @@ import Name from '@common/domain/value-object/vos/name.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { validateNullishString } from '@helpers/string/validations-helper';
 import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role-created.event';
-import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
-import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
+import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
+import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
 
 export class RoleModel extends AggregateRoot {
@@ -53,13 +53,15 @@ export class RoleModel extends AggregateRoot {
 
   public reDescribe(name?: string, description?: string) {
     if (validateNullishString(name)) {
+      const legacyName = this.name;
       this._entityRoot.name = new Name(name);
-      this.apply(new RoleReNameEvent(this.uuid, name));
+      this.apply(new RoleReNamedEvent(this.uuid, legacyName, name));
     }
 
     if (validateNullishString(description)) {
+      const legacyDescription = this.description;
       this._entityRoot.description = new Description(description);
-      this.apply(new RoleReDescribeEvent(this.uuid, description));
+      this.apply(new RoleReDescribedEvent(this.uuid, legacyDescription, description));
     }
   }
 }
