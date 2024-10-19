@@ -7,15 +7,18 @@ import { RoleModel } from '@role/domain/models/role.model';
 export class CreateRoleDomainService {
   constructor(private readonly repository: IRoleRepositoryContract) {}
 
-  async process(role: RoleModel): Promise<RoleModel> {
+  async go(uuid: string, name: string, description?: string): Promise<RoleModel> {
     try {
-      const isNameAvailable = await this.repository.isNameAvailable(role.name);
+      const isNameAvailable = await this.repository.isNameAvailable(name);
 
       if (!isNameAvailable) {
         throw new RoleNameException('Role name already exists');
       }
 
-      return await this.repository.persist(role);
+      const role = new RoleModel(uuid, name, description);
+      role.create();
+
+      return role;
     } catch (error) {
       if (error instanceof DomainException) {
         // TODO: parse error to json
