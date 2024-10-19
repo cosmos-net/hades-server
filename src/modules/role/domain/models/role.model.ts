@@ -4,8 +4,9 @@ import Description from '@common/domain/value-object/vos/description.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { validateNullishString } from '@helpers/string/validations-helper';
-import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-re-describe.event';
-import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-re-name.event';
+import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role-created.event';
+import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
+import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
 
 export class RoleModel extends AggregateRoot {
@@ -46,15 +47,19 @@ export class RoleModel extends AggregateRoot {
     return this._entityRoot.deletedAt._value;
   }
 
+  public create() {
+    this.apply(new RoleCreatedEvent(this.uuid, this.name));
+  }
+
   public reDescribe(name?: string, description?: string) {
     if (validateNullishString(name)) {
       this._entityRoot.name = new Name(name);
-      this.apply(new RoleReNameEvent(this._entityRoot.uuid._value, name));
+      this.apply(new RoleReNameEvent(this.uuid, name));
     }
 
     if (validateNullishString(description)) {
       this._entityRoot.description = new Description(description);
-      this.apply(new RoleReDescribeEvent(this._entityRoot.uuid._value, description));
+      this.apply(new RoleReDescribeEvent(this.uuid, description));
     }
   }
 }
