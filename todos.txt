@@ -20,6 +20,7 @@ Domain
 
 Application
 - Actualización de casos de uso y comandos.
+
 Infra
 - Nuevos Controladores de comandos y consultas
 - Nuevos dtos de entrada y salida
