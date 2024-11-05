@@ -1,0 +1,5 @@
+export const MAX_ROLE_NAME_LENGTH = 50;
+export const MIN_ROLE_NAME_LENGTH = 3;
+
+export const MAX_ROLE_DESCRIPTION_LENGTH = 255;
+export const MIN_ROLE_DESCRIPTION_LENGTH = 5;

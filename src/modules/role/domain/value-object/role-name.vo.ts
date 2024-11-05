@@ -1,5 +1,6 @@
 import NameValueObject from '@common/domain/value-object/vos/name.vo';
 import regexCustomBuilderHelper from '@helpers/regex/regex-custom-builder.helper';
+import { MAX_ROLE_NAME_LENGTH, MIN_ROLE_NAME_LENGTH } from '@role/domain/constants/general-rules';
 import { RoleNameException } from '@role/domain/exceptions/role-name.exception';
 
 export default class Name extends NameValueObject {
@@ -12,8 +13,8 @@ export default class Name extends NameValueObject {
     allowSpaces: false,
     allowNumbers: false,
     allowCaseInsensitive: true,
-    minLength: 3,
-    maxLength: 100,
+    minLength: MIN_ROLE_NAME_LENGTH,
+    maxLength: MAX_ROLE_NAME_LENGTH,
     allowLetters: true,
     specialChars: '',
   });
