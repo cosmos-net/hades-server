@@ -1,13 +1,13 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { IRoleSchema } from '@role/domain/schemas/role.model';
+import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-re-describe.event';
+import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-re-name.event';
 
 import { validateNulishString } from '@common/domain/rules/helper';
 import Description from '@common/domain/value-object/vos/description.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-re-describe.event';
-import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-re-name.event';
+import { IRoleSchema } from '@role/domain/schemas/role.model';
 
 export class RoleModel extends AggregateRoot {
   private readonly _entityRoot: IRoleSchema;
