@@ -1,6 +1,7 @@
 {
   "include": [
     "src/**/*.ts",
-    "./.eslintrc.js"
+    "./.eslintrc.js",
+    "jest.config.js"
   ]
 }
