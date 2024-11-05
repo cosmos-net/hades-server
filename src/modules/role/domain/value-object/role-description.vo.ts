@@ -1,5 +1,9 @@
 import DescriptionValueObject from '@common/domain/value-object/vos/description.vo';
 import regexCustomBuilderHelper from '@helpers/regex/regex-custom-builder.helper';
+import {
+  MAX_ROLE_DESCRIPTION_LENGTH,
+  MIN_ROLE_DESCRIPTION_LENGTH,
+} from '@role/domain/constants/general-rules';
 import { RoleDescriptionException } from '@role/domain/exceptions/role-description.exception';
 
 export default class Description extends DescriptionValueObject {
@@ -12,8 +16,8 @@ export default class Description extends DescriptionValueObject {
     allowSpaces: true,
     allowNumbers: true,
     allowCaseInsensitive: true,
-    minLength: 10,
-    maxLength: 200,
+    minLength: MIN_ROLE_DESCRIPTION_LENGTH,
+    maxLength: MAX_ROLE_DESCRIPTION_LENGTH,
     allowLetters: true,
     specialChars: '',
   });
