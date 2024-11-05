@@ -7,18 +7,18 @@ import { RoleModel } from '@role/domain/models/role.model';
 export class UpdateRoleDomainService {
   constructor(private readonly repository: IRoleRepositoryContract) {}
 
-  async go(uuid: string, name: string, description?: string): Promise<RoleModel> {
+  async go(uuid: string, name?: string, description?: string): Promise<RoleModel> {
     try {
-      const isNameAvailable = await this.repository.isNameAvailable(name);
+      const rolModel = await this.repository.getOneBy(uuid);
 
-      if (!isNameAvailable) {
-        throw new RoleNameException('Role name already exists');
+      if (!rolModel) {
+        // TODO: Create new exception error
+        throw new RoleNameException('Rol not found');
       }
 
-      const role = new RoleModel(uuid, name, description);
-      role.create();
+      rolModel.reDescribe(name, description);
 
-      return role;
+      return rolModel;
     } catch (error) {
       if (error instanceof DomainException) {
         ExceptionFactory.createException(error.name, error.message);

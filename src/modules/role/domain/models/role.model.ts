@@ -8,6 +8,7 @@ import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role
 import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
 import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
+import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 
 export class RoleModel extends AggregateRoot {
   private readonly _entityRoot: IRoleSchema;
@@ -52,16 +53,24 @@ export class RoleModel extends AggregateRoot {
   }
 
   public reDescribe(name?: string, description?: string) {
-    if (validateNullishString(name)) {
+    const isNameChanged = validateNullishString(name);
+    const isDescriptionChanged = validateNullishString(description);
+    const isSomethingChanged = isNameChanged || isDescriptionChanged;
+
+    if (isNameChanged) {
       const legacyName = this.name;
       this._entityRoot.name = new Name(name);
       this.apply(new RoleReNamedEvent(this.uuid, legacyName, name));
     }
 
-    if (validateNullishString(description)) {
+    if (isDescriptionChanged) {
       const legacyDescription = this.description;
       this._entityRoot.description = new Description(description);
       this.apply(new RoleReDescribedEvent(this.uuid, legacyDescription, description));
+    }
+
+    if (isSomethingChanged) {
+      this._entityRoot.updatedAt = new UpdatedAt(new Date());
     }
   }
 }
