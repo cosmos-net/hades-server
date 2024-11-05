@@ -15,6 +15,13 @@ export class ExceptionFactory {
           }),
         ),
       );
+
+      throw new ValidationDomainException(
+        JSON.stringify({
+          message: RoleDescriptionException.INVALID_ROLE_DESCRIPTION,
+          details,
+        }),
+      );
     } else {
       DomainEventHandler.dispatch(
         'DEFAULT_EXCEPTION',

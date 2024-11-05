@@ -1,12 +1,12 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
-import { validateNulishString } from '@common/domain/rules/helper';
 import Description from '@common/domain/value-object/vos/description.vo';
-// import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { RoleReDescribeEvent } from '@role/domain/events/events-success-domain/role-re-describe.event';
-import { RoleReNameEvent } from '@role/domain/events/events-success-domain/role-re-name.event';
+import { validateNullishString } from '@helpers/string/validations-helper';
+import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role-created.event';
+import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
+import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
 
 export class RoleModel extends AggregateRoot {
@@ -47,15 +47,21 @@ export class RoleModel extends AggregateRoot {
     return this._entityRoot.deletedAt._value;
   }
 
+  public create() {
+    this.apply(new RoleCreatedEvent(this.uuid, this.name));
+  }
+
   public reDescribe(name?: string, description?: string) {
-    if (validateNulishString(name)) {
+    if (validateNullishString(name)) {
+      const legacyName = this.name;
       this._entityRoot.name = new Name(name);
-      this.apply(new RoleReNameEvent(this._entityRoot.uuid._value, name));
+      this.apply(new RoleReNamedEvent(this.uuid, legacyName, name));
     }
 
-    if (validateNulishString(description)) {
+    if (validateNullishString(description)) {
+      const legacyDescription = this.description;
       this._entityRoot.description = new Description(description);
-      this.apply(new RoleReDescribeEvent(this._entityRoot.uuid._value, description));
+      this.apply(new RoleReDescribedEvent(this.uuid, legacyDescription, description));
     }
   }
 }
