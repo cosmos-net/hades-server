@@ -12,7 +12,6 @@ export class UpdateRoleDomainService {
       const rolModel = await this.repository.getOneBy(uuid);
 
       if (!rolModel) {
-        // TODO: Create new exception error
         throw new RoleNameException('Rol not found');
       }
 
