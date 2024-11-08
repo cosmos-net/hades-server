@@ -21,7 +21,6 @@ export class CreateRoleDomainService {
       return role;
     } catch (error) {
       if (error instanceof DomainException) {
-        // TODO: parse error to json
         ExceptionFactory.createException(error.name, error.message);
       }
 
