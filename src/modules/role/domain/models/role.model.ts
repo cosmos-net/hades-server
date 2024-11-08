@@ -1,18 +1,17 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
+import DeletedAt from '@common/domain/value-object/vos/deleted-at.vo';
 import Description from '@common/domain/value-object/vos/description.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
+import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { validateNullishString } from '@helpers/string/validations-helper';
+import { RoleArchivedEvent } from '@role/domain/events/events-success-domain/role-archive.event';
 import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role-created.event';
+import { RoleDestroyedEvent } from '@role/domain/events/events-success-domain/role-destroyed.event';
 import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
 import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
-import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
-import DeletedAt from '@common/domain/value-object/vos/deleted-at.vo';
-import { RoleDestroyedEvent } from '@role/domain/events/events-success-domain/role-destroyed.event';
-import { RoleArchivedEvent } from '@role/domain/events/events-success-domain/role-archive.event';
-
 
 export class RoleModel extends AggregateRoot {
   private readonly _entityRoot: IRoleSchema;
@@ -77,6 +76,7 @@ export class RoleModel extends AggregateRoot {
       this._entityRoot.updatedAt = new UpdatedAt(new Date());
     }
   }
+
   public archive(uuid: string, name: string) {
     this._entityRoot.deletedAt = new DeletedAt(new Date());
     this.apply(new RoleArchivedEvent(uuid, name, this.deletedAt));
