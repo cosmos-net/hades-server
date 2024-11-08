@@ -1,16 +1,27 @@
+import DomainException from '@common/domain/exceptions/domain.exception';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
+import { ExceptionFactory } from '@role/domain/exceptions/exception.factory';
 import { RoleNotFoundException } from '@role/domain/exceptions/role-not-found.exception';
+import { RoleModel } from '@role/domain/models/role.model';
 
 export class ArchiveRoleDomainService {
   constructor(private readonly roleRepository: IRoleRepositoryContract) {}
 
-  async go(uuid: string): Promise<void> {
-    const role = await this.roleRepository.getOneBy(uuid);
+  async go(uuid: string): Promise<RoleModel> {
+    try {
+      const roleModel = await this.roleRepository.getOneBy(uuid);
 
-    if (!role) {
-      // TODO: Create a custom error
-      throw new RoleNotFoundException(`Role with uuid ${uuid} not found`);
+      if (!roleModel) {
+        throw new RoleNotFoundException(`Role with uuid ${uuid} not found`);
+      }
+
+      roleModel.archive(roleModel.uuid, roleModel.name);
+
+      return roleModel;
+    } catch (error) {
+      if (error instanceof DomainException) {
+        ExceptionFactory.createException(error.name, error.message);
+      }
     }
-    role.archive(role.uuid, role.name);
   }
 }
