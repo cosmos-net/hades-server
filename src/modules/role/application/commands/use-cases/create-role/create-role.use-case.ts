@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateRoleCommand } from '@role/application/commands/use-cases/create-rol/create-rol.command';
+import { CreateRoleCommand } from '@role/application/commands/use-cases/create-role/create-role.command';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
 import { CreateRoleDomainService } from '@role/domain/services/create-role.domain-service';
