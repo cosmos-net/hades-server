@@ -25,20 +25,14 @@ const regexCustomBuilderHelper = (options: RegExOptions): RegExp => {
   }
 
   if (options.specialChars) {
-    const escapedSpecialChars = options.specialChars.replace(
-      /[.*+?^${}()|[\]\\]/g,
-      '\\$&',
-    );
+    const escapedSpecialChars = options.specialChars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     pattern += escapedSpecialChars;
   }
 
   let quantifier = '*';
   if (options.minLength !== undefined || options.maxLength !== undefined) {
     const min = options.minLength ?? 0;
-    const max =
-      options.maxLength !== undefined
-        ? `{${min},${options.maxLength}}`
-        : `{${min},}`;
+    const max = options.maxLength !== undefined ? `{${min},${options.maxLength}}` : `{${min},}`;
     quantifier = max;
   }
 
