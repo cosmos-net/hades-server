@@ -23,7 +23,11 @@ export class RoleEntity {
   @Column({ unique: true, length: MAX_ROLE_NAME_LENGTH })
   name: string;
 
-  @Column({ type: 'varchar', nullable: true, length: MAX_ROLE_DESCRIPTION_LENGTH })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    length: MAX_ROLE_DESCRIPTION_LENGTH,
+  })
   description: string | null;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
