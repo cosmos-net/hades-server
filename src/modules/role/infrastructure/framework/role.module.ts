@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { CreateRolUseCase } from '@role/application/commands/use-cases/create-rol/create-rol.use-case';
+import { CreateRolUseCase } from '@role/application/commands/use-cases/create-role/create-role.use-case';
 import { CreateRoleDomainService } from '@role/domain/services/create-role.domain-service';
 import { CreateRoleController } from '@role/infrastructure/controllers/commands/create-role/create-role.controller';
 import { RoleReDescribedEventHandler } from '@role/infrastructure/events-handler/success/role-redescribed.event-handler';
