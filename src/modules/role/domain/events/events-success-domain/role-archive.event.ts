@@ -1,4 +1,4 @@
-export class RoleArchiveEvent {
+export class RoleArchivedEvent {
   constructor(
     public readonly uuid: string,
     public readonly name: string,
