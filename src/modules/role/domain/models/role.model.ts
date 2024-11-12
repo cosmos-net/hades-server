@@ -12,15 +12,25 @@ import { RoleDestroyedEvent } from '@role/domain/events/events-success-domain/ro
 import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
 import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
+import { IRoleSchemaPrimitive } from '@role/domain/schemas/role.schema-primitive';
 
 export class RoleModel extends AggregateRoot {
   private readonly _entityRoot: IRoleSchema;
 
-  constructor(uuid: string, name: string, description?: string) {
+  constructor(entity: IRoleSchemaPrimitive);
+  constructor(uuid: string, name: string, description?: string);
+  constructor(uuidOrSchema: string | IRoleSchemaPrimitive, name?: string, description?: string) {
     super();
-    this._entityRoot.uuid = new UUID(uuid);
-    this._entityRoot.name = new Name(name);
-    this._entityRoot.description = new Description(description);
+
+    if (typeof uuidOrSchema === 'object') {
+      this.hydrate(uuidOrSchema);
+    } else {
+      this._entityRoot.uuid = new UUID(uuidOrSchema);
+      this._entityRoot.name = new Name(name);
+      this._entityRoot.createdAt = new UpdatedAt(new Date());
+      this._entityRoot.updatedAt = new UpdatedAt(new Date());
+      if (description) this._entityRoot.description = new Description(description);
+    }
   }
 
   get id(): number {
@@ -49,6 +59,16 @@ export class RoleModel extends AggregateRoot {
 
   get deletedAt(): Date | undefined {
     return this._entityRoot.deletedAt._value;
+  }
+
+  public hydrate(entity: IRoleSchemaPrimitive) {
+    this._entityRoot.uuid = new UUID(entity.uuid);
+    this._entityRoot.name = new Name(entity.name);
+    this._entityRoot.createdAt = new UpdatedAt(entity.createdAt);
+    this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
+
+    if (entity.deletedAt) this._entityRoot.deletedAt = new DeletedAt(entity.deletedAt);
+    if (entity.description) this._entityRoot.description = new Description(entity.description);
   }
 
   public create() {

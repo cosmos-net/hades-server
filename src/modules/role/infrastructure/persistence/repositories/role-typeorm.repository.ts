@@ -21,4 +21,24 @@ export class RoleTypeormRepository implements IRoleRepositoryContract {
   persist(role: RoleModel): Promise<RoleModel> {
     return this.repository.save(role);
   }
+
+  async archive(uuid: string): Promise<boolean> {
+    const result = await this.repository.softDelete(uuid);
+
+    return result.affected > 0;
+  }
+
+  async destroy(uuid: string): Promise<boolean> {
+    const result = await this.repository.delete(uuid);
+
+    return result.affected > 0;
+  }
+
+  async getOneBy(uuid: string): Promise<RoleModel> {
+    const entity = await this.repository.findOneBy({ uuid });
+
+    const model = new RoleModel(entity);
+
+    return model;
+  }
 }
