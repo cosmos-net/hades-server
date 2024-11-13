@@ -80,6 +80,10 @@ export class RoleModel extends AggregateRoot {
     const isDescriptionChanged = validateNullishString(description);
     const isSomethingChanged = isNameChanged || isDescriptionChanged;
 
+    if (!isSomethingChanged) {
+      throw new Error('No modified fields detected');
+    }
+
     if (isNameChanged) {
       const legacyName = this.name;
       this._entityRoot.name = new Name(name);
