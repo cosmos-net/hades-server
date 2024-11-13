@@ -5,5 +5,10 @@ export interface IRoleSchemaPrimitive {
   description: string | null;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: Date | null;
+  archivedAt: Date | null;
+}
+
+export interface IListRoleSchemaPrimitive {
+  total: number;
+  items: IRoleSchemaPrimitive[];
 }
