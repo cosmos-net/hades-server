@@ -1,3 +1,5 @@
+import { Criteria } from '@common/domain/criteria/criteria';
+import { ListRoleModel } from '@role/domain/models/role-list.model';
 import { RoleModel } from '@role/domain/models/role.model';
 
 export interface IRoleRepositoryContract {
@@ -6,4 +8,5 @@ export interface IRoleRepositoryContract {
   getOneBy(UUID: string): Promise<RoleModel>;
   destroy(UUID: string): Promise<boolean>;
   archive(UUID: string): Promise<boolean>;
+  matching(criteria: Criteria): Promise<ListRoleModel>;
 }
