@@ -1,6 +1,6 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
-import DeletedAt from '@common/domain/value-object/vos/deleted-at.vo';
+import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import Description from '@common/domain/value-object/vos/description.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
@@ -57,8 +57,8 @@ export class RoleModel extends AggregateRoot {
     return this._entityRoot.updatedAt._value;
   }
 
-  get deletedAt(): Date | undefined {
-    return this._entityRoot.deletedAt._value;
+  get archivedAt(): Date | undefined {
+    return this._entityRoot.archivedAt._value;
   }
 
   public hydrate(entity: IRoleSchemaPrimitive) {
@@ -67,8 +67,20 @@ export class RoleModel extends AggregateRoot {
     this._entityRoot.createdAt = new UpdatedAt(entity.createdAt);
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
 
-    if (entity.deletedAt) this._entityRoot.deletedAt = new DeletedAt(entity.deletedAt);
+    if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
     if (entity.description) this._entityRoot.description = new Description(entity.description);
+  }
+
+  public toPrimitives(): IRoleSchemaPrimitive {
+    return {
+      id: this.id,
+      uuid: this.uuid,
+      name: this.name,
+      description: this.description,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      archivedAt: this.archivedAt,
+    };
   }
 
   public create() {
@@ -98,12 +110,11 @@ export class RoleModel extends AggregateRoot {
   }
 
   public archive(uuid: string, name: string) {
-    this._entityRoot.deletedAt = new DeletedAt(new Date());
-    this.apply(new RoleArchivedEvent(uuid, name, this.deletedAt));
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
+    this.apply(new RoleArchivedEvent(uuid, name, this.archivedAt));
   }
 
   public destroy(uuid: string, name: string) {
-    this._entityRoot.deletedAt = new DeletedAt(new Date());
-    this.apply(new RoleDestroyedEvent(uuid, name, this.deletedAt));
+    this.apply(new RoleDestroyedEvent(uuid, name, new Date()));
   }
 }

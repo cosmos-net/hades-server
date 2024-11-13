@@ -1,5 +1,5 @@
+import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
-import DeletedAt from '@common/domain/value-object/vos/deleted-at.vo';
 import Description from '@common/domain/value-object/vos/description.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
@@ -13,5 +13,5 @@ export interface IRoleSchema {
   description: Description;
   createdAt: CreatedAt;
   updatedAt: UpdatedAt;
-  deletedAt: DeletedAt;
+  archivedAt: ArchivedAt;
 }
