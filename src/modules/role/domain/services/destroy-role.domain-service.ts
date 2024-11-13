@@ -4,7 +4,7 @@ import { ExceptionFactory } from '@role/domain/exceptions/exception.factory';
 import { RoleNotFoundException } from '@role/domain/exceptions/role-not-found.exception';
 import { RoleModel } from '@role/domain/models/role.model';
 
-export class DeleteRoleDomainService {
+export class DestroyRoleDomainService {
   constructor(private readonly roleRepository: IRoleRepositoryContract) {}
 
   async go(uuid: string): Promise<RoleModel> {
