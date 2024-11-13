@@ -37,5 +37,5 @@ export class RoleEntity {
   updatedAt: Date;
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt: Date | null;
+  archivedAt: Date | null;
 }
