@@ -1,12 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { CreateRoleCommand } from '@role/application/commands/use-cases/create-rol/create-rol.command';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_NAME } from '@common/infrastructure/controllers/constants';
-import { CreateRoleCommand } from '@role/application/commands/use-cases/create-rol/create-rol.command';
 import { CreateRoleInput } from '@role/infrastructure/controllers/commands/create-role/create-role-input.dto';
-import { CreateRoleOutputDto } from '@role/infrastructure/controllers/commands/create-role/create-role.output.dto';
+import { CreateRoleOutputDto } from '@role/infrastructure/controllers/commands/create-role/create-role-output.dto';
 
 @Controller()
 export class CreateRoleController {
