@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { DeleteRoleCommand } from '@role/application/commands/use-cases/delete-role/delete-role.command';
+import { DestroyRoleCommand } from '@role/application/commands/use-cases/destroy-role/destroy-role.command';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
-import { DeleteRoleDomainService } from '@role/domain/services/delete-role.domain-service';
+import { DestroyRoleDomainService } from '@role/domain/services/destroy-role.domain-service';
 
 @Injectable()
-@CommandHandler(DeleteRoleCommand)
-export class DeleteRoleUseCase implements ICommandHandler<DeleteRoleCommand> {
+@CommandHandler(DestroyRoleCommand)
+export class DestroyRoleUseCase implements ICommandHandler<DestroyRoleCommand> {
   constructor(
-    private readonly deleteRoleDomainService: DeleteRoleDomainService,
+    private readonly DestroyRoleDomainService: DestroyRoleDomainService,
     private readonly publisher: EventPublisher,
     private readonly repository: IRoleRepositoryContract,
   ) {}
 
-  async execute(command: DeleteRoleCommand): Promise<RoleModel> {
+  async execute(command: DestroyRoleCommand): Promise<RoleModel> {
     const { uuid } = command;
 
-    const roleModel = await this.deleteRoleDomainService.go(uuid);
+    const roleModel = await this.DestroyRoleDomainService.go(uuid);
     const role = this.publisher.mergeObjectContext(roleModel);
 
     await this.repository.destroy(uuid);

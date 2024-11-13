@@ -1,9 +1,9 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export class DeleteRoleCommand implements ICommand {
+export class DestroyRoleCommand implements ICommand {
   public readonly uuid: string;
 
-  constructor(root: DeleteRoleCommand) {
+  constructor(root: DestroyRoleCommand) {
     this.uuid = root.uuid;
   }
 }
