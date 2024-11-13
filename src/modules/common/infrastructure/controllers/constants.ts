@@ -1,3 +1,9 @@
-export const CMDS_NAME = {
-  HADES_CREATE_ROLE: 'hades.create.rol',
+export const CMDS_HADES = {
+  ROL: {
+    CREATE: 'HADES.CREATE.ROLE',
+    DELETE: 'HADES.DELETE.ROLE',
+    UPDATE: 'HADES.UPDATE.ROLE',
+    LIST: 'HADES.LIST.ROLE',
+    GET: 'HADES.GET.ROLE',
+  },
 };
