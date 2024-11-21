@@ -1,5 +1,14 @@
 import { Type } from 'class-transformer';
-import { IsString, IsNotEmpty, IsOptional, Length, IsEnum, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  Length,
+  IsEnum,
+  ValidateNested,
+  ArrayNotEmpty,
+  IsArray,
+} from 'class-validator';
 
 import {
   MAX_PROFILE_LAST_NAME_LENGTH,
@@ -15,10 +24,11 @@ import {
 import { AddressDTO } from '@user/infrastructure/controllers/user/commands/create-user/dtos/address.dto';
 
 export class ProfileDTO {
-  @IsString()
-  @IsNotEmpty()
-  @Length(MIN_PROFILE_NAME_LENGTH, MAX_PROFILE_NAME_LENGTH)
-  public readonly name: string;
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  @Length(MIN_PROFILE_NAME_LENGTH, MAX_PROFILE_NAME_LENGTH, { each: true })
+  public readonly names: string[];
 
   @IsString()
   @IsNotEmpty()
