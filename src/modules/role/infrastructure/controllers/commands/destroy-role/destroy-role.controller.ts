@@ -11,7 +11,7 @@ import { DestroyRoleOutputDto } from '@role/infrastructure/controllers/commands/
 export class DestroyRoleController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.ROL.DESTROY })
+  @MessagePattern({ cmd: CMDS_HADES.ROLE.DESTROY })
   async create(@Payload() destroyRoleInputDto: DestroyRoleInputDto): Promise<DestroyRoleOutputDto> {
     return this.commandBus.execute(new DestroyRoleCommand({ uuid: destroyRoleInputDto.uuid }));
   }

@@ -12,7 +12,7 @@ import { ListRoleOutputDto } from '@role/infrastructure/controllers/queries/list
 export class ListRoleController {
   constructor(private readonly queryBus: QueryBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.ROL.LIST })
+  @MessagePattern({ cmd: CMDS_HADES.ROLE.LIST })
   async list(@Payload() listRoleDto: ListRoleInputDto): Promise<ListRoleOutputDto> {
     const { orderType, orderBy, page, limit, offset } = listRoleDto;
     const filtersMap = listRoleDto.toFilterMap();

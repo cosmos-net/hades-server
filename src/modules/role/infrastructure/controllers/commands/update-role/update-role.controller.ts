@@ -11,7 +11,7 @@ import { UpdateRoleOutputDto } from '@role/infrastructure/controllers/commands/u
 export class UpdateRoleController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.ROL.UPDATE })
+  @MessagePattern({ cmd: CMDS_HADES.ROLE.UPDATE })
   async update(@Payload() updateRoleInputDto: UpdateRoleInputDto): Promise<UpdateRoleOutputDto> {
     return this.commandBus.execute(
       new UpdateRoleCommand({
