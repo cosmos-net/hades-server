@@ -11,7 +11,7 @@ import { GetRoleOutputDto } from '@role/infrastructure/controllers/queries/get-r
 export class GetRoleController {
   constructor(private readonly queryBus: QueryBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.ROL.GET })
+  @MessagePattern({ cmd: CMDS_HADES.ROLE.GET })
   async get(@Payload() getRoleInputDto: GetRoleInputDto): Promise<GetRoleOutputDto> {
     return this.queryBus.execute(new GetRoleQuery(getRoleInputDto));
   }

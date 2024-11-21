@@ -11,7 +11,7 @@ import { ArchiveRoleOutputDto } from '@role/infrastructure/controllers/commands/
 export class ArchiveRoleController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.ROL.ARCHIVE })
+  @MessagePattern({ cmd: CMDS_HADES.ROLE.ARCHIVE })
   async archive(@Payload() archiveRoleDto: ArchiveRoleInputDto): Promise<ArchiveRoleOutputDto> {
     return this.commandBus.execute(new ArchiveRoleCommand({ uuid: archiveRoleDto.uuid }));
   }
