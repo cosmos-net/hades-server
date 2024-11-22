@@ -5,25 +5,23 @@ export class CreateUserOutputDto {
     id: string;
     uuid: string;
     status: string;
-  };
-
-  public readonly account: {
-    username: string;
-    email: string;
-  };
-
-  public readonly profile: {
-    name: string;
-    lastName: string;
-    secondLastName: string;
-    phoneNumber: string;
-    gender: ProfileGenderEnum;
-    address: {
-      street: string;
-      city: string;
-      state: string;
-      country: string;
-      zipCode: string;
+    account: {
+      username: string;
+      email: string;
+    };
+    profile: {
+      name: string;
+      lastName: string;
+      secondLastName: string;
+      phoneNumber: string;
+      gender: ProfileGenderEnum;
+      address: {
+        street: string;
+        city: string;
+        state: string;
+        country: string;
+        zipCode: string;
+      };
     };
   };
 }
