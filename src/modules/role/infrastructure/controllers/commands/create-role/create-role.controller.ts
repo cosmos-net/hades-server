@@ -12,7 +12,7 @@ import { CreateRoleOutputDto } from '@role/infrastructure/controllers/commands/c
 export class CreateRoleController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.ROL.CREATE })
+  @MessagePattern({ cmd: CMDS_HADES.ROLE.CREATE })
   async create(@Payload() createRoleDto: CreateRoleInput): Promise<CreateRoleOutputDto> {
     const uuid = UUIDv4();
 
