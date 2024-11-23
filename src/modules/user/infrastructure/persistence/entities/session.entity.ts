@@ -1,21 +1,3 @@
-// sessionId
-// sessionType
-// sessionDuration
-// sessionClosedType
-// token
-// expiresIn
-// loggedInAt
-// loggedOutAt
-// ipAddress
-// refreshToken
-// userAgent
-// failedAttempts
-// origin
-// location
-
-// userId
-// accountId
-
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
