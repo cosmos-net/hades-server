@@ -5,6 +5,8 @@ import {
   MIN_ACCOUNT_USER_NAME_LENGTH,
   MAX_ACCOUNT_PASSWORD_LENGTH,
   MIN_ACCOUNT_PASSWORD_LENGTH,
+  MIN_ACCOUNT_EMAIL_LENGTH,
+  MAX_ACCOUNT_EMAIL_LENGTH,
 } from '@user/domain/constants/general-rules';
 
 export class AccountDTO {
@@ -18,6 +20,7 @@ export class AccountDTO {
   @IsString()
   @IsNotEmpty()
   @IsEmail()
+  @Length(MIN_ACCOUNT_EMAIL_LENGTH, MAX_ACCOUNT_EMAIL_LENGTH)
   public readonly email?: string;
 
   @IsOptional()
