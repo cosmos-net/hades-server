@@ -8,9 +8,12 @@ import { DestroyUserController } from '@user/infrastructure/controllers/user/com
 import { UpdateUserController } from '@user/infrastructure/controllers/user/commands/update-user/update-user.controller';
 import { GetUserController } from '@user/infrastructure/controllers/user/queries/get-user/get-user.controller';
 import { ListUserController } from '@user/infrastructure/controllers/user/queries/list-user/list-user.controller';
+import { AccountEntity } from '@user/infrastructure/persistence/entities/account.entity';
+import { ProfileEntity } from '@user/infrastructure/persistence/entities/profile.entity';
+import { UserEntity } from '@user/infrastructure/persistence/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoleEntity]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([UserEntity, AccountEntity, ProfileEntity]), CqrsModule],
   controllers: [
     CreateUserController,
     UpdateUserController,
