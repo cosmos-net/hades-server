@@ -15,7 +15,7 @@ export class UserModel extends AggregateRoot {
   }
 
   get status(): string {
-    return this._entityRoot.status;
+    return this._entityRoot.status.value;
   }
 
   public create() {
