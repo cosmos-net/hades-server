@@ -4,7 +4,6 @@ import { UserModel } from '@user/domain/models/user.model';
 import { Criteria } from '@common/domain/criteria/criteria';
 
 export interface IUserRepositoryContract {
-  isNameAvailable(name: string): Promise<boolean>;
   persist(user: UserModel): Promise<UserModel>;
   getOneBy(UUID: string): Promise<UserModel>;
   destroy(UUID: string): Promise<boolean>;
