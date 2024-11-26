@@ -9,9 +9,11 @@ export class UserModel extends AggregateRoot {
   get id(): number {
     return this._entityRoot.id._value;
   }
+
   get uuid(): string {
     return this._entityRoot.uuid._value;
   }
+
   get status(): string {
     return this._entityRoot.status;
   }
