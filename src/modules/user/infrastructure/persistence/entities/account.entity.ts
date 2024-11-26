@@ -21,6 +21,7 @@ export class AccountEntity extends TypeormBaseEntity {
     type: 'varchar',
     length: MAX_ACCOUNT_USER_NAME_LENGTH,
     nullable: false,
+    unique: true,
   })
   username: string;
 
@@ -29,6 +30,7 @@ export class AccountEntity extends TypeormBaseEntity {
     type: 'varchar',
     length: MAX_ACCOUNT_EMAIL_LENGTH,
     nullable: false,
+    unique: true,
   })
   email: string;
 
