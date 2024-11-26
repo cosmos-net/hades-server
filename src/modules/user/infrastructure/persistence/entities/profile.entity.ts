@@ -42,6 +42,7 @@ export class ProfileEntity extends TypeormBaseEntity {
     type: 'varchar',
     length: MAX_PROFILE_PHONE_NUMBER_LENGTH,
     nullable: false,
+    unique: true,
   })
   phoneNumber: string;
 
