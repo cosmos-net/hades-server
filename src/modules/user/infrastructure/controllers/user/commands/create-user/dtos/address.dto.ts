@@ -34,12 +34,10 @@ export class AddressDTO {
   public readonly city: string;
 
   @IsString()
-  @IsOptional()
   @Length(PROFILE_ADDRESS.STATE.MIN_LENGTH, PROFILE_ADDRESS.STATE.MAX_LENGTH)
-  public readonly state?: string;
+  public readonly state: string;
 
   @IsString()
-  @IsOptional()
   @Length(PROFILE_ADDRESS.COUNTRY.MIN_LENGTH, PROFILE_ADDRESS.COUNTRY.MAX_LENGTH)
-  public readonly country?: string;
+  public readonly country: string;
 }
