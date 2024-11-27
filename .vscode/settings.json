@@ -1,6 +1,8 @@
 {
   "files.eol": "\n",
   "conventionalCommits.scopes": [
-    "config"
+    "config",
+    "common",
+    "user-module"
   ]
 }

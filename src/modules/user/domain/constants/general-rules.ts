@@ -53,5 +53,18 @@ export enum ProfileGenderEnum {
 export const MAX_ACCOUNT_USER_NAME_LENGTH = 100;
 export const MIN_ACCOUNT_USER_NAME_LENGTH = 5;
 
+export const MAX_ACCOUNT_EMAIL_LENGTH = 255;
+export const MIN_ACCOUNT_EMAIL_LENGTH = 5;
+
 export const MAX_ACCOUNT_PASSWORD_LENGTH = 100;
 export const MIN_ACCOUNT_PASSWORD_LENGTH = 5;
+
+export enum UserStatusEnum {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
+  PENDING = 'Pending',
+  SUSPENDED = 'Suspended',
+  ARCHIVED = 'Archived',
+  BANNED = 'Banned',
+  UNDER_REVIEW = 'UnderReview',
+}

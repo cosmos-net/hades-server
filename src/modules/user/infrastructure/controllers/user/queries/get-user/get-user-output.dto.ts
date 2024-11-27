@@ -1,6 +1,6 @@
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 
-export class UpdateUserOutputDto {
+export class GetUserOutputDto {
   public readonly user: {
     id: string;
     uuid: string;

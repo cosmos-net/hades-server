@@ -1,7 +1,8 @@
+import { PaginationOutputDto } from '@common/infrastructure/dtos/pagination-options/output-pagination.dto';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 
-export class UpdateUserOutputDto {
-  public readonly user: {
+interface IListUserOutputDto {
+  user: {
     id: string;
     uuid: string;
     status: string;
@@ -24,4 +25,10 @@ export class UpdateUserOutputDto {
       };
     };
   };
+}
+
+export class ListUserOutputDto extends PaginationOutputDto<IListUserOutputDto> {
+  constructor(items: IListUserOutputDto[], page: number, limit: number, total: number) {
+    super(items, page, limit, total);
+  }
 }
