@@ -1,5 +1,5 @@
-import { StatusEnum } from '@common/domain/criteria/user-status-enum';
 import { EnumValueObject } from '@common/domain/value-object/types/enum-value-object';
+import { StatusEnum } from '@user/domain/enums/user-status-enum';
 
 export class UserStatus extends EnumValueObject<StatusEnum> {
   constructor(value: StatusEnum) {
