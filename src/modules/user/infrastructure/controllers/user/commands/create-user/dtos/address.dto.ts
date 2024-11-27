@@ -27,4 +27,19 @@ export class AddressDTO {
   @IsNotEmpty()
   @Length(PROFILE_ADDRESS.ZIP_CODE.MIN_LENGTH, PROFILE_ADDRESS.ZIP_CODE.MAX_LENGTH)
   public readonly zipCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Length(PROFILE_ADDRESS.CITY.MIN_LENGTH, PROFILE_ADDRESS.CITY.MAX_LENGTH)
+  public readonly city: string;
+
+  @IsString()
+  @IsOptional()
+  @Length(PROFILE_ADDRESS.STATE.MIN_LENGTH, PROFILE_ADDRESS.STATE.MAX_LENGTH)
+  public readonly state?: string;
+
+  @IsString()
+  @IsOptional()
+  @Length(PROFILE_ADDRESS.COUNTRY.MIN_LENGTH, PROFILE_ADDRESS.COUNTRY.MAX_LENGTH)
+  public readonly country?: string;
 }
