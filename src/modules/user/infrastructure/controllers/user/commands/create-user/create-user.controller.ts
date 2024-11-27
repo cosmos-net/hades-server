@@ -1,10 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateUserCommand } from '@user/application/commands/use-cases/create-user/create-user.command';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
+import { CreateUserCommand } from '@user/application/commands/use-cases/create-user/create-user.command';
 import { CreateUserInput } from '@user/infrastructure/controllers/user/commands/create-user/create-user-input.dto';
 import { CreateUserOutputDto } from '@user/infrastructure/controllers/user/commands/create-user/create-user-output.dto';
 
