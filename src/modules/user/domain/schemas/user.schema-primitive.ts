@@ -1,4 +1,4 @@
-import { StatusEnum } from '@common/domain/criteria/user-status-enum';
+import { StatusEnum } from '@user/domain/enums/user-status-enum';
 
 export interface IUserSchemaPrimitive {
   id: number;

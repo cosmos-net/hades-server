@@ -1,7 +1,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
-import { StatusEnum } from '@common/domain/criteria/user-status-enum';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { UserCreatedEvent } from '@user/domain/events/events-success-domain/user-created.event';
 import { IUserSchema } from '@user/domain/schemas/user.schema';
 import { IUserSchemaPrimitive } from '@user/domain/schemas/user.schema-primitive';
