@@ -22,6 +22,7 @@ export class UserModel extends AggregateRoot {
       if (status) this._entityRoot.status = new UserStatus(status);
     }
   }
+
   get id(): number {
     return this._entityRoot.id._value;
   }
