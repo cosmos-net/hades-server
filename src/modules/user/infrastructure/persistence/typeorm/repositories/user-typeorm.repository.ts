@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { Criteria } from '@common/domain/criteria/criteria';
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
-import { UserEntity } from '@user/infrastructure/persistence/entities/user.entity';
+import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Injectable()
 export class UserTypeormRepository

@@ -2,8 +2,8 @@ import { PrimaryGeneratedColumn, Column, OneToOne, OneToMany, Entity } from 'typ
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
 import { UserStatusEnum } from '@user/domain/constants/general-rules';
-import { AccountEntity } from '@user/infrastructure/persistence/entities/account.entity';
-import { ProfileEntity } from '@user/infrastructure/persistence/entities/profile.entity';
+import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
+import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 
 @Entity('users')
 export class UserEntity extends TypeormBaseEntity {

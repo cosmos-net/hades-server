@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
 import { IProfileRepositoryContract } from '@user/domain/contracts/profile-repository.contract';
-import { ProfileEntity } from '@user/infrastructure/persistence/entities/profile.entity';
+import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 
 @Injectable()
 export class ProfileTypeormRepository

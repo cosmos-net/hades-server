@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
 import { IAccountRepositoryContract } from '@user/domain/contracts/account-repository.contract';
-import { AccountEntity } from '@user/infrastructure/persistence/entities/account.entity';
+import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 
 @Injectable()
 export class AccountTypeormRepository

@@ -8,7 +8,7 @@ import {
   MAX_PROFILE_SECOND_LAST_NAME_LENGTH,
   ProfileGenderEnum,
 } from '@user/domain/constants/general-rules';
-import { UserEntity } from '@user/infrastructure/persistence/entities/user.entity';
+import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Entity('profiles')
 export class ProfileEntity extends TypeormBaseEntity {
