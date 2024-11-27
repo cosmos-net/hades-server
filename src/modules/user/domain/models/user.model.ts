@@ -38,6 +38,7 @@ export class UserModel extends AggregateRoot {
   public create() {
     this.apply(new UserCreatedEvent(this.uuid, this.status));
   }
+
   public hydrate(entity: IUserSchemaPrimitive) {
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.status = new UserStatus(entity.status);
