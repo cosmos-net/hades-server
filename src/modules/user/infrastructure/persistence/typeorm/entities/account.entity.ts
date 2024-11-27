@@ -5,8 +5,8 @@ import {
   MAX_ACCOUNT_EMAIL_LENGTH,
   MAX_ACCOUNT_USER_NAME_LENGTH,
 } from '@user/domain/constants/general-rules';
-import { SessionEntity } from '@user/infrastructure/persistence/entities/session.entity';
-import { UserEntity } from '@user/infrastructure/persistence/entities/user.entity';
+import { SessionEntity } from '@user/infrastructure/persistence/typeorm/entities/session.entity';
+import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Entity('accounts')
 export class AccountEntity extends TypeormBaseEntity {

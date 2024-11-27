@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
-import { AccountEntity } from '@user/infrastructure/persistence/entities/account.entity';
+import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 
 @Entity('sessions')
 export class SessionEntity extends TypeormBaseEntity {
