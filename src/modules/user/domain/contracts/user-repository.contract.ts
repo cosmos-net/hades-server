@@ -1,7 +1,7 @@
 import { ListUserModel } from '@user/domain/models/user-list.model';
-import { UserModel } from '@user/domain/models/user.model';
 
 import { Criteria } from '@common/domain/criteria/criteria';
+import { UserModel } from '@user/domain/models/user.model';
 
 export interface IUserRepositoryContract {
   persist(user: UserModel): Promise<UserModel>;
