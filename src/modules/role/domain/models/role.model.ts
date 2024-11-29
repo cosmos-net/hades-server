@@ -58,7 +58,7 @@ export class RoleModel extends AggregateRoot {
   }
 
   get archivedAt(): Date | undefined {
-    return this._entityRoot.archivedAt._value;
+    return this._entityRoot.archivedAt?._value;
   }
 
   public hydrate(entity: IRoleSchemaPrimitive) {
