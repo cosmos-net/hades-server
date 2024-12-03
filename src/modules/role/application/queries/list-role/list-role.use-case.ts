@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IQueryHandler } from '@nestjs/cqrs';
 
 import { Criteria } from '@common/domain/criteria/criteria';
 import { ListRoleQuery } from '@role/application/queries/list-role/list-role.query';
+import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { ListRoleModel } from '@role/domain/models/role-list.model';
 
 @Injectable()
 export class ListRoleUseCase implements IQueryHandler<ListRoleQuery, ListRoleModel> {
-  constructor(private readonly roleRepository: IRoleRepositoryContract) {}
+  constructor(
+    @Inject(ROLE_REPOSITORY)
+    private readonly roleRepository: IRoleRepositoryContract,
+  ) {}
 
   async execute(query: ListRoleQuery): Promise<ListRoleModel> {
     const { orderType, orderBy, limit, offset, filtersMap } = query;
