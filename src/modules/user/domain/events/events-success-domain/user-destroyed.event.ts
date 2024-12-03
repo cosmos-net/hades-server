@@ -1,7 +1,6 @@
-export class RoleDestroyedEvent {
+export class UserDestroyedEvent {
   constructor(
     public readonly uuid: string,
-    public readonly name: string,
     public readonly destroyedAt: Date,
   ) {}
 }
