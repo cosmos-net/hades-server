@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
 import { CreateUserCommand } from '@user/application/commands/use-cases/create-user/create-user.command';
+import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { UserModel } from '@user/domain/models/user.model';
 import { CreateUserDomainService } from '@user/domain/services/create-user.domain-service';
@@ -12,6 +13,7 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
   constructor(
     private readonly createUserDomainService: CreateUserDomainService,
     private readonly publisher: EventPublisher,
+    @Inject(USER_REPOSITORY)
     private readonly repository: IUserRepositoryContract,
   ) {}
 
