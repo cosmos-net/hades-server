@@ -4,7 +4,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { CreateUserCommand } from '@user/application/commands/use-cases/create-user/create-user.command';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { UserModel } from '@user/domain/models/user.model';
-import { CreateUserDomainService } from '@user/domain/services/create-user.domain-service';
+import { CreateUserDomainService } from '@user/domain/domain-service/create-user.domain-service';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)

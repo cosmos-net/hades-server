@@ -5,7 +5,7 @@ import { UpdateRoleCommand } from '@role/application/commands/use-cases/update-r
 import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
-import { UpdateRoleDomainService } from '@role/domain/services/update-role.domain-service';
+import { UpdateRoleDomainService } from '@role/domain/domain-service/update-role.domain-service';
 
 @Injectable()
 @CommandHandler(UpdateRoleCommand)

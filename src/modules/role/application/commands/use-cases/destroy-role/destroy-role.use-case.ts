@@ -5,7 +5,7 @@ import { DestroyRoleCommand } from '@role/application/commands/use-cases/destroy
 import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
-import { DestroyRoleDomainService } from '@role/domain/services/destroy-role.domain-service';
+import { DestroyRoleDomainService } from '@role/domain/domain-service/destroy-role.domain-service';
 
 @Injectable()
 @CommandHandler(DestroyRoleCommand)
