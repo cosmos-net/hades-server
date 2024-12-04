@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { DestroyUserDomainService } from '@user/domain/services/destroy-user.domain-service';
+import { DestroyUserDomainService } from '@user/domain/domain-service/destroy-user.domain-service';
 
 import { DestroyUserCommand } from '@user/application/commands/use-cases/destroy-user/destroy-user.command';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
