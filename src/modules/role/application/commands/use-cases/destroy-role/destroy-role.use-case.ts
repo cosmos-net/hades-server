@@ -4,7 +4,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { DestroyRoleCommand } from '@role/application/commands/use-cases/destroy-role/destroy-role.command';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
-import { DestroyRoleDomainService } from '@role/domain/services/destroy-role.domain-service';
+import { DestroyRoleDomainService } from '@role/domain/domain-service/destroy-role.domain-service';
 
 @Injectable()
 @CommandHandler(DestroyRoleCommand)
