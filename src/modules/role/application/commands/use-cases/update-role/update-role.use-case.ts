@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { UpdateRoleCommand } from '@role/application/commands/use-cases/update-rol/update-role.command';
 
+import { UpdateRoleCommand } from '@role/application/commands/use-cases/update-role/update-role.command';
+import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
 import { UpdateRoleDomainService } from '@role/domain/domain-service/update-role.domain-service';
@@ -12,6 +13,7 @@ export class UpdateRolUseCase implements ICommandHandler<UpdateRoleCommand> {
   constructor(
     private readonly UpdateRoleDomainService: UpdateRoleDomainService,
     private readonly publisher: EventPublisher,
+    @Inject(ROLE_REPOSITORY)
     private readonly repository: IRoleRepositoryContract,
   ) {}
 
