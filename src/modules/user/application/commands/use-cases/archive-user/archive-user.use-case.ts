@@ -4,6 +4,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { ArchiveUserCommand } from '@user/application/commands/use-cases/archive-user/archive-user.command';
 import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
+import { ArchiveUserDomainService } from '@user/domain/domain-service/archive-user.domain-service';
 import { UserModel } from '@user/domain/models/user.model';
 import { ArchiveUserDomainService } from '@user/domain/services/archive-user.domain-service';
 

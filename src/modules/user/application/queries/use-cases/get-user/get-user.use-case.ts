@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetUserDomainService } from '@user/domain/services/get-user.domain-service';
 
 import { GetUserQuery } from '@user/application/queries/use-cases/get-user/get-user.query';
+import { GetUserDomainService } from '@user/domain/domain-service/get-user.domain-service';
 import { UserModel } from '@user/domain/models/user.model';
 
 @Injectable()
