@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 
 import { GetRoleQuery } from '@role/application/queries/get-role/get-role.query';
+import { GetRoleDomainService } from '@role/domain/domain-service/get-role.domain-service';
 import { RoleModel } from '@role/domain/models/role.model';
-import { GetRoleDomainService } from '@role/domain/services/get-role.domain-service';
 
 @Injectable()
 @QueryHandler(GetRoleQuery)
