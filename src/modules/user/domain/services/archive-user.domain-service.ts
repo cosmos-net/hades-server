@@ -1,6 +1,6 @@
 import DomainException from '@common/domain/exceptions/domain.exception';
-import { ExceptionFactory } from '@role/domain/exceptions/exception.factory';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
+import { ExceptionFactory } from '@user/domain/exceptions/exception.factory';
 import { UserNotFoundException } from '@user/domain/exceptions/user-not-found.exceptions';
 import { UserModel } from '@user/domain/models/user.model';
 
