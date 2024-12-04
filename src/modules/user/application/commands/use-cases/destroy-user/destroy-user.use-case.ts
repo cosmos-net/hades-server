@@ -4,8 +4,8 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { DestroyUserCommand } from '@user/application/commands/use-cases/destroy-user/destroy-user.command';
 import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
+import { DestroyUserDomainService } from '@user/domain/domain-service/destroy-user.domain-service';
 import { UserModel } from '@user/domain/models/user.model';
-import { DestroyUserDomainService } from '@user/domain/services/destroy-user.domain-service';
 
 @Injectable()
 @CommandHandler(DestroyUserCommand)

@@ -5,7 +5,7 @@ import { ArchiveRoleCommand } from '@role/application/commands/use-cases/archive
 import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleModel } from '@role/domain/models/role.model';
-import { ArchiveRoleDomainService } from '@role/domain/services/archive-role.domain-service';
+import { ArchiveRoleDomainService } from '@role/domain/domain-service/archive-role.domain-service';
 
 @Injectable()
 @CommandHandler(ArchiveRoleCommand)
