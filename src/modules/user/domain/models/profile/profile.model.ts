@@ -1,17 +1,17 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
-import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
-import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { StatusEnum } from '@user/domain/enums/user-status-enum';
-import { UserArchivedEvent } from '@user/domain/events/events-success-domain/user-archived.event';
-import { UserCreatedEvent } from '@user/domain/events/events-success-domain/user-created.event';
-import { UserDestroyedEvent } from '@user/domain/events/events-success-domain/user-destroyed.event';
-import { IUserSchema } from '@user/domain/schemas/user.schema';
-import { IUserSchemaPrimitive } from '@user/domain/schemas/user.schema-primitive';
-import { UserStatus } from '@user/domain/value-object/user-status.vo';
+// import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
+// import UUID from '@common/domain/value-object/vos/uuid.vo';
+// import { StatusEnum } from '@user/domain/enums/user-status-enum';
+// import { UserArchivedEvent } from '@user/domain/events/events-success-domain/user-archived.event';
+// import { UserCreatedEvent } from '@user/domain/events/events-success-domain/user-created.event';
+// import { UserDestroyedEvent } from '@user/domain/events/events-success-domain/user-destroyed.event';
+// import { IUserSchema } from '@user/domain/schemas/user.schema';
+// import { IUserSchemaPrimitive } from '@user/domain/schemas/user.schema-primitive';
+// import { UserStatus } from '@user/domain/value-object/user-status.vo';
 
-export class UserModel extends AggregateRoot {
-  private readonly _entityRoot: IUserSchema;
+export class ProfileModel extends AggregateRoot {
+  private readonly _entityRoot: IProfileSchema;
 
   constructor(entity: IUserSchemaPrimitive);
   constructor(uuid: string, status: string);
@@ -38,6 +38,14 @@ export class UserModel extends AggregateRoot {
     return this._entityRoot.status.value;
   }
 
+  get createdAt(): Date {
+    return this._entityRoot.createdAt._value;
+  }
+
+  get updatedAt(): Date {
+    return this._entityRoot.updatedAt._value;
+  }
+
   get archivedAt(): Date | undefined {
     return this._entityRoot.archivedAt?._value;
   }
@@ -49,6 +57,17 @@ export class UserModel extends AggregateRoot {
   public hydrate(entity: IUserSchemaPrimitive) {
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.status = new UserStatus(entity.status);
+  }
+
+  public toPrimitives(): IUserSchemaPrimitive {
+    return {
+      id: this.id,
+      uuid: this.uuid,
+      status: this.status,
+      archivedAt: this.archivedAt,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 
   public archive(uuid: string) {
