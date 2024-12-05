@@ -8,3 +8,8 @@ export interface IUserSchemaPrimitive {
   updatedAt: Date;
   archivedAt: Date | null;
 }
+
+export interface IListUserSchemaPrimitive {
+  total: number;
+  items: IUserSchemaPrimitive[];
+}
