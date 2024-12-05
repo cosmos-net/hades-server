@@ -1,25 +1,15 @@
-import { DomainEventHandler } from '@common/domain/events/domain-events-handler';
-import DomainException from '@common/domain/exceptions/domain.exception';
 import ValidationDomainException from '@common/domain/exceptions/validation.exception';
 import { RoleDescriptionException } from '@role/domain/exceptions/role-description.exception';
 import { RoleNotFoundException } from '@role/domain/exceptions/role-not-found.exception';
 
 export class ExceptionFactory {
+  private static readonly DEFAULT_ERROR_MESSAGE = 'EXCEPTION_DOMAIN_NOT_SPECIFIED';
+
   static createException(type: string, details: string): void {
     if (
       type === RoleDescriptionException.INVALID_ROLE_DESCRIPTION ||
       type === RoleNotFoundException.ROLE_NOT_FOUND
     ) {
-      // DomainEventHandler.dispatch(
-      //   RoleDescriptionException.INVALID_ROLE_DESCRIPTION,
-      //   new ValidationDomainException(
-      //     JSON.stringify({
-      //       message: RoleDescriptionException.INVALID_ROLE_DESCRIPTION,
-      //       details,
-      //     }),
-      //   ),
-      // );
-
       throw new ValidationDomainException(
         JSON.stringify({
           message: RoleDescriptionException.INVALID_ROLE_DESCRIPTION,
@@ -27,14 +17,11 @@ export class ExceptionFactory {
         }),
       );
     } else {
-      DomainEventHandler.dispatch(
-        'DEFAULT_EXCEPTION',
-        new DomainException(
-          JSON.stringify({
-            message: 'DEFAULT_EXCEPTION',
-            details,
-          }),
-        ),
+      throw new ValidationDomainException(
+        JSON.stringify({
+          message: ExceptionFactory.DEFAULT_ERROR_MESSAGE,
+          details,
+        }),
       );
     }
   }
