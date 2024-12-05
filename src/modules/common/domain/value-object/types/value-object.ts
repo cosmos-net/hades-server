@@ -1,4 +1,4 @@
-import { ConflictException } from '@nestjs/common';
+import BusinessConflictDomainException from '@common/domain/exceptions/business-conflict.exception';
 
 export type Primitives = string | number | boolean | Date | string[] | number[] | boolean[];
 
@@ -14,7 +14,7 @@ export abstract class ValueObject<T extends Primitives> {
     const isInvalidValue = value === null || value === undefined;
 
     if (isInvalidValue) {
-      throw new ConflictException('Value must be defined');
+      throw new BusinessConflictDomainException('Value must be defined');
     }
   }
 
