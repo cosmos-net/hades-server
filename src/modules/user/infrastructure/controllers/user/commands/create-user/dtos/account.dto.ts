@@ -18,6 +18,7 @@ export class AccountDTO {
   @IsEmail()
   public readonly email: string;
 
+  //TODO: handler confirmation of password
   @IsString()
   @IsNotEmpty()
   @Length(MIN_ACCOUNT_PASSWORD_LENGTH, MAX_ACCOUNT_PASSWORD_LENGTH)

@@ -34,6 +34,13 @@ export class AccountEntity extends TypeormBaseEntity {
   })
   email: string;
 
+  @Column({
+    name: 'password',
+    type: 'varchar',
+    nullable: false,
+  })
+  password: string;
+
   @ManyToOne(() => UserEntity, (user) => user.accounts, {
     nullable: false,
     cascade: false,
