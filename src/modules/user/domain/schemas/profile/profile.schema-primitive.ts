@@ -1,7 +1,7 @@
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 
 export interface IProfileSchemaPrimitive {
-  id: number;
+  id?: number;
   uuid: string;
   names: string[];
   lastName: string;
@@ -11,13 +11,16 @@ export interface IProfileSchemaPrimitive {
   address: {
     street: string;
     extNumber: string;
-    intNumber: string;
+    intNumber: string | null;
     neighborhood: string;
     zipCode: string;
     city: string;
     state: string;
     country: string;
   };
+  createdAt: Date;
+  updatedAt: Date;
+  archivedAt?: Date;
 }
 
 export interface IListProfileSchemaPrimitive {
