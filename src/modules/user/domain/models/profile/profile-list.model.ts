@@ -1,40 +1,40 @@
-import { UserModel } from '@user/domain/models/user.model';
+import { ProfileModel } from '@user/domain/models/profile/profile.model';
 import {
-  IListUserSchemaPrimitive,
-  IUserSchemaPrimitive,
-} from '@user/domain/schemas/user.schema-primitive';
+  IListProfileSchemaPrimitive,
+  IProfileSchemaPrimitive,
+} from '@user/domain/schemas/profile/profile.schema-primitive';
 
-export class ListUserModel {
-  private readonly items: UserModel[];
+export class ListProfileModel {
+  private readonly items: ProfileModel[];
   private total: number;
 
-  constructor(listUser: IListUserSchemaPrimitive) {
-    this.items = listUser.items.map((user) => new UserModel(user));
-    this.total = listUser.total;
+  constructor(listProfile: IListProfileSchemaPrimitive) {
+    this.items = listProfile.items.map((profile) => new ProfileModel(profile));
+    this.total = listProfile.total;
   }
 
-  public get getItems(): IUserSchemaPrimitive[] {
-    return this.items.map((user) => user.toPrimitives());
+  public get getItems(): IProfileSchemaPrimitive[] {
+    return this.items.map((profile) => profile.toPrimitives());
   }
 
   public get getTotal(): number {
     return this.total;
   }
 
-  public hydrate(users: IUserSchemaPrimitive[]) {
-    this.setItems(users);
+  public hydrate(profiles: IProfileSchemaPrimitive[]) {
+    this.setItems(profiles);
   }
 
   private setTotal(total: number) {
     this.total = total;
   }
 
-  private setItems(items: IUserSchemaPrimitive[]) {
+  private setItems(items: IProfileSchemaPrimitive[]) {
     items.forEach((item) => this.addItems(item));
     this.setTotal(items.length);
   }
 
-  private addItems(item: IUserSchemaPrimitive) {
-    this.items.push(new UserModel(item));
+  private addItems(item: IProfileSchemaPrimitive) {
+    this.items.push(new ProfileModel(item));
   }
 }
