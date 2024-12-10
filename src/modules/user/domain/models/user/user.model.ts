@@ -3,12 +3,10 @@ import { AggregateRoot } from '@nestjs/cqrs';
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
-import { UserArchivedEvent } from '@user/domain/events/events-success-domain/user-archived.event';
-import { UserCreatedEvent } from '@user/domain/events/events-success-domain/user-created.event';
 import { UserDestroyedEvent } from '@user/domain/events/events-success-domain/user-destroyed.event';
-import { IUserSchema } from '@user/domain/schemas/user.schema';
-import { IUserSchemaPrimitive } from '@user/domain/schemas/user.schema-primitive';
-import { UserStatus } from '@user/domain/value-object/user-status.vo';
+import { IUserSchema } from '@user/domain/schemas/user/user.schema';
+import { IUserSchemaPrimitive } from '@user/domain/schemas/user/user.schema-primitive';
+import { UserStatus } from '@user/domain/value-object/user/user-status.vo';
 
 export class UserModel extends AggregateRoot {
   private readonly _entityRoot: IUserSchema;
@@ -50,10 +48,6 @@ export class UserModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  public create() {
-    this.apply(new UserCreatedEvent(this.uuid, this.status));
-  }
-
   public hydrate(entity: IUserSchemaPrimitive) {
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.status = new UserStatus(entity.status);
@@ -70,9 +64,8 @@ export class UserModel extends AggregateRoot {
     };
   }
 
-  public archive(uuid: string) {
+  public archive() {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
-    this.apply(new UserArchivedEvent(uuid, this.archivedAt));
   }
 
   public destroy(uuid: string) {
