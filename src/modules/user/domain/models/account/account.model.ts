@@ -9,16 +9,33 @@ import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { ListSessionModel } from '@user/domain/models/session/session-list.model';
 import { SessionModel } from '@user/domain/models/session/session.model';
 import { IAccountSchema } from '@user/domain/schemas/account/account.schema';
-import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
+import {
+  IAccountBaseSchema,
+  IAccountSchemaPrimitives,
+} from '@user/domain/schemas/account/account.schema-primitive';
 import Password from '@user/domain/value-object/account/password.vo';
 import Username from '@user/domain/value-object/account/username.vo';
 
 export class AccountModel extends AggregateRoot {
   private readonly _entityRoot: IAccountSchema;
 
-  constructor(entity: IAccountSchemaPrimitives) {
+  constructor(entity: IAccountSchemaPrimitives);
+  constructor(uuid: string, username: string, email: string, password: string);
+  constructor(
+    entityOrUuid: IAccountSchemaPrimitives | string,
+    username?: string,
+    email?: string,
+    password?: string,
+  ) {
     super();
-    this.hydrate(entity);
+    if (entityOrUuid instanceof Object) {
+      this.hydrate(entityOrUuid);
+    } else if (typeof entityOrUuid === 'string') {
+      this._entityRoot.uuid = new UUID(entityOrUuid);
+      this._entityRoot.username = new Username(username);
+      this._entityRoot.email = new Email(email);
+      this._entityRoot.password = new Password(password);
+    }
   }
 
   get id(): number | undefined {
@@ -75,6 +92,10 @@ export class AccountModel extends AggregateRoot {
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
   }
 
+  public static fromPrimitives(entity: IAccountBaseSchema): AccountModel {
+    return new AccountModel(entity.uuid, entity.username, entity.email, entity.password);
+  }
+
   public toPrimitives(): IAccountSchemaPrimitives {
     return {
       id: this.id,
@@ -87,6 +108,17 @@ export class AccountModel extends AggregateRoot {
       archivedAt: this.archivedAt,
       sessions: this.sessions.getItems,
     };
+  }
+
+  public update(entity: Partial<IAccountBaseSchema>): void {
+    //TODO: Encrypte username, email and password before update and create
+    if (entity.username) this._entityRoot.username = new Username(entity.username);
+    if (entity.email) this._entityRoot.email = new Email(entity.email);
+    if (entity.password) this._entityRoot.password = new Password(entity.password);
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    //TODO: Handler a domain to emit an event
   }
 
   public archive() {
