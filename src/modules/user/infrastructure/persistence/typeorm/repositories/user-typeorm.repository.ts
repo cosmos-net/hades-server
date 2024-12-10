@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ListUserModel } from '@user/domain/models/list-user.model';
 import { Repository } from 'typeorm';
 
 import { Criteria } from '@common/domain/criteria/criteria';
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
-import { UserModel } from '@user/domain/models/user.model';
+import { ListUserModel } from '@user/domain/models/user/user-list.model';
+import { UserModel } from '@user/domain/models/user/user.model';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Injectable()
