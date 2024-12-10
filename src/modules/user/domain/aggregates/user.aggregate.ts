@@ -4,40 +4,51 @@ import { UserCreatedEvent } from '@user/domain/events/events-success-domain/user
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
 import { UserModel } from '@user/domain/models/user/user.model';
+import { IAccountBaseSchema } from '@user/domain/schemas/account/account.schema-primitive';
+import { IProfileBaseSchema } from '@user/domain/schemas/profile/profile.schema-primitive';
+
+export interface IUserSchemaAggregate {
+  userModel?: UserModel;
+  accountModel: AccountModel;
+  profileModel: ProfileModel;
+}
 
 export class UserAggregate extends AggregateRoot {
-  private readonly _userModel: UserModel;
-  private readonly _accountModel: AccountModel;
-  private readonly _profileModel: ProfileModel;
+  private readonly entities: IUserSchemaAggregate;
 
-  constructor(userModel: UserModel, accountModel: AccountModel, profileModel: ProfileModel) {
+  constructor(entities: IUserSchemaAggregate) {
     super();
-    this.hydrate(userModel, accountModel, profileModel);
+    this.hydrate(entities);
   }
 
   get userModel(): UserModel {
-    return this._userModel;
+    return this.entities.userModel;
   }
 
   get accountModel(): AccountModel {
-    return this._accountModel;
+    return this.entities.accountModel;
   }
 
   get profileModel(): ProfileModel {
-    return this._profileModel;
+    return this.entities.profileModel;
   }
 
-  public hydrate(user: UserModel, account: AccountModel, profile: ProfileModel) {
-    this._userModel.hydrate(user.toPrimitives());
-    this._accountModel.hydrate(account.toPrimitives());
-    this._profileModel.hydrate(profile.toPrimitives());
+  public hydrate(entities: IUserSchemaAggregate) {
+    const { userModel, accountModel, profileModel } = entities;
+
+    if (userModel) {
+      this.entities.userModel = userModel;
+    }
+
+    this.entities.accountModel = accountModel;
+    this.entities.profileModel = profileModel;
   }
 
   public toPrimitives() {
     return {
-      user: this._userModel.toPrimitives(),
-      account: this._accountModel.toPrimitives(),
-      profile: this._profileModel.toPrimitives(),
+      user: this.entities.userModel?.toPrimitives(),
+      account: this.entities.accountModel.toPrimitives(),
+      profile: this.entities.profileModel.toPrimitives(),
     };
   }
 
@@ -46,9 +57,19 @@ export class UserAggregate extends AggregateRoot {
     this.apply(new UserCreatedEvent(this.userModel.uuid, this.userModel.status));
   }
 
+  public update(account?: Partial<IAccountBaseSchema>, profile?: Partial<IProfileBaseSchema>) {
+    if (account) {
+      this.entities.accountModel.update(account);
+    }
+
+    if (profile) {
+      this.entities.profileModel.update(profile);
+    }
+  }
+
   public archive() {
-    this._userModel.archive();
-    this._profileModel.archive();
-    this._accountModel.archive();
+    this.entities.userModel.archive();
+    this.entities.profileModel.archive();
+    this.entities.accountModel.archive();
   }
 }
