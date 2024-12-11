@@ -5,7 +5,7 @@ import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 export interface IAddressCommand {
   readonly street: string;
   readonly extNumber: string;
-  readonly intNumber: string;
+  readonly intNumber?: string;
   readonly neighborhood: string;
   readonly zipCode: string;
   readonly city: string;
@@ -32,10 +32,10 @@ export interface IAccountCommand {
 
 export class CreateUserCommand implements ICommand {
   public readonly profile: IProfileCommand;
-  public readonly account: IAccountCommand;
+  public readonly accounts: IAccountCommand[];
 
   constructor(root: CreateUserCommand) {
     this.profile = root.profile;
-    this.account = root.account;
+    this.accounts = root.accounts;
   }
 }
