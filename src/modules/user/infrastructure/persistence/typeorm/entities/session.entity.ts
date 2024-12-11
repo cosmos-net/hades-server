@@ -1,10 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
+import { ISessionSchemaPrimitive } from '@user/domain/schemas/session/session.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 
 @Entity('sessions')
-export class SessionEntity extends TypeormBaseEntity {
+export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPrimitive {
   @PrimaryGeneratedColumn('identity', { type: 'int', name: 'id' })
   id: number;
 
