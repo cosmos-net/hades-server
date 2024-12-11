@@ -5,7 +5,7 @@ import { CreateUserCommand } from '@user/application/commands/use-cases/create-u
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
-import { CreateUserDomainService } from '@user/domain/domain-service/create-user.domain-service';
+import { CreateUserDomainService } from '@user/domain/domain-services/create-user.domain-service';
 
 @Injectable()
 @CommandHandler(CreateUserCommand)
@@ -18,9 +18,9 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
   ) {}
 
   async execute(command: CreateUserCommand): Promise<UserAggregate> {
-    const { account, profile } = command;
+    const { accounts, profile } = command;
 
-    const userAggregate = await this.createUserDomainService.go(account, profile);
+    const userAggregate = await this.createUserDomainService.go(accounts, profile);
     const user = this.publisher.mergeObjectContext(userAggregate);
 
     await this.repository.persist(userAggregate);
