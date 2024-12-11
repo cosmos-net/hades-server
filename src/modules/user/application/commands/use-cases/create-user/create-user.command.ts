@@ -14,6 +14,7 @@ export interface IAddressCommand {
 }
 
 export interface IProfileCommand {
+  readonly uuid: string;
   readonly names: string[];
   readonly lastName: string;
   readonly secondLastName?: string;
@@ -23,6 +24,7 @@ export interface IProfileCommand {
 }
 
 export interface IAccountCommand {
+  readonly uuid: string;
   readonly username: string;
   readonly email: string;
   readonly password: string;
