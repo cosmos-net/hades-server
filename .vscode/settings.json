@@ -3,6 +3,7 @@
   "conventionalCommits.scopes": [
     "config",
     "common",
-    "user-module"
+    "user-module",
+    "helper"
   ]
 }
