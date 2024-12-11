@@ -1,9 +1,10 @@
+import { DeepPartial } from '@helpers/types/partials.helper';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 
 export interface IProfileAddressSchema {
   street: string;
   extNumber: string;
-  intNumber: string | null;
+  intNumber?: string | null;
   neighborhood: string;
   zipCode: string;
   city: string;
@@ -32,3 +33,5 @@ export interface IListProfileSchemaPrimitive {
   total: number;
   items: IProfileSchemaPrimitive[];
 }
+
+export type DeepPartialProfileBaseSchema = DeepPartial<IProfileBaseSchema>;
