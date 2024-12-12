@@ -6,7 +6,7 @@ import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { DeepPartial } from '@helpers/types/deep-partial';
+import { DeepPartial } from '@helpers/types/partials.helper';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 import { IProfileSchema } from '@user/domain/schemas/profile/profile.schema';
 import {

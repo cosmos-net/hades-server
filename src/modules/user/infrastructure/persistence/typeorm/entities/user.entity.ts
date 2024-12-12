@@ -1,12 +1,13 @@
 import { PrimaryGeneratedColumn, Column, OneToOne, OneToMany, Entity } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
-import { UserStatusEnum } from '@user/domain/constants/general-rules';
+import { StatusEnum } from '@user/domain/enums/user-status-enum';
+import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 
 @Entity('users')
-export class UserEntity extends TypeormBaseEntity {
+export class UserEntity extends TypeormBaseEntity implements IUserSchemaPrimitives {
   @PrimaryGeneratedColumn('identity', { type: 'int', name: 'id' })
   id: number;
 
@@ -15,10 +16,10 @@ export class UserEntity extends TypeormBaseEntity {
 
   @Column({
     type: 'enum',
-    enum: UserStatusEnum,
+    enum: StatusEnum,
     nullable: false,
   })
-  status: UserStatusEnum;
+  status: StatusEnum;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user, {
     cascade: true,

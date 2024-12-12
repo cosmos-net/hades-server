@@ -5,15 +5,15 @@ import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { UserDestroyedEvent } from '@user/domain/events/events-success-domain/user-destroyed.event';
 import { IUserSchema } from '@user/domain/schemas/user/user.schema';
-import { IUserSchemaPrimitive } from '@user/domain/schemas/user/user.schema-primitive';
+import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 import { UserStatus } from '@user/domain/value-object/user/user-status.vo';
 
 export class UserModel extends AggregateRoot {
   private readonly _entityRoot: IUserSchema;
 
-  constructor(entity: IUserSchemaPrimitive);
+  constructor(entity: IUserSchemaPrimitives);
   constructor(uuid: string, status: string);
-  constructor(uuidOrSchema: string | IUserSchemaPrimitive, status?: StatusEnum) {
+  constructor(uuidOrSchema: string | IUserSchemaPrimitives, status?: StatusEnum) {
     super();
 
     if (typeof uuidOrSchema === 'object') {
@@ -48,12 +48,12 @@ export class UserModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  public hydrate(entity: IUserSchemaPrimitive) {
+  public hydrate(entity: IUserSchemaPrimitives) {
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.status = new UserStatus(entity.status);
   }
 
-  public toPrimitives(): IUserSchemaPrimitive {
+  public toPrimitives(): IUserSchemaPrimitives {
     return {
       id: this.id,
       uuid: this.uuid,
@@ -70,5 +70,9 @@ export class UserModel extends AggregateRoot {
 
   public destroy(uuid: string) {
     this.apply(new UserDestroyedEvent(uuid, new Date()));
+  }
+
+  public static fromPrimitives(entity: IUserSchemaPrimitives): UserModel {
+    return new UserModel(entity);
   }
 }
