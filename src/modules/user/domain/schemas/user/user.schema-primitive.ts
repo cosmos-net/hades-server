@@ -1,6 +1,6 @@
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
 
-export interface IUserSchemaPrimitive {
+export interface IUserSchemaPrimitives {
   id: number;
   uuid: string;
   status: StatusEnum;
@@ -11,5 +11,5 @@ export interface IUserSchemaPrimitive {
 
 export interface IListUserSchemaPrimitive {
   total: number;
-  items: IUserSchemaPrimitive[];
+  items: IUserSchemaPrimitives[];
 }

@@ -14,8 +14,14 @@ export class CreateUserController {
 
   @MessagePattern({ cmd: CMDS_HADES.USER.CREATE })
   async create(@Payload() createUserDto: CreateUserInput): Promise<CreateUserOutputDto> {
-    const uuid = UUIDv4();
+    const accounts = createUserDto.account.map((account) => ({ ...account, uuid: UUIDv4() }));
+    const profile = { ...createUserDto.profile, uuid: UUIDv4() };
 
-    return this.commandBus.execute(new CreateUserCommand({ ...createUserDto, uuid }));
+    return this.commandBus.execute(
+      new CreateUserCommand({
+        accounts,
+        profile,
+      }),
+    );
   }
 }

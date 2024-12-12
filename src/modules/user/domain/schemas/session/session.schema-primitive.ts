@@ -8,7 +8,7 @@ export interface ISessionSchemaPrimitive {
   token: string;
   expiresIn: Date;
   loggedInAt: Date;
-  loggedOutAt: Date;
+  loggedOutAt?: Date;
   ipAddress: string;
   refreshToken: string;
   userAgent: string;

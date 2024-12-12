@@ -10,13 +10,15 @@ import { IProfileBaseSchema } from '@user/domain/schemas/profile/profile.schema-
 export class CreateUserDomainService {
   constructor(private readonly userRepository: IUserRepositoryContract) {}
 
-  async go(account: IAccountBaseSchema, profile: IProfileBaseSchema): Promise<UserAggregate> {
+  async go(accounts: IAccountBaseSchema[], profile: IProfileBaseSchema): Promise<UserAggregate> {
     try {
-      const accountModel = AccountModel.fromPrimitives({
-        uuid: account.uuid,
-        username: account.username,
-        password: account.password,
-        email: account.email,
+      const accountsModel = accounts.map((account) => {
+        return AccountModel.fromPrimitives({
+          uuid: account.uuid,
+          username: account.username,
+          email: account.email,
+          password: account.password,
+        });
       });
 
       const profileModel = ProfileModel.fromPrimitives({
@@ -30,7 +32,7 @@ export class CreateUserDomainService {
       });
 
       const userAggregate = new UserAggregate({
-        accountModel,
+        accountsModel,
         profileModel,
       });
 
