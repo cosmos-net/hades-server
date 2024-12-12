@@ -15,4 +15,7 @@ export const CMDS_HADES = {
     LIST: 'HADES.USER.LIST',
     GET: 'HADES.USER.GET',
   },
+  SESSION: {
+    CREATE: 'HADES.CREATE.SESSION',
+  },
 };
