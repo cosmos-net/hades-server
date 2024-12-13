@@ -1,14 +1,16 @@
 import { IsString, IsNotEmpty, IsNumber, Length } from 'class-validator';
+import { SESSION } from 'src/modules/session/domain/constants/general-rules';
+
 
 export class CreateSessionInput {
   @IsString()
   @IsNotEmpty()
-  @Length(5, 255)
+  @Length(SESSION.SESSION_ID.MIN_LENGTH, SESSION.SESSION_ID.MAX_LENGTH)
   public readonly sessionId: string;
 
   @IsString()
   @IsNotEmpty()
-  @Length(5, 50)
+  @Length(SESSION.SESSION_TYPE.MIN_LENGTH, SESSION.SESSION_TYPE.MAX_LENGTH)
   public readonly sessionType: string;
 
   @IsNumber()
@@ -17,7 +19,7 @@ export class CreateSessionInput {
 
   @IsString()
   @IsNotEmpty()
-  @Length(5, 50)
+  @Length(SESSION.SESSION_CLOSED_TYPE.MIN_LENGTH, SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH)
   public readonly sessionClosedType: string;
 
   @IsString()
@@ -26,7 +28,7 @@ export class CreateSessionInput {
 
   @IsString()
   @IsNotEmpty()
-  @Length(5, 100)
+  @Length(SESSION.IP_ADDRESS.MIN_LENGTH, SESSION.IP_ADDRESS.MAX_LENGTH)
   public readonly ipAddress: string;
 
   @IsString()
@@ -35,7 +37,7 @@ export class CreateSessionInput {
 
   @IsString()
   @IsNotEmpty()
-  @Length(5, 255)
+  @Length(SESSION.USER_AGENT.MIN_LENGTH, SESSION.USER_AGENT.MAX_LENGTH)
   public readonly userAgent: string;
 
   @IsNumber()
@@ -44,11 +46,11 @@ export class CreateSessionInput {
 
   @IsString()
   @IsNotEmpty()
-  @Length(5, 100)
+  @Length(SESSION.ORIGIN.MIN_LENGTH, SESSION.ORIGIN.MAX_LENGTH)
   public readonly origin: string;
 
   @IsString()
   @IsNotEmpty()
-  @Length(5, 255)
+  @Length(SESSION.LOCATION.MIN_LENGTH, SESSION.LOCATION.MAX_LENGTH)
   public readonly location: string;
 }
