@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
-import { SESSION } from '@user/domain/constants/general-rules';
+import { SESSION } from '@session/domain/constants/general-rules';
 import { ISessionSchemaPrimitive } from '@user/domain/schemas/session/session.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { Length } from 'class-validator';

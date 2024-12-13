@@ -1,6 +1,6 @@
 import { StringValueObject } from '@common/domain/value-object/types/string-value-object';
 import regexCustomBuilderHelper from '@helpers/regex/regex-custom-builder.helper';
-import { SESSION } from '@user/domain/constants/general-rules';
+import { SESSION } from '@session/domain/constants/general-rules';
 
 export default class SessionId extends StringValueObject {
   constructor(value: string) {
