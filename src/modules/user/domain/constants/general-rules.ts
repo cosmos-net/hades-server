@@ -59,6 +59,37 @@ export const MIN_ACCOUNT_EMAIL_LENGTH = 5;
 export const MAX_ACCOUNT_PASSWORD_LENGTH = 100;
 export const MIN_ACCOUNT_PASSWORD_LENGTH = 5;
 
+export enum UserStatusEnum {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
+  PENDING = 'Pending',
+  SUSPENDED = 'Suspended',
+  ARCHIVED = 'Archived',
+  BANNED = 'Banned',
+  UNDER_REVIEW = 'UnderReview',
+}
+
+export const MAX_SESSION_SESSION_ID_LENGTH = 255;
+export const MIN_SESSION_SESSION_ID_LENGTH = 5;
+
+export const MAX_SESSION_SESSION_TYPE_LENGTH = 50;
+export const MIN_SESSION_SESSION_TYPE_LENGTH = 5;
+
+export const MAX_SESSION_SESSION_CLOSED_TYPE_LENGTH = 50;
+export const MIN_SESSION_SESSION_CLOSED_TYPE_LENGTH = 5;
+
+export const MAX_SESSION_IP_ADDRESS_LENGTH = 100;
+export const MIN_SESSION_IP_ADDRESS_LENGTH = 5;
+
+export const MAX_SESSION_USER_AGENT_LENGTH = 255;
+export const MIN_SESSION_USER_AGENT_LENGTH = 5;
+
+export const MAX_SESSION_ORIGIN_LENGTH = 100;
+export const MIN_SESSION_ORIGIN_LENGTH = 5;
+
+export const MAX_SESSION_LOCATION_LENGTH = 255;
+export const MIN_SESSION_LOCATION_LENGTH = 5;
+
 // TODO: Use in value objects
 // TODO: Use in dtos
 // TODO: Use in entities
