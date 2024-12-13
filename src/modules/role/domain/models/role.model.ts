@@ -5,7 +5,7 @@ import Description from '@common/domain/value-object/vos/description.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { validateNullishString } from '@helpers/string/validations-helper';
+import { validateNullishString } from '@helpers/string/validations.helper';
 import { RoleArchivedEvent } from '@role/domain/events/events-success-domain/role-archive.event';
 import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role-created.event';
 import { RoleDestroyedEvent } from '@role/domain/events/events-success-domain/role-destroyed.event';
