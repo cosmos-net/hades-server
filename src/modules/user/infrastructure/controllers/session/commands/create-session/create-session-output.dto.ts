@@ -1,4 +1,5 @@
 export class CreateSessionOutputDto {
+  public readonly id: number;
   public readonly uuid: string;
   public readonly sessionId: string;
   public readonly sessionType: string;
