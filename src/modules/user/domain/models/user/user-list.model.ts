@@ -1,8 +1,8 @@
-import { UserModel } from '@user/domain/models/user.model';
+import { UserModel } from '@user/domain/models/user/user.model';
 import {
   IListUserSchemaPrimitive,
   IUserSchemaPrimitive,
-} from '@user/domain/schemas/user.schema-primitive';
+} from '@user/domain/schemas/user/user.schema-primitive';
 
 export class ListUserModel {
   private readonly items: UserModel[];

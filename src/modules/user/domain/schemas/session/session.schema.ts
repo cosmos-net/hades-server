@@ -1,0 +1,41 @@
+import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
+import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
+import Id from '@common/domain/value-object/vos/id.vo';
+import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
+import UUID from '@common/domain/value-object/vos/uuid.vo';
+import ExpiresIn from '@user/domain/value-object/session/expires-in.vo';
+import SessionFailedAttempts from '@user/domain/value-object/session/failed-attempts.vo';
+import SessionIpAddress from '@user/domain/value-object/session/ip-address.vo';
+import SessionLocation from '@user/domain/value-object/session/location.vo';
+import LoggedInAt from '@user/domain/value-object/session/logged-in-at.vo';
+import LoggedOutAt from '@user/domain/value-object/session/logged-out-at.vo';
+import SessionOrigin from '@user/domain/value-object/session/origin.vo';
+import SessionRefreshToken from '@user/domain/value-object/session/refresh-token.vo';
+import SessionClosedType from '@user/domain/value-object/session/session-closed-type.vo';
+import SessionDuration from '@user/domain/value-object/session/session-duration.vo';
+import SessionId from '@user/domain/value-object/session/session-id.vo';
+import SessionType from '@user/domain/value-object/session/session-type.vo';
+import SessionToken from '@user/domain/value-object/session/token.vo';
+import SessionUserAgent from '@user/domain/value-object/session/user-agent.vo';
+
+export interface ISessionSchema {
+  id: Id;
+  uuid: UUID;
+  sessionId: SessionId;
+  sessionType: SessionType;
+  sessionDuration: SessionDuration;
+  sessionClosedType: SessionClosedType;
+  token: SessionToken;
+  expiresIn: ExpiresIn;
+  loggedInAt: LoggedInAt;
+  loggedOutAt: LoggedOutAt;
+  ipAddress: SessionIpAddress;
+  refreshToken: SessionRefreshToken;
+  userAgent: SessionUserAgent;
+  failedAttempts: SessionFailedAttempts;
+  origin: SessionOrigin;
+  location: SessionLocation;
+  createdAt: CreatedAt;
+  updatedAt: UpdatedAt;
+  archivedAt: ArchivedAt;
+}

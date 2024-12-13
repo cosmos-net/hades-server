@@ -5,11 +5,12 @@ import {
   MAX_ACCOUNT_EMAIL_LENGTH,
   MAX_ACCOUNT_USER_NAME_LENGTH,
 } from '@user/domain/constants/general-rules';
+import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 import { SessionEntity } from '@user/infrastructure/persistence/typeorm/entities/session.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Entity('accounts')
-export class AccountEntity extends TypeormBaseEntity {
+export class AccountEntity extends TypeormBaseEntity implements IAccountSchemaPrimitives {
   @PrimaryGeneratedColumn('identity', { type: 'int', name: 'id' })
   id: number;
 
@@ -54,5 +55,5 @@ export class AccountEntity extends TypeormBaseEntity {
   user: UserEntity;
 
   @OneToMany(() => SessionEntity, (session) => session.account, { cascade: true, nullable: true })
-  sessions: SessionEntity[] | null;
+  sessions?: SessionEntity[] | null;
 }
