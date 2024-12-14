@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "strict": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -15,8 +17,12 @@
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
+    "rootDir": "./",
+    "noEmit": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
       "@core": [
         "src/modules/core/"
@@ -67,5 +73,5 @@
         "src/helpers/*"
       ],
     }
-  }
+  },
 }
