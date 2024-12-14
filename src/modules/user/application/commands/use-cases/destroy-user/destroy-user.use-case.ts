@@ -2,10 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
 import { DestroyUserCommand } from '@user/application/commands/use-cases/destroy-user/destroy-user.command';
+import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { DestroyUserDomainService } from '@user/domain/domain-services/destroy-user.domain-service';
-import { UserModel } from '@user/domain/models/user.model';
+import { UserModel } from '@user/domain/models/user/user.model';
 
 @Injectable()
 @CommandHandler(DestroyUserCommand)
@@ -17,16 +18,16 @@ export class DestroyUserUseCase implements ICommandHandler<DestroyUserCommand> {
     private readonly repository: IUserRepositoryContract,
   ) {}
 
-  async execute(command: DestroyUserCommand): Promise<UserModel> {
+  async execute(command: DestroyUserCommand): Promise<UserAggregate> {
     const { uuid } = command;
 
-    const userModel = await this.DestroyUserDomainService.go(uuid);
-    const user = this.publisher.mergeObjectContext(userModel);
+    const userAggregate = await this.DestroyUserDomainService.go(uuid);
+    const userContext = this.publisher.mergeObjectContext(userAggregate);
 
     await this.repository.destroy(uuid);
 
-    user.commit();
+    userContext.commit();
 
-    return user;
+    return userContext;
   }
 }
