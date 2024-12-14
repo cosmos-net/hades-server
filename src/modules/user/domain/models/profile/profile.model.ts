@@ -8,11 +8,12 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { DeepPartial } from '@helpers/types/partials.helper';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
+import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
 import { IProfileSchema } from '@user/domain/schemas/profile/profile.schema';
 import {
   IProfileAddressSchema,
   IProfileBaseSchema,
-  IProfileSchemaPrimitive,
+  IProfileSchemaPrimitives,
 } from '@user/domain/schemas/profile/profile.schema-primitive';
 import { Gender } from '@user/domain/value-object/profile/gender.vo';
 import { LastName } from '@user/domain/value-object/profile/last-name.vo';
@@ -23,7 +24,7 @@ import { SecondLastName } from '@user/domain/value-object/profile/second-last-na
 export class ProfileModel extends AggregateRoot {
   private readonly _entityRoot: IProfileSchema;
 
-  constructor(entity: IProfileSchemaPrimitive);
+  constructor(entity: IProfileSchemaPrimitives);
   constructor(
     uuid: string,
     names: string[],
@@ -34,7 +35,7 @@ export class ProfileModel extends AggregateRoot {
     address: IProfileAddressSchema,
   );
   constructor(
-    entityOrUuid: IProfileSchemaPrimitive | string,
+    entityOrUuid: IProfileSchemaPrimitives | string,
     names?: string[],
     lastName?: string,
     secondLastName?: string,
@@ -47,12 +48,22 @@ export class ProfileModel extends AggregateRoot {
       this.hydrate(entityOrUuid);
     } else if (typeof entityOrUuid === 'string') {
       this._entityRoot.uuid = new UUID(entityOrUuid);
-      this._entityRoot.names = names.map((name) => new Name(name));
+      this._entityRoot.names = names.map((name): Name => new Name(name));
       this._entityRoot.lastName = new LastName(lastName);
       this._entityRoot.secondLastName = new SecondLastName(secondLastName);
       this._entityRoot.phoneNumber = new PhoneNumber(phoneNumber);
       this._entityRoot.gender = new Gender(gender);
-      this._entityRoot.address = new Address(address);
+
+      this._entityRoot.address = new Address({
+        street: address.street,
+        extNumber: address.extNumber,
+        intNumber: address.intNumber,
+        neighborhood: address.neighborhood,
+        zipCode: address.zipCode,
+        city: address.city,
+        state: address.state,
+        country: address.country,
+      });
     }
   }
 
@@ -65,7 +76,7 @@ export class ProfileModel extends AggregateRoot {
   }
 
   get names(): string[] {
-    return this._entityRoot.names.map((name) => name._value);
+    return this._entityRoot.names.map((name): string => name._value);
   }
 
   get lastName(): string {
@@ -100,13 +111,13 @@ export class ProfileModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  public hydrate(entity: IProfileSchemaPrimitive) {
+  public hydrate(entity: IProfileSchemaPrimitives): void {
     //TODO: Handle a domain to emit an event
     if (entity.id) this._entityRoot.id = new Id(entity.id);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
 
     this._entityRoot.uuid = new UUID(entity.uuid);
-    this._entityRoot.names = entity.names.map((name) => new Name(name));
+    this._entityRoot.names = entity.names.map((name): Name => new Name(name));
     this._entityRoot.lastName = new LastName(entity.lastName);
     this._entityRoot.secondLastName = new SecondLastName(entity.secondLastName);
     this._entityRoot.phoneNumber = new PhoneNumber(entity.phoneNumber);
@@ -138,7 +149,7 @@ export class ProfileModel extends AggregateRoot {
     );
   }
 
-  public toPrimitives(): IProfileSchemaPrimitive {
+  public toPrimitives(): IProfileSchemaPrimitives {
     return {
       id: this.id,
       uuid: this.uuid,
@@ -163,9 +174,9 @@ export class ProfileModel extends AggregateRoot {
     };
   }
 
-  public update(entity: DeepPartial<IProfileBaseSchema>) {
+  public update(entity: DeepPartial<IProfileBaseSchema>): void {
     if (entity.names && entity.names.length > 0) {
-      this._entityRoot.names = entity.names.map((name) => new Name(name));
+      this._entityRoot.names = entity.names.map((name): Name => new Name(name));
     }
 
     if (entity.lastName) this._entityRoot.lastName = new LastName(entity.lastName);
@@ -192,7 +203,15 @@ export class ProfileModel extends AggregateRoot {
     }
   }
 
-  public archive() {
+  public archive(): void {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
+  }
+
+  public destroy(): void {
+    if (!this.archivedAt) {
+      throw new UserNotArchivedException(
+        `User with uuid ${this.uuid} cannot be destroyed because it is not archived`,
+      );
+    }
   }
 }
