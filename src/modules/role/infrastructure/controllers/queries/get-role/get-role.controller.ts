@@ -3,7 +3,7 @@ import { QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { GetRoleQuery } from '@role/application/query/use-cases/get-rol/get-role.query';
+import { GetRoleQuery } from '@role/application/queries/get-role/get-role.query';
 import { GetRoleInputDto } from '@role/infrastructure/controllers/queries/get-role/get-role-input.dto';
 import { GetRoleOutputDto } from '@role/infrastructure/controllers/queries/get-role/get-role-output.dto';
 
