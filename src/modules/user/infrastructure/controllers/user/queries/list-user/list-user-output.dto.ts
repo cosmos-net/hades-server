@@ -1,30 +1,43 @@
 import { PaginationOutputDto } from '@common/infrastructure/dtos/pagination-options/output-pagination.dto';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 
-interface IListUserOutputDto {
-  user: {
-    id: string;
-    uuid: string;
-    status: string;
-    account: {
-      username: string;
-      email: string;
-    };
-    profile: {
-      name: string;
-      lastName: string;
-      secondLastName: string;
-      phoneNumber: string;
-      gender: ProfileGenderEnum;
-      address: {
-        street: string;
-        city: string;
-        state: string;
-        country: string;
-        zipCode: string;
-      };
-    };
-  };
+export interface IAccount {
+  id: number;
+  uuid: string;
+  username: string;
+  email: string;
+}
+
+export interface IAddress {
+  street: string;
+  extNumber: string;
+  intNumber?: string | null;
+  neighborhood: string;
+  zipCode: string;
+  city: string;
+  state: string;
+  country: string;
+}
+
+export interface IProfile {
+  names: string[];
+  lastName: string;
+  secondLastName: string;
+  phoneNumber: string;
+  gender: ProfileGenderEnum;
+  address: IAddress;
+}
+
+export interface IUser {
+  id: number;
+  uuid: string;
+  status: string;
+}
+
+export interface IListUserOutputDto {
+  user: IUser;
+  profile: IProfile;
+  accounts: IAccount[];
 }
 
 export class ListUserOutputDto extends PaginationOutputDto<IListUserOutputDto> {
