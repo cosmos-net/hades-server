@@ -8,11 +8,11 @@ import {
   MAX_PROFILE_SECOND_LAST_NAME_LENGTH,
   ProfileGenderEnum,
 } from '@user/domain/constants/general-rules';
-import { IProfileSchemaPrimitive } from '@user/domain/schemas/profile/profile.schema-primitive';
+import { IProfileSchemaPrimitives } from '@user/domain/schemas/profile/profile.schema-primitive';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Entity('profiles')
-export class ProfileEntity extends TypeormBaseEntity implements IProfileSchemaPrimitive {
+export class ProfileEntity extends TypeormBaseEntity implements IProfileSchemaPrimitives {
   @PrimaryGeneratedColumn('identity', { type: 'int', name: 'id' })
   id: number;
 
