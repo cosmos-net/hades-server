@@ -22,7 +22,7 @@ export interface IProfileBaseSchema {
   address: IProfileAddressSchema;
 }
 
-export interface IProfileSchemaPrimitive extends IProfileBaseSchema {
+export interface IProfileSchemaPrimitives extends IProfileBaseSchema {
   id?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -31,7 +31,7 @@ export interface IProfileSchemaPrimitive extends IProfileBaseSchema {
 
 export interface IListProfileSchemaPrimitive {
   total: number;
-  items: IProfileSchemaPrimitive[];
+  items: IProfileSchemaPrimitives[];
 }
 
 export type DeepPartialProfileBaseSchema = DeepPartial<IProfileBaseSchema>;
