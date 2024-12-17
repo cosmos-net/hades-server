@@ -1,30 +1,44 @@
-# Usa una imagen base de Node.js
-FROM node:18-alpine
+# Etapa 1: Construcción
+FROM node:18-alpine AS builder
 
-# Establece el directorio de trabajo en el contenedor
-WORKDIR /usr/src/app
-
-# Copia el archivo package.json y pnpm-lock.yaml
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
-
-# Instala pnpm
+# Instalar pnpm globalmente
 RUN npm install -g pnpm
 
-# Instala las dependencias del proyecto
-RUN pnpm install
+# Establecer el directorio de trabajo
+WORKDIR /app
 
-# Copia el resto del código de la aplicación, excluyendo los archivos y directorios especificados en .dockerignore
+# Copiar dependencias
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --frozen-lockfile
+
+# Copiar el resto del código
 COPY . .
 
-# Compila la aplicación
+# Construir el proyecto
 RUN pnpm run build
 
-# Verifica que el archivo dist/main.js existe
-RUN ls -la /usr/src/app/dist
+# Etapa 2: Producción
+FROM node:18-alpine AS production
 
-# Expone el puerto en el que la aplicación se ejecutará
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Copiar dependencias de producción
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --prod --frozen-lockfile
+
+# Copiar los archivos construidos
+COPY --from=builder /app/dist ./dist
+COPY entrypoint.sh /app/entrypoint.sh
+
+# Dar permisos de ejecución al script
+RUN chmod +x /app/entrypoint.sh
+
+# Exponer el puerto
 EXPOSE ${PORT}
 
-# Comando para ejecutar las migraciones y luego iniciar la aplicación
-CMD ["sh", "-c", "pnpm run migration:run && pnpm run start:prod"]
+# Comando de inicio
+CMD ["sh", "/app/entrypoint.sh"]
