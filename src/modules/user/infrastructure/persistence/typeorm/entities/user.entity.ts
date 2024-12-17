@@ -1,6 +1,6 @@
 import { PrimaryGeneratedColumn, Column, OneToOne, OneToMany, Entity } from 'typeorm';
 
-import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
+import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';

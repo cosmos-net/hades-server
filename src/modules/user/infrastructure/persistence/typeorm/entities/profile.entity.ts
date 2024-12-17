@@ -1,7 +1,7 @@
 import { PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, Entity } from 'typeorm';
 
 import { Address } from '@common/infrastructure/persistence/typeorm/entities/typeorm-address.embeddable';
-import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
+import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import {
   MAX_PROFILE_LAST_NAME_LENGTH,
   MAX_PROFILE_PHONE_NUMBER_LENGTH,
