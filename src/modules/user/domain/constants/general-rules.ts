@@ -89,3 +89,49 @@ export const MIN_SESSION_ORIGIN_LENGTH = 5;
 
 export const MAX_SESSION_LOCATION_LENGTH = 255;
 export const MIN_SESSION_LOCATION_LENGTH = 5;
+
+// TODO: Use in value objects
+// TODO: Use in dtos
+// TODO: Use in entities
+export const SESSION = {
+  SESSION_ID: {
+    MAX_LENGTH: 255,
+    MIN_LENGTH: 1,
+  },
+  SESSION_TYPE: {
+    MAX_LENGTH: 50,
+    MIN_LENGTH: 1,
+  },
+  SESSION_DURATION: {
+    MAX_LENGTH: 50,
+    MIN_LENGTH: 1,
+  },
+  SESSION_CLOSED_TYPE: {
+    MAX_LENGTH: 50,
+    MIN_LENGTH: 1,
+  },
+  TOKEN: {
+    MAX_LENGTH: 1000,
+    MIN_LENGTH: 1,
+  },
+  IP_ADDRESS: {
+    MAX_LENGTH: 100,
+    MIN_LENGTH: 1,
+  },
+  REFRESH_TOKEN: {
+    MAX_LENGTH: 255,
+    MIN_LENGTH: 1,
+  },
+  USER_AGENT: {
+    MAX_LENGTH: 255,
+    MIN_LENGTH: 1,
+  },
+  ORIGIN: {
+    MAX_LENGTH: 100,
+    MIN_LENGTH: 1,
+  },
+  LOCATION: {
+    MAX_LENGTH: 100,
+    MIN_LENGTH: 1,
+  },
+};
