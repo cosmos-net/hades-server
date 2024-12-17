@@ -15,6 +15,7 @@ import {
 } from '@user/domain/schemas/account/account.schema-primitive';
 import Password from '@user/domain/value-object/account/password.vo';
 import Username from '@user/domain/value-object/account/username.vo';
+import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
 
 export class AccountModel extends AggregateRoot {
   private readonly _entityRoot: IAccountSchema;
@@ -125,6 +126,14 @@ export class AccountModel extends AggregateRoot {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
     if (this._entityRoot.sessions?.getTotal > 0) {
       this._entityRoot.sessions.archiveSessions();
+    }
+  }
+
+  public destroy(): void {
+    if (!this.archivedAt) {
+      throw new UserNotArchivedException(
+        `User with uuid ${this.uuid} cannot be destroyed because it is not archived`,
+      );
     }
   }
 }

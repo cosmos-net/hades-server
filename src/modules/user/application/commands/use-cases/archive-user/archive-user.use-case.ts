@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
 import { ArchiveUserCommand } from '@user/application/commands/use-cases/archive-user/archive-user.command';
+import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { ArchiveUserDomainService } from '@user/domain/domain-services/archive-user.domain-service';
@@ -17,16 +18,16 @@ export class ArchiveUserUseCase implements ICommandHandler<ArchiveUserCommand> {
     private readonly repository: IUserRepositoryContract,
   ) {}
 
-  async execute(command: ArchiveUserCommand): Promise<UserModel> {
+  async execute(command: ArchiveUserCommand): Promise<UserAggregate> {
     const { uuid } = command;
 
-    const userModel = await this.archiveUserDomainService.go(uuid);
-    const user = this.publisher.mergeObjectContext(userModel);
+    const userAggregate = await this.archiveUserDomainService.go(uuid);
+    const userContext = this.publisher.mergeObjectContext(userAggregate);
 
     await this.repository.archive(uuid);
 
-    user.commit();
+    userContext.commit();
 
-    return user;
+    return userContext;
   }
 }

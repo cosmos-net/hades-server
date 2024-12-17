@@ -4,12 +4,13 @@ import { Repository, EntityManager } from 'typeorm';
 
 import { Criteria } from '@common/domain/criteria/criteria';
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
+import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
-import { ListUserModel } from '@user/domain/models/user/user-list.model';
 import { UserModel } from '@user/domain/models/user/user.model';
+import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
@@ -28,27 +29,44 @@ export class UserTypeormRepository
   }
 
   async persist(userAggregate: UserAggregate): Promise<UserAggregate> {
-    return await this.entityManager.transaction(async (manager: EntityManager) => {
-      const savedUser = await manager.save(UserEntity, userAggregate.userModel.toPrimitives());
+    return await this.entityManager.transaction(
+      async (manager: EntityManager): Promise<UserAggregate> => {
+        const user = userAggregate.userModel.toPrimitives();
+        const profile = userAggregate.profileModel.toPrimitives();
+        const accounts = userAggregate.accountsModel.map(
+          (account): IAccountSchemaPrimitives => account.toPrimitives(),
+        );
 
-      const savedProfile = await manager.save(
-        ProfileEntity,
-        userAggregate.profileModel.toPrimitives(),
-      );
+        // Save or update user entity
+        const savedUser = await manager.save(UserEntity, user);
 
-      const savedAccounts = await manager.save(
-        AccountEntity,
-        userAggregate.accountsModel.map((account) => account.toPrimitives()),
-      );
+        // Set foreign key for profile entity
+        const savedProfile = await manager.save(ProfileEntity, {
+          ...profile,
+          user: savedUser,
+        });
 
-      userAggregate.hydrate({
-        userModel: new UserModel(savedUser),
-        profileModel: new ProfileModel(savedProfile),
-        accountsModel: savedAccounts.map((account) => new AccountModel(account)),
-      });
+        // Set foreign key for each account entity
+        const savedAccounts = [];
+        for (const account of accounts) {
+          const savedAccount = await manager.save(AccountEntity, {
+            ...account,
+            user: savedUser,
+          });
 
-      return userAggregate;
-    });
+          savedAccounts.push(savedAccount);
+        }
+
+        // Hydrate the aggregate with the saved entities
+        userAggregate.hydrate({
+          userModel: new UserModel(savedUser),
+          profileModel: new ProfileModel(savedProfile),
+          accountsModel: savedAccounts.map((account): AccountModel => new AccountModel(account)),
+        });
+
+        return userAggregate;
+      },
+    );
   }
 
   async archive(uuid: string): Promise<boolean> {
@@ -74,7 +92,7 @@ export class UserTypeormRepository
 
     const user = new UserModel(entity);
     const profile = new ProfileModel(entity.profile);
-    const accounts = entity.accounts.map((account) => new AccountModel(account));
+    const accounts = entity.accounts.map((account): AccountModel => new AccountModel(account));
 
     const userAggregate = new UserAggregate({
       userModel: user,
@@ -85,16 +103,26 @@ export class UserTypeormRepository
     return userAggregate;
   }
 
-  async matching(criteria: Criteria): Promise<ListUserModel> {
+  async matching(criteria: Criteria): Promise<ListUserAggregate> {
     const query = this.getQueryByCriteria(criteria);
 
     const [items, total] = await this.repository.findAndCount(query);
 
-    const listUserModel = new ListUserModel({
-      items,
-      total,
+    const userAggregate = items.map((item): UserAggregate => {
+      const user = new UserModel(item);
+      const profile = new ProfileModel(item.profile);
+      const accounts = item.accounts.map((account): AccountModel => new AccountModel(account));
+
+      return new UserAggregate({
+        userModel: user,
+        profileModel: profile,
+        accountsModel: accounts,
+      });
     });
 
-    return listUserModel;
+    return new ListUserAggregate({
+      items: userAggregate,
+      total,
+    });
   }
 }
