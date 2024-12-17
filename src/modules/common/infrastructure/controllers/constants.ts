@@ -17,5 +17,6 @@ export const CMDS_HADES = {
   },
   SESSION: {
     CREATE: 'HADES.CREATE.SESSION',
+    ARCHIVE: 'HADES.ARCHIVE.SESSION',
   },
 };
