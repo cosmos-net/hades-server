@@ -1,9 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
+import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import { SESSION } from '@user/domain/constants/general-rules';
 import { ISessionSchemaPrimitive } from '@user/domain/schemas/session/session.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
+import { Length } from 'class-validator';
 
 @Entity('sessions')
 export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPrimitive {
@@ -25,7 +26,8 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   @Column({ type: 'varchar', length: SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH })
   sessionClosedType: string;
 
-  @Column({ type: 'text', length: SESSION.TOKEN.MAX_LENGTH })
+  @Column({ type: 'text' })
+  @Length(SESSION.TOKEN.MIN_LENGTH, SESSION.TOKEN.MAX_LENGTH)
   token: string;
 
   @Column({ type: 'timestamp' })
@@ -40,7 +42,8 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   @Column({ type: 'varchar', length: SESSION.IP_ADDRESS.MAX_LENGTH })
   ipAddress: string;
 
-  @Column({ type: 'text', length: SESSION.REFRESH_TOKEN.MAX_LENGTH })
+  @Column({ type: 'text'})
+  @Length(SESSION.REFRESH_TOKEN.MIN_LENGTH, SESSION.REFRESH_TOKEN.MAX_LENGTH)
   refreshToken: string;
 
   @Column({ type: 'varchar', length: SESSION.USER_AGENT.MAX_LENGTH })
