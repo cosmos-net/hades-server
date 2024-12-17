@@ -4,7 +4,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { CreateSessionCommand } from '@user/application/commands/use-cases/session/create-session.command';
+import { CreateSessionCommand } from '@user/application/commands/use-cases/session/create-session/create-session.command';
 import { CreateSessionInput } from '@user/infrastructure/controllers/session/commands/create-session/create-session-input.dto';
 import { CreateSessionOutputDto } from '@user/infrastructure/controllers/session/commands/create-session/create-session-output.dto';
 
