@@ -10,14 +10,18 @@ import { TransformInterceptor } from '@core/infrastructure/framework/globals/tra
 import { ValidationPipeWithExceptionFactory } from '@core/infrastructure/framework/globals/validation-pipe.global';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(CoreModule, {
-    transport: Transport.NATS,
-    options: {
-      url: 'nats://localhost:4222',
-    },
-  });
+  const app = await NestFactory.create(CoreModule);
 
   const configService = app.get(ConfigService);
+  const natsUrl = configService.get<string>('NATS_URL');
+  const port = configService.get<number>('PORT');
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.NATS,
+    options: {
+      url: natsUrl || 'nats://localhost:4222',
+    },
+  });
 
   app.useGlobalPipes(
     new ValidationPipeWithExceptionFactory(),
@@ -27,7 +31,8 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new TransformInterceptor(), new TimeOutInterceptor());
   app.useGlobalFilters(new ExceptionFilter(configService));
 
-  await app.listen();
+  await app.startAllMicroservices();
+  await app.listen(port);
 }
 
 bootstrap();
