@@ -9,7 +9,7 @@ import { CreateRoleDomainService } from '@role/domain/domain-service/create-role
 
 @Injectable()
 @CommandHandler(CreateRoleCommand)
-export class CreateRolUseCase implements ICommandHandler<CreateRoleCommand> {
+export class CreateRoleUseCase implements ICommandHandler<CreateRoleCommand> {
   constructor(
     private readonly createRoleDomainService: CreateRoleDomainService,
     private readonly publisher: EventPublisher,

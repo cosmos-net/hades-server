@@ -9,7 +9,7 @@ import { UpdateUserDomainService } from '@user/domain/domain-services/update-use
 
 @Injectable()
 @CommandHandler(UpdateUserCommand)
-export class UpdateRolUseCase implements ICommandHandler<UpdateUserCommand> {
+export class UpdateUserUseCase implements ICommandHandler<UpdateUserCommand> {
   constructor(
     private readonly UpdateUserDomainService: UpdateUserDomainService,
     private readonly publisher: EventPublisher,
