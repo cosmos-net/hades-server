@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { CreateRolUseCase } from '@role/application/commands/use-cases/create-role/create-role.use-case';
+import { ArchiveRoleUseCase } from '@role/application/commands/use-cases/archive-role/archive-role.use-case';
+import { CreateRoleUseCase } from '@role/application/commands/use-cases/create-role/create-role.use-case';
+import { UpdateRoleUseCase } from '@role/application/commands/use-cases/update-role/update-role.use-case';
+import { GetRoleUseCase } from '@role/application/queries/get-role/get-role.use-case';
+import { ListRoleUseCase } from '@role/application/queries/list-role/list-role.use-case';
 import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { ArchiveRoleDomainService } from '@role/domain/domain-service/archive-role.domain-service';
 import { CreateRoleDomainService } from '@role/domain/domain-service/create-role.domain-service';
@@ -14,60 +17,48 @@ import { CreateRoleController } from '@role/infrastructure/controllers/commands/
 import { RoleReDescribedEventHandler } from '@role/infrastructure/events-handler/success/role-redescribed.event-handler';
 import { RoleEntity } from '@role/infrastructure/persistence/entities/role.entity';
 import { RoleTypeormRepository } from '@role/infrastructure/persistence/repositories/role-typeorm.repository';
+import { ArchiveRoleController } from '@role/infrastructure/controllers/commands/archive-role/archive-role.controller';
+import { DestroyRoleController } from '@role/infrastructure/controllers/commands/destroy-role/destroy-role.controller';
+import { UpdateRoleController } from '@role/infrastructure/controllers/commands/update-role/update-role.controller';
+import { GetRoleController } from '@role/infrastructure/controllers/queries/get-role/get-role.controller';
+import { ListRoleController } from '@role/infrastructure/controllers/queries/list-role/list-role.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoleEntity]), CqrsModule],
-  controllers: [CreateRoleController],
+  imports: [
+    TypeOrmModule.forFeature([RoleEntity]),
+    CqrsModule,
+  ],
   providers: [
+    // UseCases
+    CreateRoleUseCase,
+    UpdateRoleUseCase,
+    ArchiveRoleUseCase,
+    DestroyRoleDomainService,
+    GetRoleUseCase,
+    ListRoleUseCase,
+    // Domain Services
+    RoleTypeormRepository,
+    CreateRoleDomainService,
+    UpdateRoleDomainService,
+    ArchiveRoleDomainService,
+    GetRoleDomainService,
+    ListRoleDomainService,
+    // Event Handlers
+    RoleReDescribedEventHandler,
+    // Repositories
     {
       provide: ROLE_REPOSITORY,
       useClass: RoleTypeormRepository,
     },
-    {
-      provide: CreateRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository): CreateRoleDomainService => {
-        return new CreateRoleDomainService(roleRepository);
-      },
-      inject: [RoleTypeormRepository],
-    },
-    {
-      provide: UpdateRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository): UpdateRoleDomainService => {
-        return new UpdateRoleDomainService(roleRepository);
-      },
-      inject: [RoleTypeormRepository],
-    },
-    {
-      provide: ArchiveRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository): ArchiveRoleDomainService => {
-        return new ArchiveRoleDomainService(roleRepository);
-      },
-      inject: [RoleTypeormRepository],
-    },
-    {
-      provide: DestroyRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository): DestroyRoleDomainService => {
-        return new DestroyRoleDomainService(roleRepository);
-      },
-      inject: [RoleTypeormRepository],
-    },
-    {
-      provide: GetRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository): GetRoleDomainService => {
-        return new GetRoleDomainService(roleRepository);
-      },
-      inject: [RoleTypeormRepository],
-    },
-    {
-      provide: ListRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository): ListRoleDomainService => {
-        return new ListRoleDomainService(roleRepository);
-      },
-      inject: [RoleTypeormRepository],
-    },
-    CreateRolUseCase,
-    RoleTypeormRepository,
-    RoleReDescribedEventHandler,
   ],
+  controllers: [
+    CreateRoleController,
+    UpdateRoleController,
+    ArchiveRoleController,
+    DestroyRoleController,
+    GetRoleController,
+    ListRoleController,
+  ],
+  exports: [],
 })
 export class RoleModule {}
