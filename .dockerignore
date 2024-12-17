@@ -5,3 +5,5 @@ dist
 .env.local
 Dockerfile
 docker-compose.yml
+.dockerignore
+*.log
