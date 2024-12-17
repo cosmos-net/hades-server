@@ -1,7 +1,7 @@
 import { DomainEventHandler } from '@common/domain/events/domain-events-handler';
 import DomainException from '@common/domain/exceptions/domain.exception';
 import ValidationDomainException from '@common/domain/exceptions/validation.exception';
-import { UserNotFoundException } from '@user/domain/exceptions/user-not-found.exceptions';
+import { UserNotFoundException } from '@user/domain/exceptions/user-not-found.exception';
 
 export class ExceptionFactory {
   static createException(type: string, details: string): void {

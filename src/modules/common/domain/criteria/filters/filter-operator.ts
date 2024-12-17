@@ -21,6 +21,6 @@ export class FilterOperator extends EnumValueObject<OperatorsEnum> {
   }
 
   public getValue(): OperatorsEnum {
-    return this.value;
+    return this._value;
   }
 }
