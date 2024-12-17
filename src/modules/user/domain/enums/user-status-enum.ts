@@ -5,5 +5,5 @@ export enum StatusEnum {
   SUSPENDED = 'Suspended',
   ARCHIVED = 'Archived',
   BANNED = 'Banned',
-  UNDERREVIEW = 'UnderReview',
+  UNDER_REVIEW = 'UnderReview',
 }

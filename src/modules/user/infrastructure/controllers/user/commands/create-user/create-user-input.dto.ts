@@ -5,9 +5,9 @@ import { AccountDTO } from '@user/infrastructure/controllers/user/commands/creat
 import { ProfileDTO } from '@user/infrastructure/controllers/user/commands/create-user/dtos/profile.dto';
 
 export class CreateUserInput {
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => AccountDTO)
-  public readonly account: AccountDTO;
+  public readonly account: AccountDTO[];
 
   @ValidateNested()
   @Type(() => ProfileDTO)

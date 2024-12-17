@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, Length, IsEmail, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsEmail, IsOptional, IsUUID } from 'class-validator';
 
 import {
   MAX_ACCOUNT_USER_NAME_LENGTH,
@@ -10,6 +10,9 @@ import {
 } from '@user/domain/constants/general-rules';
 
 export class AccountDTO {
+  @IsUUID()
+  public readonly uuid: string;
+
   @IsOptional()
   @IsString()
   @IsNotEmpty()
