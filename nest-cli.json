@@ -4,6 +4,9 @@
   "sourceRoot": "src/modules",
   "entryFile": "core/infrastructure/framework/main",
   "compilerOptions": {
-    "deleteOutDir": true
+    "watchAssets": true,
+    "deleteOutDir": true,
+    "assets": ["**/*.js"],
+    "webpack": false
   }
 }
