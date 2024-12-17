@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env.docker
+    environment:
+      POSTGRES_USER: ${DB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRES_PASS}
+      POSTGRES_DB: ${DB_POSTGRES_NAME}
+    ports:
+      - "${DB_POSTGRES_PORT}:${DB_POSTGRES_PORT}"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      - db
+      - nats
+    env_file:
+      - .env.docker
+    environment:
+      DB_POSTGRES_HOST: ${DB_POSTGRES_HOST}
+      DB_POSTGRES_PORT: ${DB_POSTGRES_PORT}
+      DB_POSTGRES_USER: ${DB_POSTGRES_USER}
+      DB_POSTGRES_PASS: ${DB_POSTGRES_PASS}
+      DB_POSTGRES_NAME: ${DB_POSTGRES_NAME}
+      DB_POSTGRES_SYNC: ${DB_POSTGRES_SYNC}
+      DB_POSTGRES_LOGGING: ${DB_POSTGRES_LOGGING}
+      DB_POSTGRES_SSL: ${DB_POSTGRES_SSL}
+      NATS_URL: ${NATS_URL}
+    ports:
+      - "${PORT}:${PORT}"
+
+  nats:
+    image: nats:latest
+    ports:
+    - ${NATS_PORT_EXT}:${NATS_PORT_INT}
+    environment:
+    - NATS_LOG_LEVEL=debug
+
+volumes:
+  db-data:
