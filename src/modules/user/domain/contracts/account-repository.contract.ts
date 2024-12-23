@@ -1,4 +1,4 @@
-export interface IAccountRepositoryContract {
-  isUsernameAvailable(username: string): Promise<boolean>;
-  isEmailAvailable(email: string): Promise<boolean>;
+export abstract class IAccountRepositoryContract {
+  abstract isUsernameAvailable(username: string): Promise<boolean>;
+  abstract isEmailAvailable(email: string): Promise<boolean>;
 }
