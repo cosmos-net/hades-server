@@ -6,8 +6,8 @@ import { Criteria } from '@common/domain/criteria/criteria';
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { ListRoleModel } from '@role/domain/models/role-list.model';
-import { RoleModel } from '@role/domain/models/role.model';
 import { RoleEntity } from '@role/infrastructure/persistence/entities/role.entity';
+import { RoleModel } from '@role/domain/models/role.model';
 
 @Injectable()
 export class RoleTypeormRepository
@@ -26,24 +26,39 @@ export class RoleTypeormRepository
     return !role;
   }
 
-  persist<RoleModel>(model: RoleModel): Promise<RoleModel> {
-    return this.repository.save(model);
+  async persist(model: RoleModel): Promise<RoleModel> {
+    const primitives = model.toPartialPrimitives();
+    const entity = await this.repository.save(primitives);
+    const roleModel = new RoleModel(entity);
+
+    return roleModel;
   }
 
   async archive(uuid: string): Promise<boolean> {
-    const result = await this.repository.softDelete(uuid);
+    const result = await this.repository.softDelete({
+      uuid,
+    });
 
     return result.affected > 0;
   }
 
   async destroy(uuid: string): Promise<boolean> {
-    const result = await this.repository.delete(uuid);
+    const result = await this.repository.delete({uuid});
 
     return result.affected > 0;
   }
 
-  async getOneBy(uuid: string): Promise<RoleModel> {
-    const entity = await this.repository.findOneBy({ uuid });
+  async getOneBy(uuid: string, options?: { withDeleted: false }): Promise<RoleModel | null> {
+    const entity = await this.repository.findOne(
+      {
+        where: { uuid },
+        ...(options?.withDeleted ? { withDeleted: true } : {}),
+      }
+    );
+
+    if (!entity) {
+      return null;
+    }
 
     const model = new RoleModel(entity);
 
