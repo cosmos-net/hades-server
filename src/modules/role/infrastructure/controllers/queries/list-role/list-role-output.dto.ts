@@ -1,7 +1,7 @@
 import { PaginationOutputDto } from '@common/infrastructure/dtos/pagination-options/output-pagination.dto';
 
 interface IListRoleOutputDto {
-  id: number;
+  id?: number;
   uuid: string;
   name: string;
   description?: string;
