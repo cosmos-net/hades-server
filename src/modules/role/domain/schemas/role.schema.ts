@@ -7,10 +7,10 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 
 export interface IRoleSchema {
-  id: Id;
+  id?: Id;
   uuid: UUID;
   name: Name;
-  description: Description;
+  description?: Description;
   createdAt: CreatedAt;
   updatedAt: UpdatedAt;
   archivedAt: ArchivedAt;
