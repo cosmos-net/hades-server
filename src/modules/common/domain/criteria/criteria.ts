@@ -1,7 +1,7 @@
 import { Filters } from '@common/domain/criteria/filters/filters';
 import { Order } from '@common/domain/criteria/orders/order';
 import { OrderTypeEnum } from '@common/domain/criteria/orders/order-type-enum';
-import { Primitives } from '@common/domain/value-object/types/value-object';
+import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 
 export class Criteria {
   public readonly filters: Filters;
@@ -10,7 +10,7 @@ export class Criteria {
   public readonly offset: number;
 
   constructor(
-    filters: Array<Map<string, Primitives>>,
+    filters: Array<Map<string, PrimitivesType>>,
     orderBy: string,
     orderType: OrderTypeEnum,
     limit: number,
