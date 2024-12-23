@@ -6,7 +6,7 @@
   "compilerOptions": {
     "watchAssets": true,
     "deleteOutDir": true,
-    "assets": ["**/*.js"],
+    "assets": ["**/*.js", "**/*.json", "**/*.yaml"],
     "webpack": false
   }
 }
