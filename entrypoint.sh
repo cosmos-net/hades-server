@@ -1,10 +1,12 @@
 #!/bin/sh
+
+# Exit immediately if a command exits with a non-zero status
 set -e
 
-# Ejecutar migraciones
-echo "Ejecutando migraciones..."
+# Run TypeORM migrations
 pnpm run typeorm:migration:run
 
-# Iniciar la aplicación
-echo "Iniciando la aplicación..."
+# Start the application
 pnpm run start:prod
+
+exec "$@"
