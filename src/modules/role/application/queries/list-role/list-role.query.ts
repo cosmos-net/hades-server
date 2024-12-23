@@ -1,7 +1,7 @@
 import { IQuery } from '@nestjs/cqrs';
 
 import { OrderTypeEnum } from '@common/domain/criteria/orders/order-type-enum';
-import { Primitives } from '@common/domain/value-object/types/value-object';
+import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 import { ListOrderByTypes } from '@role/infrastructure/controllers/queries/list-role/list-role-input.dto';
 
 export class ListRoleQuery implements IQuery {
@@ -13,7 +13,7 @@ export class ListRoleQuery implements IQuery {
 
   public readonly offset: number;
 
-  public readonly filtersMap: Array<Map<string, Primitives>>;
+  public readonly filtersMap: Array<Map<string, PrimitivesType>>;
 
   constructor(props: ListRoleQuery) {
     this.orderType = props.orderType;
