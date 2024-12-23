@@ -20,7 +20,6 @@ import { UserModule } from '@user/infrastructure/framework/user.module';
       useFactory: (configService: ConfigService): TypeOrmModuleAsyncOptions => {
         const db = configService.get<PostgresType>('postgres');
         const namingStrategy = new DefaultNamingStrategy();
-
         return {
           type: db.type,
           host: db.host,
