@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Servicio de PostgreSQL
   db:
-    image: postgres:15
+    image: postgres:latest
     container_name: postgres-db
     ports:
       - "5432:5432"
@@ -13,16 +13,25 @@ services:
       POSTGRES_DB: ${DB_POSTGRES_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Servicio de NATS
   nats-server:
-    image: nats:2.9.15
+    image: nats:latest
     container_name: nats-broker
     ports:
-      - "${NATS_PORT_EXT}:${NATS_PORT_INT}"
+      - "4223:4222"
     environment:
       - NATS_HOST=${NATS_HOST}
       - NATS_PROTOCOL=${NATS_PROTOCOL}
+    networks:
+      - app-network
 
   # Servicio de tu microservicio NestJS
   app:
@@ -35,6 +44,8 @@ services:
     depends_on:
       - db
       - nats-server
+    networks:
+      - app-network
     environment:
       # Variables de entorno para PostgreSQL
       DB_POSTGRES_HOST: db
@@ -51,16 +62,22 @@ services:
       DB_POSTGRES_MIGRATIONS_TABLE_NAME: ${DB_POSTGRES_MIGRATIONS_TABLE_NAME}
 
       # Variables de entorno para NATS
-      NATS_HOST: nats-server
-      NATS_PROTOCOL: ${NATS_PROTOCOL}
-      NATS_PORT: ${NATS_PORT_INT}
-      NATS_URL: nats://${NATS_HOST}:${NATS_PORT_INT}
+      NATS_URL: nats://nats-server:4222
 
       # Variables de entorno para el servidor
       PORT: ${PORT:-3000}
-    volumes:
-      - ./src:/app/src
-    command: sh -c "pnpm run typeorm:migration:run && pnpm run start:prod"
+
+    command: >
+      bash -c "
+        /usr/local/bin/wait-for-it.sh db:${DB_POSTGRES_PORT} -t 60 --
+        /usr/local/bin/wait-for-it.sh nats-server:4222 --
+        pnpm run typeorm:migration:run &&
+        pnpm run start:prod
+      "
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
