@@ -1,11 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { DestroyRoleCommand } from '@role/application/commands/use-cases/destroy-role/destroy-role.command';
 import { DestroyRoleInputDto } from '@role/infrastructure/controllers/commands/destroy-role/destroy-role-input.dto';
 import { DestroyRoleOutputDto } from '@role/infrastructure/controllers/commands/destroy-role/destroy-role-output.dto';
+import { RoleModel } from '@role/domain/models/role.model';
 
 @Controller()
 export class DestroyRoleController {
@@ -13,6 +14,12 @@ export class DestroyRoleController {
 
   @MessagePattern({ cmd: CMDS_HADES.ROLE.DESTROY })
   async create(@Payload() destroyRoleInputDto: DestroyRoleInputDto): Promise<DestroyRoleOutputDto> {
-    return this.commandBus.execute(new DestroyRoleCommand({ uuid: destroyRoleInputDto.uuid }));
+    try {
+      const result = await this.commandBus.execute<DestroyRoleCommand, RoleModel>(new DestroyRoleCommand({ uuid: destroyRoleInputDto.uuid }));
+
+      return new DestroyRoleOutputDto(!!result);
+    } catch (error: any) {
+      throw new RpcException(error);
+    }
   }
 }
