@@ -17,7 +17,7 @@ export class TypeormBaseEntity {
 
   @DeleteDateColumn({
     type: 'timestamp',
-    name: 'deletedAt',
+    name: 'archivedAt',
     nullable: true,
   })
   archivedAt: Date | null;
