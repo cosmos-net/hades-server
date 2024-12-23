@@ -1,12 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { CreateRoleCommand } from '@role/application/commands/use-cases/create-role/create-role.command';
 import { CreateRoleInput } from '@role/infrastructure/controllers/commands/create-role/create-role-input.dto';
 import { CreateRoleOutputDto } from '@role/infrastructure/controllers/commands/create-role/create-role-output.dto';
+import { RoleModel } from '@role/domain/models/role.model';
 
 @Controller()
 export class CreateRoleController {
@@ -14,8 +15,13 @@ export class CreateRoleController {
 
   @MessagePattern({ cmd: CMDS_HADES.ROLE.CREATE })
   async create(@Payload() createRoleDto: CreateRoleInput): Promise<CreateRoleOutputDto> {
-    const uuid = UUIDv4();
-
-    return this.commandBus.execute(new CreateRoleCommand({ ...createRoleDto, uuid }));
+    try {
+      const uuid = UUIDv4();
+      const result = await this.commandBus.execute<CreateRoleCommand, RoleModel>(new CreateRoleCommand({ ...createRoleDto, uuid }));
+      
+      return new CreateRoleOutputDto(result);
+    } catch (error: any) {
+      throw new RpcException(error);
+    }
   }
 }
