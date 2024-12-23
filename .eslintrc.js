@@ -97,7 +97,7 @@ module.exports = {
         format: ['camelCase'],
       },
       {
-        selector: 'typeLike',
+        selector: 'type',
         format: ['PascalCase'],
         custom: {
           regex: '.*Type$',
