@@ -12,5 +12,5 @@ export const mainConfigOptions: ConfigModuleOptions = {
     allowUnknown: true,
     abortEarly: true,
   },
-  envFilePath: ['.env', '.env.local', '.env.test'],
+  envFilePath: ['.env.local', '.env.test'],
 };
