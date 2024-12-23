@@ -16,7 +16,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_POSTGRES_PASS,
   database: process.env.DB_POSTGRES_NAME,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  migrations: [__dirname + '/src/migrations/*{.ts,.js}'],
   synchronize: process.env.DB_POSTGRES_SYNC === 'true',
   logging: process.env.DB_POSTGRES_LOGGING === 'true',
   ssl: process.env.DB_POSTGRES_SSL === 'true',
