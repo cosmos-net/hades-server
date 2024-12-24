@@ -8,6 +8,7 @@ export class Criteria {
   public readonly order: Order;
   public readonly limit: number;
   public readonly offset: number;
+  public readonly withArchived: boolean;
 
   constructor(
     filters: Array<Map<string, PrimitivesType>>,
@@ -15,11 +16,13 @@ export class Criteria {
     orderType: OrderTypeEnum,
     limit: number,
     offset: number,
+    withArchived?: boolean | undefined,
   ) {
     this.filters = Filters.create(filters);
     this.order = Order.create(orderBy, orderType);
     this.limit = limit;
     this.offset = offset;
+    this.withArchived = withArchived;
   }
 
   public hasFilters(): boolean {
@@ -28,5 +31,9 @@ export class Criteria {
 
   public hasOrder(): boolean {
     return this.order.hasOrder();
+  }
+
+  public hasWithArchived(): boolean {
+    return this.withArchived;
   }
 }
