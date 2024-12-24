@@ -115,16 +115,6 @@ export class ListRoleInputDto extends InputPaginationDto {
       filtersMapper.push(map);
     }
 
-    if (this.withArchived !== undefined) {
-      const map: IKeysFilterMap = {
-        field: 'archivedAt',
-        value: this.withArchived,
-        operator: OperatorsEnum.WI_DEL,
-      };
-
-      filtersMapper.push(map);
-    }
-
     if (this.createdAtFrom && this.createdAtTo) {
       const mapCreatedAtFrom: IKeysFilterMap = {
         field: 'createdAt',

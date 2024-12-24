@@ -12,9 +12,9 @@ export class ListRoleUseCase implements IQueryHandler<ListRoleQuery, ListRoleMod
   constructor(private readonly listRoleDomainService: ListRoleDomainService) {}
 
   async execute(query: ListRoleQuery): Promise<ListRoleModel> {
-    const { orderType, orderBy, limit, offset, filtersMap } = query;
+    const { orderType, orderBy, limit, offset, withArchived, filtersMap } = query;
 
-    const criteria = new Criteria(filtersMap, orderBy, orderType, limit, offset);
+    const criteria = new Criteria(filtersMap, orderBy, orderType, limit, offset, withArchived);
 
     const roles = await this.listRoleDomainService.go(criteria);
 
