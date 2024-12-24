@@ -9,6 +9,7 @@ interface IError {
   message?: string;
   name?: string;
   status?: number;
+  stack?: string;
 }
 
 interface IBodyResponse {
@@ -41,10 +42,11 @@ export class MicroserviceExceptionFilter implements RpcExceptionFilter<RpcExcept
     }
 
     if (typeof error === 'object') {
-      const message = (error as IError).message ?? 'Internal Server Error';
-      const name = (error as IError).name ?? 'Error';
-      const status = (error as IError).status ?? 500;
-      const stack = (error as IBodyResponse).stack ?? '';
+      const errorDetails = typeof bodyResponse.error === 'object' ? bodyResponse.error : { message: 'Internal Server Error', name: 'Error', status: 500, stack: '' };
+      const message = errorDetails.message ?? 'Internal Server Error';
+      const name = errorDetails.name ?? 'Error';
+      const status = errorDetails.status ?? 500;
+      const stack = (error as IError).stack ?? '';
 
       bodyResponse = {
         ...bodyResponse,
