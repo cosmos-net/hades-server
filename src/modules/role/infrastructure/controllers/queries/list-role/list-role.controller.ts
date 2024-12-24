@@ -15,7 +15,7 @@ export class ListRoleController {
   @MessagePattern({ cmd: CMDS_HADES.ROLE.LIST })
   async list(@Payload() listRoleDto: ListRoleInputDto): Promise<ListRoleOutputDto> {
     try {
-      const { orderType, orderBy, page, limit, offset } = listRoleDto;
+      const { orderType, orderBy, page, limit, offset, withArchived } = listRoleDto;
       const filtersMap = listRoleDto.toFilterMap();
 
       const result = await this.queryBus.execute<ListRoleQuery, ListRoleModel>(
@@ -24,6 +24,7 @@ export class ListRoleController {
           orderBy,
           limit,
           offset,
+          withArchived,
           filtersMap,
         }),
       );

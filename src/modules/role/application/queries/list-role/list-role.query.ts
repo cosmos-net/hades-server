@@ -13,6 +13,8 @@ export class ListRoleQuery implements IQuery {
 
   public readonly offset: number;
 
+  public readonly withArchived: boolean;
+
   public readonly filtersMap: Array<Map<string, PrimitivesType>>;
 
   constructor(props: ListRoleQuery) {
@@ -20,6 +22,7 @@ export class ListRoleQuery implements IQuery {
     this.orderBy = props.orderBy;
     this.limit = props.limit;
     this.offset = props.offset;
+    this.withArchived = props.withArchived;
     this.filtersMap = props.filtersMap;
   }
 }
