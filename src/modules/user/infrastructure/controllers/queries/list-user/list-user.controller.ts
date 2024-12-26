@@ -5,12 +5,12 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { ListUserQuery } from '@user/application/queries/use-cases/list-user/list-user.query';
 import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
-import { ListUserInputDto } from '@user/infrastructure/controllers/user/queries/list-user/list-user-input.dto';
+import { ListUserInputDto } from '@user/infrastructure/controllers/queries/list-user/list-user-input.dto';
 import {
   IAccount,
   IListUserOutputDto,
   ListUserOutputDto,
-} from '@user/infrastructure/controllers/user/queries/list-user/list-user-output.dto';
+} from '@user/infrastructure/controllers/queries/list-user/list-user-output.dto';
 
 @Controller()
 export class ListUserController {
