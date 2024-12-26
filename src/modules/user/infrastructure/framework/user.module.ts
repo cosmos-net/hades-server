@@ -22,7 +22,7 @@ import { GetUserController } from '@user/infrastructure/controllers/user/queries
 import { ListUserController } from '@user/infrastructure/controllers/user/queries/list-user/list-user.controller';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
-import { SessionEntity } from '@user/infrastructure/persistence/typeorm/entities/session.entity';
+import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/user-typeorm.repository';
 

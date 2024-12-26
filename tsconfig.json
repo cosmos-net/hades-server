@@ -54,6 +54,12 @@
       "@role/*": [
         "src/modules/role/*"
       ],
+      "@session": [
+        "src/modules/session/"
+      ],
+      "@session/*": [
+        "src/modules/session/*"
+      ],
       "@assignment": [
         "src/modules/assignment/"
       ],

@@ -1,0 +1,41 @@
+import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
+import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
+import Id from '@common/domain/value-object/vos/id.vo';
+import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
+import UUID from '@common/domain/value-object/vos/uuid.vo';
+import ExpiresIn from '@session/domain/value-objects/session/expires-in.vo';
+import SessionFailedAttempts from '@session/domain/value-objects/session/failed-attempts.vo';
+import SessionIpAddress from '@session/domain/value-objects/session/ip-address.vo';
+import SessionLocation from '@session/domain/value-objects/session/location.vo';
+import LoggedInAt from '@session/domain/value-objects/session/logged-in-at.vo';
+import LoggedOutAt from '@session/domain/value-objects/session/logged-out-at.vo';
+import SessionOrigin from '@session/domain/value-objects/session/origin.vo';
+import SessionRefreshToken from '@session/domain/value-objects/session/refresh-token.vo';
+import SessionClosedType from '@session/domain/value-objects/session/session-closed-type.vo';
+import SessionDuration from '@session/domain/value-objects/session/session-duration.vo';
+import SessionId from '@session/domain/value-objects/session/session-id.vo';
+import SessionType from '@session/domain/value-objects/session/session-type.vo';
+import SessionToken from '@session/domain/value-objects/session/token.vo';
+import SessionUserAgent from '@session/domain/value-objects/session/user-agent.vo';
+
+export interface ISessionSchema {
+  id: Id;
+  uuid: UUID;
+  sessionId: SessionId;
+  sessionType: SessionType;
+  sessionDuration: SessionDuration;
+  sessionClosedType: SessionClosedType;
+  token: SessionToken;
+  expiresIn: ExpiresIn;
+  loggedInAt: LoggedInAt;
+  loggedOutAt: LoggedOutAt;
+  ipAddress: SessionIpAddress;
+  refreshToken: SessionRefreshToken;
+  userAgent: SessionUserAgent;
+  failedAttempts: SessionFailedAttempts;
+  origin: SessionOrigin;
+  location: SessionLocation;
+  createdAt: CreatedAt;
+  updatedAt: UpdatedAt;
+  archivedAt: ArchivedAt;
+}
