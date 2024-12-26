@@ -3,7 +3,7 @@ import { ListRoleModel } from '@role/domain/models/role-list.model';
 import { RoleModel } from '@role/domain/models/role.model';
 
 export interface IOptions {
-  withDeleted: boolean;
+  withArchived: boolean;
 }
 
 export abstract class IRoleRepositoryContract {

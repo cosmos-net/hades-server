@@ -25,7 +25,7 @@ export class RoleTypeormRepository
   private async getOneByName(name: string, options?: IOptions): Promise<RoleEntity | null> {
     const entity = await this.repository.findOne({
       where: { name },
-      ...(options?.withDeleted ? { withDeleted: true } : {}),
+      ...(options?.withArchived ? { withDeleted: true } : {}),
     });
 
     return entity;
@@ -34,7 +34,7 @@ export class RoleTypeormRepository
   private async getOneByUUID(uuid: string, options?: IOptions): Promise<RoleEntity | null> {
     const entity = await this.repository.findOne({
       where: { uuid },
-      ...(options?.withDeleted ? { withDeleted: true } : {}),
+      ...(options?.withArchived ? { withDeleted: true } : {}),
     });
 
     return entity;
