@@ -6,7 +6,7 @@ export class UpdateRoleDomainService {
   constructor(private readonly repository: IRoleRepositoryContract) {}
 
   async go(uuid: string, name?: string, description?: string): Promise<RoleModel> {
-    const rolModel = await this.repository.getOneBy(uuid);
+    const rolModel = await this.repository.getOneBy(uuid, { withArchived: true });
 
     if (!rolModel) {
       throw new RoleNameException('Rol not found');

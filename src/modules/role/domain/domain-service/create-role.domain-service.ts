@@ -6,7 +6,7 @@ export class CreateRoleDomainService {
   constructor(private readonly repository: IRoleRepositoryContract) {}
 
   async go(uuid: string, name: string, description?: string): Promise<RoleModel> {
-      const roleModel = await this.repository.getOneBy(name, { withDeleted: true });
+      const roleModel = await this.repository.getOneBy(name, { withArchived: true });
 
       if (roleModel) {
         if (roleModel.archivedAt) {
