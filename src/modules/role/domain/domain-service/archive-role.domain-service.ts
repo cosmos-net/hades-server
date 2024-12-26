@@ -6,10 +6,14 @@ export class ArchiveRoleDomainService {
   constructor(private readonly roleRepository: IRoleRepositoryContract) {}
 
   async go(uuid: string): Promise<RoleModel> {
-    const roleModel = await this.roleRepository.getOneBy(uuid);
+    const roleModel = await this.roleRepository.getOneBy(uuid, { withArchived: true });
 
     if (!roleModel) {
       throw new RoleNotFoundException(`Role with uuid ${uuid} not found`);
+    }
+
+    if (roleModel.archivedAt) {
+      throw new RoleNotFoundException(`Role with uuid ${uuid} is already archived`);
     }
 
     roleModel.archive(roleModel.uuid, roleModel.name);
