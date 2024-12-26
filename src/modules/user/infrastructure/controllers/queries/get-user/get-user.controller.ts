@@ -4,8 +4,8 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { GetUserQuery } from '@user/application/queries/use-cases/get-user/get-user.query';
-import { GetUserInputDto } from '@user/infrastructure/controllers/user/queries/get-user/get-user-input.dto';
-import { GetUserOutputDto } from '@user/infrastructure/controllers/user/queries/get-user/get-user-output.dto';
+import { GetUserInputDto } from '@user/infrastructure/controllers/queries/get-user/get-user-input.dto';
+import { GetUserOutputDto } from '@user/infrastructure/controllers/queries/get-user/get-user-output.dto';
 
 @Controller()
 export class GetUserController {

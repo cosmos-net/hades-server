@@ -16,37 +16,14 @@ import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 import { IKeysFilterMap } from '@common/infrastructure/dtos/filter-map/keys-filter-map';
 import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-options/input-pagination.dto';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
-
-export const ORDER_BY_VALUES = [
-  'status',
-  'username',
-  'email',
-  'name',
-  'lastName',
-  'secondLastName',
-  'phoneNumber',
-  'gender',
-  'street',
-  'extNumber',
-  'intNumber',
-  'neighborhood',
-  'zipCode',
-  'city',
-  'state',
-  'country',
-  'createdAt',
-  'updatedAt',
-  'archivedAt',
-] as const;
-
-export type ListOrderByTypes = (typeof ORDER_BY_VALUES)[number];
+import { USER_OPTIONS_ORDER_BY_VALUE, USER_OPTIONS_ORDER_BY_VALUE_TYPE } from '@user/application/queries/use-cases/list-user/list-user.query';
 
 export class ListUserInputDto extends InputPaginationDto {
   @IsOptional()
-  @IsIn(ORDER_BY_VALUES, {
-    message: `The orderBy field must be one of the following values: ${ORDER_BY_VALUES.join(', ')}`,
+  @IsIn(USER_OPTIONS_ORDER_BY_VALUE, {
+    message: `The orderBy field must be one of the following values: ${USER_OPTIONS_ORDER_BY_VALUE.join(', ')}`,
   })
-  public readonly orderBy?: ListOrderByTypes = ORDER_BY_VALUES[0];
+  public readonly orderBy?: USER_OPTIONS_ORDER_BY_VALUE_TYPE = USER_OPTIONS_ORDER_BY_VALUE[0];
 
   // TODOl Add the correct type enum for the status field
   @IsOptional()
