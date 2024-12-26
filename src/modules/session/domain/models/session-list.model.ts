@@ -1,8 +1,8 @@
-import { SessionModel } from '@user/domain/models/session/session.model';
+import { SessionModel } from '@session/domain/models/session.model';
 import {
   IListSessionSchemaPrimitive,
   ISessionSchemaPrimitive,
-} from '@user/domain/schemas/session/session.schema-primitive';
+} from '@session/domain/schemas/session.schema-primitive';
 
 export class ListSessionModel {
   private readonly items: SessionModel[];

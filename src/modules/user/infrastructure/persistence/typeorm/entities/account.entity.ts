@@ -6,7 +6,7 @@ import {
   MAX_ACCOUNT_USER_NAME_LENGTH,
 } from '@user/domain/constants/general-rules';
 import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
-import { SessionEntity } from '@user/infrastructure/persistence/typeorm/entities/session.entity';
+import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Entity('accounts')
