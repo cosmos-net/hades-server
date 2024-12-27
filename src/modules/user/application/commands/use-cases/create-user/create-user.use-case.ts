@@ -21,12 +21,12 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     const { accounts, profile } = command;
 
     const userAggregate = await this.createUserDomainService.go(accounts, profile);
-    const user = this.publisher.mergeObjectContext(userAggregate);
+    const userContext = this.publisher.mergeObjectContext(userAggregate);
 
     await this.repository.persist(userAggregate);
 
-    user.commit();
+    userContext.commit();
 
-    return userAggregate;
+    return userContext;
   }
 }
