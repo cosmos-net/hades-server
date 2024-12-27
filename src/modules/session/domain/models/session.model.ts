@@ -154,8 +154,7 @@ export class SessionModel extends AggregateRoot {
     };
   }
 
-  public archive(uuid: string): void {
+  public archive(): void {
       this._entityRoot.archivedAt = new ArchivedAt(new Date());
-      this.apply(new SessionArchivedEvent(uuid, this.archivedAt));
     }
 }
