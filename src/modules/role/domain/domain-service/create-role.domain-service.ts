@@ -1,6 +1,4 @@
-import DomainException from '@common/domain/exceptions/domain.exception';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
-import { ExceptionFactory } from '@role/domain/exceptions/exception.factory';
 import { RoleNameException } from '@role/domain/exceptions/role-name.exception';
 import { RoleModel } from '@role/domain/models/role.model';
 
@@ -8,10 +6,13 @@ export class CreateRoleDomainService {
   constructor(private readonly repository: IRoleRepositoryContract) {}
 
   async go(uuid: string, name: string, description?: string): Promise<RoleModel> {
-    try {
-      const isNameAvailable = await this.repository.isNameAvailable(name);
+      const roleModel = await this.repository.getOneBy(name, { withArchived: true });
 
-      if (!isNameAvailable) {
+      if (roleModel) {
+        if (roleModel.archivedAt) {
+          throw new RoleNameException(`Role name already exists but is archived with date ${roleModel.archivedAt}`);
+        }
+
         throw new RoleNameException('Role name already exists');
       }
 
@@ -19,12 +20,5 @@ export class CreateRoleDomainService {
       role.create();
 
       return role;
-    } catch (error) {
-      if (error instanceof DomainException) {
-        ExceptionFactory.createException(error.name, error.message);
-      }
-
-      throw error;
-    }
   }
 }

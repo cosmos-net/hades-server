@@ -31,6 +31,7 @@ interface ICreateUserOutputDto {
   status: string;
   accounts: IAccount[];
   profile: IProfile;
+
 }
 
 export class UpdateUserOutputDto {
@@ -39,4 +40,5 @@ export class UpdateUserOutputDto {
   constructor(root: UpdateUserOutputDto) {
     this.user = root.user;
   }
+
 }

@@ -9,7 +9,7 @@ import { UpdateRoleDomainService } from '@role/domain/domain-service/update-role
 
 @Injectable()
 @CommandHandler(UpdateRoleCommand)
-export class UpdateRolUseCase implements ICommandHandler<UpdateRoleCommand> {
+export class UpdateRoleUseCase implements ICommandHandler<UpdateRoleCommand> {
   constructor(
     private readonly UpdateRoleDomainService: UpdateRoleDomainService,
     private readonly publisher: EventPublisher,
@@ -18,9 +18,9 @@ export class UpdateRolUseCase implements ICommandHandler<UpdateRoleCommand> {
   ) {}
 
   async execute(command: UpdateRoleCommand): Promise<RoleModel> {
-    const { name, description } = command;
+    const { uuid, name, description } = command;
 
-    const roleModel = await this.UpdateRoleDomainService.go(name, description);
+    const roleModel = await this.UpdateRoleDomainService.go(uuid, name, description);
     const role = this.publisher.mergeObjectContext(roleModel);
 
     await this.repository.persist(roleModel);

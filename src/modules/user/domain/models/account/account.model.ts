@@ -6,15 +6,15 @@ import Email from '@common/domain/value-object/vos/email.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { ListSessionModel } from '@user/domain/models/session/session-list.model';
-import { SessionModel } from '@user/domain/models/session/session.model';
+import { ListSessionModel } from '@session/domain/models/session-list.model';
+import { SessionModel } from '@session/domain/models/session.model';
 import { IAccountSchema } from '@user/domain/schemas/account/account.schema';
 import {
   IAccountBaseSchema,
   IAccountSchemaPrimitives,
 } from '@user/domain/schemas/account/account.schema-primitive';
-import Password from '@user/domain/value-object/account/password.vo';
-import Username from '@user/domain/value-object/account/username.vo';
+import Password from '@user/domain/value-objects/account/password.vo';
+import Username from '@user/domain/value-objects/account/username.vo';
 import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
 
 export class AccountModel extends AggregateRoot {

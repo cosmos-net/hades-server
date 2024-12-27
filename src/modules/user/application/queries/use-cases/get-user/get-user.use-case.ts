@@ -4,7 +4,6 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetUserQuery } from '@user/application/queries/use-cases/get-user/get-user.query';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { GetUserDomainService } from '@user/domain/domain-services/get-user.domain-service';
-import { UserModel } from '@user/domain/models/user/user.model';
 
 @Injectable()
 @QueryHandler(GetUserQuery)

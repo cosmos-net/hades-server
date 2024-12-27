@@ -13,6 +13,8 @@ import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/
 import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
 import { IRoleSchemaPrimitive } from '@role/domain/schemas/role.schema-primitive';
+import Id from '@common/domain/value-object/vos/id.vo';
+import { RoleNotArchivedException } from '../exceptions/role-not-archived-exception';
 
 export class RoleModel extends AggregateRoot {
   private readonly _entityRoot: IRoleSchema;
@@ -21,6 +23,7 @@ export class RoleModel extends AggregateRoot {
   constructor(uuid: string, name: string, description?: string);
   constructor(uuidOrSchema: string | IRoleSchemaPrimitive, name?: string, description?: string) {
     super();
+    this._entityRoot = {} as IRoleSchema;
 
     if (typeof uuidOrSchema === 'object') {
       this.hydrate(uuidOrSchema);
@@ -33,8 +36,8 @@ export class RoleModel extends AggregateRoot {
     }
   }
 
-  get id(): number {
-    return this._entityRoot.id._value;
+  get id(): number | undefined {
+    return this._entityRoot.id?._value;
   }
 
   get uuid(): string {
@@ -46,7 +49,7 @@ export class RoleModel extends AggregateRoot {
   }
 
   get description(): string | undefined {
-    return this._entityRoot.description._value;
+    return this._entityRoot.description?._value;
   }
 
   get createdAt(): Date {
@@ -61,7 +64,8 @@ export class RoleModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  public hydrate(entity: IRoleSchemaPrimitive) {
+  public hydrate(entity: IRoleSchemaPrimitive): void {
+    this._entityRoot.id = new Id(entity.id);
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.name = new Name(entity.name);
     this._entityRoot.createdAt = new UpdatedAt(entity.createdAt);
@@ -83,11 +87,24 @@ export class RoleModel extends AggregateRoot {
     };
   }
 
-  public create() {
+  public toPartialPrimitives(): Partial<IRoleSchemaPrimitive> {
+    return {
+      ...(this.id && { id: this.id }),
+      ...(this.uuid && { uuid: this.uuid }),
+      ...(this.name && { name: this.name }),
+      ...(this.description && { description: this.description }),
+      ...(this.createdAt && { createdAt: this.createdAt }),
+      ...(this.updatedAt && { updatedAt: this.updatedAt }),
+      ...(this.archivedAt && { archivedAt: this.archivedAt }),
+    }
+  }
+    
+
+  public create(): void {
     this.apply(new RoleCreatedEvent(this.uuid, this.name));
   }
 
-  public reDescribe(name?: string, description?: string) {
+  public reDescribe(name?: string, description?: string): void {
     const isNameChanged = validateNullishString(name);
     const isDescriptionChanged = validateNullishString(description);
     const isSomethingChanged = isNameChanged || isDescriptionChanged;
@@ -113,12 +130,16 @@ export class RoleModel extends AggregateRoot {
     }
   }
 
-  public archive(uuid: string, name: string) {
+  public archive(uuid: string, name: string): void {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
     this.apply(new RoleArchivedEvent(uuid, name, this.archivedAt));
   }
 
-  public destroy(uuid: string, name: string) {
+  public destroy(uuid: string, name: string): void {
+    if (!this.archivedAt) {
+      throw new RoleNotArchivedException(`Role with uuid ${uuid} requires to be archived before destroyed`);
+    }
+
     this.apply(new RoleDestroyedEvent(uuid, name, new Date()));
   }
 }
