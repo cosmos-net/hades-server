@@ -11,9 +11,9 @@ export class GetRoleUseCase implements IQueryHandler<GetRoleQuery> {
   constructor(private readonly getRoleDomainService: GetRoleDomainService) {}
 
   async execute(query: GetRoleQuery): Promise<RoleModel> {
-    const { uuid } = query;
+    const { uuid, withArchived } = query;
 
-    const roleModel = await this.getRoleDomainService.go(uuid);
+    const roleModel = await this.getRoleDomainService.go(uuid, withArchived);
 
     return roleModel;
   }

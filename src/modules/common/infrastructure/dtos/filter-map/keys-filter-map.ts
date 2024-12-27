@@ -1,5 +1,5 @@
 import { OperatorsEnum } from '@common/domain/criteria/operators-enum';
-import { Primitives } from '@common/domain/value-object/types/value-object';
+import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 
 export enum KeysFilterMapEnum {
   FIELD = 'field',
@@ -9,6 +9,6 @@ export enum KeysFilterMapEnum {
 
 export interface IKeysFilterMap {
   [KeysFilterMapEnum.FIELD]: string;
-  [KeysFilterMapEnum.VALUE]: Primitives;
+  [KeysFilterMapEnum.VALUE]: PrimitivesType;
   [KeysFilterMapEnum.OPERATOR]: OperatorsEnum;
 }

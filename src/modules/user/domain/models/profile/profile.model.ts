@@ -15,11 +15,11 @@ import {
   IProfileBaseSchema,
   IProfileSchemaPrimitives,
 } from '@user/domain/schemas/profile/profile.schema-primitive';
-import { Gender } from '@user/domain/value-object/profile/gender.vo';
-import { LastName } from '@user/domain/value-object/profile/last-name.vo';
-import { Name } from '@user/domain/value-object/profile/name.vo';
-import { PhoneNumber } from '@user/domain/value-object/profile/phone-number.vo';
-import { SecondLastName } from '@user/domain/value-object/profile/second-last-name.vo';
+import { Gender } from '@user/domain/value-objects/profile/gender.vo';
+import { LastName } from '@user/domain/value-objects/profile/last-name.vo';
+import { Name } from '@user/domain/value-objects/profile/name.vo';
+import { PhoneNumber } from '@user/domain/value-objects/profile/phone-number.vo';
+import { SecondLastName } from '@user/domain/value-objects/profile/second-last-name.vo';
 
 export class ProfileModel extends AggregateRoot {
   private readonly _entityRoot: IProfileSchema;

@@ -69,27 +69,6 @@ export enum UserStatusEnum {
   UNDER_REVIEW = 'UnderReview',
 }
 
-export const MAX_SESSION_SESSION_ID_LENGTH = 255;
-export const MIN_SESSION_SESSION_ID_LENGTH = 5;
-
-export const MAX_SESSION_SESSION_TYPE_LENGTH = 50;
-export const MIN_SESSION_SESSION_TYPE_LENGTH = 5;
-
-export const MAX_SESSION_SESSION_CLOSED_TYPE_LENGTH = 50;
-export const MIN_SESSION_SESSION_CLOSED_TYPE_LENGTH = 5;
-
-export const MAX_SESSION_IP_ADDRESS_LENGTH = 100;
-export const MIN_SESSION_IP_ADDRESS_LENGTH = 5;
-
-export const MAX_SESSION_USER_AGENT_LENGTH = 255;
-export const MIN_SESSION_USER_AGENT_LENGTH = 5;
-
-export const MAX_SESSION_ORIGIN_LENGTH = 100;
-export const MIN_SESSION_ORIGIN_LENGTH = 5;
-
-export const MAX_SESSION_LOCATION_LENGTH = 255;
-export const MIN_SESSION_LOCATION_LENGTH = 5;
-
 // TODO: Use in value objects
 // TODO: Use in dtos
 // TODO: Use in entities

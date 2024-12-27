@@ -1,19 +1,42 @@
 import { IQuery } from '@nestjs/cqrs';
 
 import { OrderTypeEnum } from '@common/domain/criteria/orders/order-type-enum';
-import { Primitives } from '@common/domain/value-object/types/value-object';
-import { ListOrderByTypes } from '@user/infrastructure/controllers/user/queries/list-user/list-user-input.dto';
+import { PrimitivesType } from '@common/domain/value-object/types/value-object';
+
+export const USER_OPTIONS_ORDER_BY_VALUE = [
+  'status',
+  'username',
+  'email',
+  'name',
+  'lastName',
+  'secondLastName',
+  'phoneNumber',
+  'gender',
+  'street',
+  'extNumber',
+  'intNumber',
+  'neighborhood',
+  'zipCode',
+  'city',
+  'state',
+  'country',
+  'createdAt',
+  'updatedAt',
+  'archivedAt',
+] as const;
+
+export type USER_OPTIONS_ORDER_BY_VALUE_TYPE = typeof USER_OPTIONS_ORDER_BY_VALUE[number];
 
 export class ListUserQuery implements IQuery {
   public readonly orderType: OrderTypeEnum;
 
-  public readonly orderBy: ListOrderByTypes;
+  public readonly orderBy: USER_OPTIONS_ORDER_BY_VALUE_TYPE;
 
   public readonly limit: number;
 
   public readonly offset: number;
 
-  public readonly filtersMap: Array<Map<string, Primitives>>;
+  public readonly filtersMap: Array<Map<string, PrimitivesType>>;
 
   constructor(props: ListUserQuery) {
     this.orderType = props.orderType;
