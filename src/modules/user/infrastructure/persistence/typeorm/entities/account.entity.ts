@@ -1,12 +1,12 @@
 import { PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, OneToMany, Entity } from 'typeorm';
 
-import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base-entity';
+import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import {
   MAX_ACCOUNT_EMAIL_LENGTH,
   MAX_ACCOUNT_USER_NAME_LENGTH,
 } from '@user/domain/constants/general-rules';
 import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
-import { SessionEntity } from '@user/infrastructure/persistence/typeorm/entities/session.entity';
+import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Entity('accounts')

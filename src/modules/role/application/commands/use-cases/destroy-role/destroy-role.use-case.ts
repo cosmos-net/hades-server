@@ -11,7 +11,7 @@ import { DestroyRoleDomainService } from '@role/domain/domain-service/destroy-ro
 @CommandHandler(DestroyRoleCommand)
 export class DestroyRoleUseCase implements ICommandHandler<DestroyRoleCommand> {
   constructor(
-    private readonly DestroyRoleDomainService: DestroyRoleDomainService,
+    private readonly destroyRoleDomainService: DestroyRoleDomainService,
     private readonly publisher: EventPublisher,
     @Inject(ROLE_REPOSITORY)
     private readonly repository: IRoleRepositoryContract,
@@ -20,7 +20,7 @@ export class DestroyRoleUseCase implements ICommandHandler<DestroyRoleCommand> {
   async execute(command: DestroyRoleCommand): Promise<RoleModel> {
     const { uuid } = command;
 
-    const roleModel = await this.DestroyRoleDomainService.go(uuid);
+    const roleModel = await this.destroyRoleDomainService.go(uuid);
     const role = this.publisher.mergeObjectContext(roleModel);
 
     await this.repository.destroy(uuid);

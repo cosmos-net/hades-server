@@ -31,6 +31,7 @@ interface ICreateUserOutputDto {
   status: string;
   accounts: IAccount[];
   profile: IProfile;
+
 }
 
 export class GetUserOutputDto {

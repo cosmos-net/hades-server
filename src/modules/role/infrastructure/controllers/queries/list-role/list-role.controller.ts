@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { ListRoleQuery } from '@role/application/queries/list-role/list-role.query';
@@ -14,19 +14,24 @@ export class ListRoleController {
 
   @MessagePattern({ cmd: CMDS_HADES.ROLE.LIST })
   async list(@Payload() listRoleDto: ListRoleInputDto): Promise<ListRoleOutputDto> {
-    const { orderType, orderBy, page, limit, offset } = listRoleDto;
-    const filtersMap = listRoleDto.toFilterMap();
+    try {
+      const { orderType, orderBy, page, limit, offset, withArchived } = listRoleDto;
+      const filtersMap = listRoleDto.toFilterMap();
 
-    const result = await this.queryBus.execute<ListRoleQuery, ListRoleModel>(
-      new ListRoleQuery({
-        orderType,
-        orderBy,
-        limit,
-        offset,
-        filtersMap,
-      }),
-    );
+      const result = await this.queryBus.execute<ListRoleQuery, ListRoleModel>(
+        new ListRoleQuery({
+          orderType,
+          orderBy,
+          limit,
+          offset,
+          withArchived,
+          filtersMap,
+        }),
+      );
 
-    return new ListRoleOutputDto(result.getItems, page, limit, result.getTotal);
+      return new ListRoleOutputDto(result.getItems, page, limit, result.getTotal);
+    } catch (error: any) {
+      throw new RpcException(error);
+    }
   }
 }

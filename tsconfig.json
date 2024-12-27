@@ -42,11 +42,23 @@
       "@user/*": [
         "src/modules/user/*"
       ],
+      "@session": [
+        "src/modules/session/"
+      ],
+      "@session/*": [
+        "src/modules/session/*"
+      ],
       "@role": [
         "src/modules/role/"
       ],
       "@role/*": [
         "src/modules/role/*"
+      ],
+      "@session": [
+        "src/modules/session/"
+      ],
+      "@session/*": [
+        "src/modules/session/*"
       ],
       "@assignment": [
         "src/modules/assignment/"
