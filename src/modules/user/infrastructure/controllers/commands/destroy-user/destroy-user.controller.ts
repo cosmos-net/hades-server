@@ -4,7 +4,6 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { DestroyUserCommand } from '@user/application/commands/use-cases/destroy-user/destroy-user.command';
-
 import { DestroyUserInputDto } from '@user/infrastructure/controllers/commands/destroy-user/destroy-user-input.dto';
 import { DestroyUserOutputDto } from '@user/infrastructure/controllers/commands/destroy-user/destroy-user-output.dto';
 
