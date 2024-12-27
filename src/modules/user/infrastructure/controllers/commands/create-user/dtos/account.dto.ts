@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, Length, IsEmail } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsEmail, IsDefined } from 'class-validator';
 
 import {
   MAX_ACCOUNT_USER_NAME_LENGTH,
@@ -11,16 +11,26 @@ export class AccountDTO {
   @IsString()
   @IsNotEmpty()
   @Length(MIN_ACCOUNT_USER_NAME_LENGTH, MAX_ACCOUNT_USER_NAME_LENGTH)
+  @IsDefined()
   public readonly username: string;
 
   @IsString()
   @IsNotEmpty()
   @IsEmail()
+  @IsDefined()
   public readonly email: string;
 
   //TODO: handler confirmation of password
   @IsString()
   @IsNotEmpty()
   @Length(MIN_ACCOUNT_PASSWORD_LENGTH, MAX_ACCOUNT_PASSWORD_LENGTH)
+  @IsDefined()
   public readonly password: string;
+
+  //TODO: handler confirmation of password
+  @IsString()
+  @IsNotEmpty()
+  @Length(MIN_ACCOUNT_PASSWORD_LENGTH, MAX_ACCOUNT_PASSWORD_LENGTH)
+  @IsDefined()
+  public readonly passwordConfirmation: string;
 }
