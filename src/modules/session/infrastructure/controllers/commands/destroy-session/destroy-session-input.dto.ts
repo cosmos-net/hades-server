@@ -1,6 +1,6 @@
 import { IsUUID } from 'class-validator';
 
-export class ArchiveSessionInputDto {
+export class DestroySessionInputDto {
   @IsUUID()
   public readonly uuid: string;
 }
