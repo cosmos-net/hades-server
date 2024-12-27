@@ -3,7 +3,7 @@ import { AggregateRoot } from '@nestjs/cqrs';
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
-import { UserDestroyedEvent } from '@user/domain/events/events-success-domain/user-destroyed.event';
+import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
 import { IUserSchema } from '@user/domain/schemas/user/user.schema';
 import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 import { UserStatus } from '@user/domain/value-object/user/user-status.vo';
@@ -33,7 +33,7 @@ export class UserModel extends AggregateRoot {
   }
 
   get status(): StatusEnum {
-    return this._entityRoot.status.value;
+    return this._entityRoot.status._value;
   }
 
   get createdAt(): Date {
@@ -48,7 +48,7 @@ export class UserModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  public hydrate(entity: IUserSchemaPrimitives) {
+  public hydrate(entity: IUserSchemaPrimitives): void {
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.status = new UserStatus(entity.status);
   }
@@ -64,12 +64,16 @@ export class UserModel extends AggregateRoot {
     };
   }
 
-  public archive() {
+  public archive(): void {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
   }
 
-  public destroy(uuid: string) {
-    this.apply(new UserDestroyedEvent(uuid, new Date()));
+  public destroy(): void {
+    if (!this.archivedAt) {
+      throw new UserNotArchivedException(
+        `User with uuid ${this.uuid} cannot be destroyed because it is not archived`,
+      );
+    }
   }
 
   public static fromPrimitives(entity: IUserSchemaPrimitives): UserModel {

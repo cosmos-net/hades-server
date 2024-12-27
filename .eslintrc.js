@@ -59,11 +59,22 @@ module.exports = {
         alphabetize: { order: 'asc', caseInsensitive: true },
       },
     ],
+    '@typescript-eslint/explicit-function-return-type':
+    [
+      'error', 
+      {
+        allowExpressions: false,
+        allowTypedFunctionExpressions: false,
+        allowHigherOrderFunctions: false,
+      }
+    ],
+    '@typescript-eslint/no-explicit-any': ['error', {
+      fixToUnknown: false,
+      ignoreRestArgs: false,
+    }],
     '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/consistent-type-definitions': 'off',
@@ -88,6 +99,10 @@ module.exports = {
       {
         selector: 'typeLike',
         format: ['PascalCase'],
+        custom: {
+          regex: '.*Type$',
+          match: true,
+        },
       },
       {
         selector: 'interface',
@@ -105,6 +120,10 @@ module.exports = {
         selector: 'enumMember',
         format: ['UPPER_CASE'],
       },
+      {
+        selector: 'class',
+        format: ['PascalCase'],
+      }
     ],
   },
   settings: {

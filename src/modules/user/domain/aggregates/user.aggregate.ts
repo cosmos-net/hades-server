@@ -4,13 +4,26 @@ import { UserCreatedEvent } from '@user/domain/events/events-success-domain/user
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
 import { UserModel } from '@user/domain/models/user/user.model';
-import { DeepPartialExceptAccountBaseSchema } from '@user/domain/schemas/account/account.schema-primitive';
-import { DeepPartialProfileBaseSchema } from '@user/domain/schemas/profile/profile.schema-primitive';
+import {
+  DeepPartialExceptAccountBaseSchema,
+  IAccountSchemaPrimitives,
+} from '@user/domain/schemas/account/account.schema-primitive';
+import {
+  DeepPartialProfileBaseSchema,
+  IProfileSchemaPrimitives,
+} from '@user/domain/schemas/profile/profile.schema-primitive';
+import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 
 export interface IUserSchemaAggregate {
   userModel?: UserModel;
   accountsModel: AccountModel[];
   profileModel: ProfileModel;
+}
+
+export interface IUserSchemaPrimitivesAggregate {
+  user: IUserSchemaPrimitives;
+  accounts: IAccountSchemaPrimitives[];
+  profile: IProfileSchemaPrimitives;
 }
 
 export class UserAggregate extends AggregateRoot {
@@ -33,7 +46,7 @@ export class UserAggregate extends AggregateRoot {
     return this.entities.profileModel;
   }
 
-  public hydrate(entities: IUserSchemaAggregate) {
+  public hydrate(entities: IUserSchemaAggregate): void {
     const { userModel, accountsModel, profileModel } = entities;
 
     if (userModel) {
@@ -44,26 +57,28 @@ export class UserAggregate extends AggregateRoot {
     this.entities.profileModel = profileModel;
   }
 
-  public toPrimitives() {
+  public toPrimitives(): IUserSchemaPrimitivesAggregate {
     return {
-      user: this.entities.userModel?.toPrimitives(),
-      account: this.entities.accountsModel.map((account) => account.toPrimitives()),
-      profile: this.entities.profileModel.toPrimitives(),
+      user: this.userModel.toPrimitives(),
+      profile: this.profileModel.toPrimitives(),
+      accounts: this.accountsModel.map(
+        (accountModel): IAccountSchemaPrimitives => accountModel.toPrimitives(),
+      ),
     };
   }
 
   // TODO: map more fields to emit the event
-  public create() {
+  public create(): void {
     this.apply(new UserCreatedEvent(this.userModel.uuid, this.userModel.status));
   }
 
   public update(
     accounts?: DeepPartialExceptAccountBaseSchema,
     profile?: DeepPartialProfileBaseSchema,
-  ) {
+  ): void {
     if (accounts) {
-      this.entities.accountsModel.forEach((accountModel) => {
-        const account = accounts.find((account) => account.uuid === accountModel.uuid);
+      this.entities.accountsModel.forEach((accountModel): void => {
+        const account = accounts.find((account): boolean => account.uuid === accountModel.uuid);
 
         if (account) {
           accountModel.update(account);
@@ -76,9 +91,15 @@ export class UserAggregate extends AggregateRoot {
     }
   }
 
-  public archive() {
+  public archive(): void {
     this.entities.userModel.archive();
     this.entities.profileModel.archive();
-    this.entities.accountsModel.forEach((accountModel) => accountModel.archive());
+    this.entities.accountsModel.forEach((accountModel): void => accountModel.archive());
+  }
+
+  public destroy(): void {
+    this.entities.userModel.destroy();
+    this.entities.profileModel.destroy();
+    this.entities.accountsModel.forEach((accountModel): void => accountModel.destroy());
   }
 }
