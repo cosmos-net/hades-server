@@ -40,5 +40,4 @@ export class UpdateUserOutputDto {
   constructor(root: UpdateUserOutputDto) {
     this.user = root.user;
   }
-
 }
