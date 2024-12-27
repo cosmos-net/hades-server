@@ -21,6 +21,5 @@ export class ArchiveRoleController {
     } catch (error: any) {
       throw new RpcException(error);
     }
-    
   }
 }
