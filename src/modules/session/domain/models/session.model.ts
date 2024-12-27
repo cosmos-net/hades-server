@@ -21,6 +21,7 @@ import SessionId from '@session/domain/value-objects/session/session-id.vo';
 import SessionType from '@session/domain/value-objects/session/session-type.vo';
 import SessionToken from '@session/domain/value-objects/session/token.vo';
 import SessionUserAgent from '@session/domain/value-objects/session/user-agent.vo';
+import { SessionArchivedEvent } from '../events/events-success-domain/session-archive.event';
 
 export class SessionModel extends AggregateRoot {
   private readonly _entityRoot: ISessionSchema;
@@ -153,7 +154,7 @@ export class SessionModel extends AggregateRoot {
     };
   }
 
-  public archive() {
-    this._entityRoot.archivedAt = new ArchivedAt(new Date());
-  }
+  public archive(): void {
+      this._entityRoot.archivedAt = new ArchivedAt(new Date());
+    }
 }

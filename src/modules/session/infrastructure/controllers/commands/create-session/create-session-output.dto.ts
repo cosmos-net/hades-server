@@ -17,4 +17,25 @@ export class CreateSessionOutputDto {
   public readonly location: string;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
+
+  constructor(root: CreateSessionOutputDto) {
+    this.id = root.id;
+    this.uuid = root.uuid;
+    this.sessionId = root.sessionId;
+    this.sessionType = root.sessionType;
+    this.sessionDuration = root.sessionDuration;
+    this.sessionClosedType = root.sessionClosedType;
+    this.token = root.token;
+    this.expiresIn = root.expiresIn;
+    this.loggedInAt = root.loggedInAt;
+    this.loggedOutAt = root.loggedOutAt;
+    this.ipAddress = root.ipAddress;
+    this.refreshToken = root.refreshToken;
+    this.userAgent = root.userAgent;
+    this.failedAttempts = root.failedAttempts;
+    this.origin = root.origin;
+    this.location = root.location;
+    this.createdAt = root.createdAt;
+    this.updatedAt = root.updatedAt;
+  }
 }
