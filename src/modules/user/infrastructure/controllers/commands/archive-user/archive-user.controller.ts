@@ -17,10 +17,7 @@ export class ArchiveUserController {
     try {
       const result = await this.commandBus.execute<ArchiveUserCommand, UserAggregate>(new ArchiveUserCommand({ uuid: archiveUserDto.uuid }));
 
-      return new ArchiveUserOutputDto({
-        uuid: result.userModel.uuid,
-        archivedAt: result.userModel.archivedAt,
-      });
+      return new ArchiveUserOutputDto(result);
     } catch (error: any) {
       throw new RpcException(error);
     }
