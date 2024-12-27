@@ -1,14 +1,8 @@
 import { PaginationOutputDto } from '@common/infrastructure/dtos/pagination-options/output-pagination.dto';
+import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 
-export interface IAccount {
-  id: number;
-  uuid: string;
-  username: string;
-  email: string;
-}
-
-export interface IAddress {
+interface IAddress {
   street: string;
   extNumber: string;
   intNumber?: string | null;
@@ -19,13 +13,22 @@ export interface IAddress {
   country: string;
 }
 
-export interface IProfile {
-  names: string[];
+interface IProfile {
+  id: number;
+  uuid: string;
+  names: string;
   lastName: string;
   secondLastName: string;
-  phoneNumber: string;
+  phoneNumber: string,
   gender: ProfileGenderEnum;
   address: IAddress;
+}
+
+interface IAccount {
+  id: number;
+  uuid: string
+  username: string;
+  email: string;
 }
 
 export interface IUser {
@@ -41,7 +44,35 @@ export interface IListUserOutputDto {
 }
 
 export class ListUserOutputDto extends PaginationOutputDto<IListUserOutputDto> {
-  constructor(items: IListUserOutputDto[], page: number, limit: number, total: number) {
-    super(items, page, limit, total);
+  constructor(items: ListUserAggregate, page: number, limit: number) {
+    const itemsPrimitives = items.toPrimitives();
+    const total = items.getTotal;
+    const itemsMapped = itemsPrimitives.map(({ user, profile, accounts }): IListUserOutputDto => ({
+      user: {
+        id: user.id,
+        uuid: user.uuid,
+        status: user.status,
+      },
+      profile: {
+        id: profile.id,
+        uuid: profile.uuid,
+        names: profile.names.join(' '),
+        lastName: profile.lastName,
+        secondLastName: profile.secondLastName,
+        phoneNumber: profile.phoneNumber,
+        gender: profile.gender,
+        address: profile.address,
+      },
+      accounts: accounts.map(
+        (account): IAccount => ({
+          id: account.id,
+          uuid: account.uuid,
+          username: account.username,
+          email: account.email,
+        }),
+      ),
+    }));
+
+    super(itemsMapped, page, limit, total);
   }
 }
