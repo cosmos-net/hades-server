@@ -18,7 +18,7 @@ interface IProfile {
   names: string;
   lastName: string;
   secondLastName: string;
-  phoneNumber: string,
+  phoneNumber: string;
   gender: ProfileGenderEnum;
   address: IAddress;
 }
@@ -36,7 +36,8 @@ interface ICreateUserOutputDto {
   status: string;
   accounts: IAccount[];
   profile: IProfile;
-};
+
+}
 
 export class GetUserOutputDto {
   public readonly user: ICreateUserOutputDto;
