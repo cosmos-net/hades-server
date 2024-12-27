@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 
 import { OperatorsEnum } from '@common/domain/criteria/operators-enum';
-import { Primitives } from '@common/domain/value-object/types/value-object';
+import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 import { IKeysFilterMap } from '@common/infrastructure/dtos/filter-map/keys-filter-map';
 import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-options/input-pagination.dto';
 
@@ -92,7 +92,7 @@ export class ListRoleInputDto extends InputPaginationDto {
   @IsNotEmpty()
   public readonly archivedAtTo?: string;
 
-  public toFilterMap(): Array<Map<string, Primitives>> {
+  public toFilterMap(): Array<Map<string, PrimitivesType>> {
     const filtersMapper: IKeysFilterMap[] = [];
 
     if (this.name) {
@@ -110,16 +110,6 @@ export class ListRoleInputDto extends InputPaginationDto {
         field: 'description',
         value: this.description,
         operator: OperatorsEnum.LIKE,
-      };
-
-      filtersMapper.push(map);
-    }
-
-    if (this.withArchived !== undefined) {
-      const map: IKeysFilterMap = {
-        field: 'archivedAt',
-        value: this.withArchived,
-        operator: OperatorsEnum.WI_DEL,
       };
 
       filtersMapper.push(map);

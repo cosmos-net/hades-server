@@ -1,15 +1,13 @@
 import { ValueObject } from '@common/domain/value-object/types/value-object';
 
 export abstract class BooleanValueObject extends ValueObject<boolean> {
-  private readonly value: boolean;
-
   constructor(value: boolean) {
     super(value);
     this.ensureIsBoolean();
   }
 
   private isValid(): boolean {
-    return typeof this.value === 'boolean';
+    return typeof this._value === 'boolean';
   }
 
   private ensureIsBoolean(): void {

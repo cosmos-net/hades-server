@@ -75,6 +75,10 @@ export class TypeormCriteriaConverter<T extends Document> {
       options.order = this.generateOrder(criteria.order);
     }
 
+    if (criteria.hasWithArchived()) {
+      options.withDeleted = true;
+    }
+
     return options;
   }
 
@@ -252,6 +256,6 @@ export class TypeormCriteriaConverter<T extends Document> {
   private withDeletedFilter(filter: Filter): FindOptionsWhere<T> {
     const field = filter.getField() as keyof T;
 
-    return { [field]: Raw((alias) => `${alias} = true`) } as FindOptionsWhere<T>;
+    return { [field]: Raw((alias) => `${alias} IS NOT NULL`) } as FindOptionsWhere<T>;
   }
 }

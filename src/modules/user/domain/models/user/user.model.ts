@@ -6,7 +6,7 @@ import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
 import { IUserSchema } from '@user/domain/schemas/user/user.schema';
 import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
-import { UserStatus } from '@user/domain/value-object/user/user-status.vo';
+import { UserStatus } from '@user/domain/value-objects/user/user-status.vo';
 
 export class UserModel extends AggregateRoot {
   private readonly _entityRoot: IUserSchema;
