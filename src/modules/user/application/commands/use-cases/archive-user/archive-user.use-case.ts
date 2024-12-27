@@ -6,7 +6,6 @@ import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { ArchiveUserDomainService } from '@user/domain/domain-services/archive-user.domain-service';
-import { UserModel } from '@user/domain/models/user/user.model';
 
 @Injectable()
 @CommandHandler(ArchiveUserCommand)
