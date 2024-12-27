@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { DestroyUserCommand } from '@user/application/commands/use-cases/destroy-user/destroy-user.command';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
+import { DestroyUserCommand } from '@user/application/commands/use-cases/destroy-user/destroy-user.command';
 import { DestroyUserInputDto } from '@user/infrastructure/controllers/user/commands/destroy-user/destroy-user-input.dto';
 import { DestroyUserOutputDto } from '@user/infrastructure/controllers/user/commands/destroy-user/destroy-user-output.dto';
 
