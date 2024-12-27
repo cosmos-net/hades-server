@@ -15,8 +15,12 @@ import { OperatorsEnum } from '@common/domain/criteria/operators-enum';
 import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 import { IKeysFilterMap } from '@common/infrastructure/dtos/filter-map/keys-filter-map';
 import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-options/input-pagination.dto';
+
+import {
+  USER_OPTIONS_ORDER_BY_VALUE,
+  USER_OPTIONS_ORDER_BY_VALUE_TYPE,
+} from '@user/application/queries/use-cases/list-user/list-user.query';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
-import { USER_OPTIONS_ORDER_BY_VALUE, USER_OPTIONS_ORDER_BY_VALUE_TYPE } from '@user/application/queries/use-cases/list-user/list-user.query';
 
 export class ListUserInputDto extends InputPaginationDto {
   @IsOptional()
