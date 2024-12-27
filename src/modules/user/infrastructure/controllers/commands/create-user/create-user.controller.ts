@@ -5,8 +5,8 @@ import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { CreateUserCommand } from '@user/application/commands/use-cases/create-user/create-user.command';
-import { CreateUserInput } from '@user/infrastructure/controllers/user/commands/create-user/create-user-input.dto';
-import { CreateUserOutputDto } from '@user/infrastructure/controllers/user/commands/create-user/create-user-output.dto';
+import { CreateUserInput } from '@user/infrastructure/controllers/commands/create-user/create-user-input.dto';
+import { CreateUserOutputDto } from '@user/infrastructure/controllers/commands/create-user/create-user-output.dto';
 
 @Controller()
 export class CreateUserController {
