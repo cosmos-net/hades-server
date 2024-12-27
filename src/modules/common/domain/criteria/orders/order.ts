@@ -56,6 +56,6 @@ export class Order {
   }
 
   public getOrderType(): OrderTypeEnum {
-    return this.orderType.value;
+    return this.orderType._value;
   }
 }

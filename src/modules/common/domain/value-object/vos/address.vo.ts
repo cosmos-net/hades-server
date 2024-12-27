@@ -3,7 +3,7 @@ import InvalidOperationDomainException from '@common/domain/exceptions/invalid-o
 interface IAddressSchema {
   street: string;
   extNumber: string;
-  intNumber: string | null;
+  intNumber?: string | null;
   neighborhood: string;
   zipCode: string;
   city: string;
@@ -17,7 +17,7 @@ export class Address {
   constructor(Address: IAddressSchema) {
     this._entityRoot.street = Address.street;
     this._entityRoot.extNumber = Address.extNumber;
-    this._entityRoot.intNumber = Address.intNumber;
+    this._entityRoot.intNumber = Address.intNumber || null;
     this._entityRoot.neighborhood = Address.neighborhood;
     this._entityRoot.zipCode = Address.zipCode;
     this._entityRoot.city = Address.city;
@@ -63,7 +63,7 @@ export class Address {
     return new Address({
       street: address._entityRoot.street,
       extNumber: address._entityRoot.extNumber,
-      intNumber: address._entityRoot.intNumber,
+      intNumber: address._entityRoot.intNumber || null,
       neighborhood: address._entityRoot.neighborhood,
       zipCode: address._entityRoot.zipCode,
       city: address._entityRoot.city,

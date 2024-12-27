@@ -25,42 +25,42 @@ import { RoleTypeormRepository } from '@role/infrastructure/persistence/reposito
     },
     {
       provide: CreateRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository) => {
+      useFactory: (roleRepository: RoleTypeormRepository): CreateRoleDomainService => {
         return new CreateRoleDomainService(roleRepository);
       },
       inject: [RoleTypeormRepository],
     },
     {
       provide: UpdateRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository) => {
+      useFactory: (roleRepository: RoleTypeormRepository): UpdateRoleDomainService => {
         return new UpdateRoleDomainService(roleRepository);
       },
       inject: [RoleTypeormRepository],
     },
     {
       provide: ArchiveRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository) => {
+      useFactory: (roleRepository: RoleTypeormRepository): ArchiveRoleDomainService => {
         return new ArchiveRoleDomainService(roleRepository);
       },
       inject: [RoleTypeormRepository],
     },
     {
       provide: DestroyRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository) => {
+      useFactory: (roleRepository: RoleTypeormRepository): DestroyRoleDomainService => {
         return new DestroyRoleDomainService(roleRepository);
       },
       inject: [RoleTypeormRepository],
     },
     {
       provide: GetRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository) => {
+      useFactory: (roleRepository: RoleTypeormRepository): GetRoleDomainService => {
         return new GetRoleDomainService(roleRepository);
       },
       inject: [RoleTypeormRepository],
     },
     {
       provide: ListRoleDomainService.name,
-      useFactory: (roleRepository: RoleTypeormRepository) => {
+      useFactory: (roleRepository: RoleTypeormRepository): ListRoleDomainService => {
         return new ListRoleDomainService(roleRepository);
       },
       inject: [RoleTypeormRepository],

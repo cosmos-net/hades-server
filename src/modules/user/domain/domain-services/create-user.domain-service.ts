@@ -12,7 +12,7 @@ export class CreateUserDomainService {
 
   async go(accounts: IAccountBaseSchema[], profile: IProfileBaseSchema): Promise<UserAggregate> {
     try {
-      const accountsModel = accounts.map((account) => {
+      const accountsModel = accounts.map((account): AccountModel => {
         return AccountModel.fromPrimitives({
           uuid: account.uuid,
           username: account.username,

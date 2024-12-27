@@ -11,7 +11,7 @@ interface IError {
 }
 
 interface IBodyResponse {
-  data: any;
+  data: unknown;
   timestamp: string;
   path: string;
   method: string;
@@ -24,7 +24,7 @@ export class ExceptionFilter implements RpcExceptionFilter<RpcException> {
   private readonly logger = new Logger(ExceptionFilter.name);
   constructor(private readonly config: ConfigService) {}
 
-  catch(exception: RpcException, host: ArgumentsHost): Observable<any> {
+  catch(exception: RpcException, host: ArgumentsHost): Observable<unknown> {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
     const error = exception.getError();
@@ -55,6 +55,6 @@ export class ExceptionFilter implements RpcExceptionFilter<RpcException> {
     }
 
     this.logger.error(`Error: ${JSON.stringify(bodyResponse)}`);
-    return throwError(() => bodyResponse);
+    return throwError((): IBodyResponse => bodyResponse);
   }
 }

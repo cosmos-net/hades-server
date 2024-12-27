@@ -19,15 +19,15 @@ export class OrderType extends EnumValueObject<OrderTypeEnum> {
   }
 
   public isNone(): boolean {
-    return this.value === OrderTypeEnum.NONE;
+    return this._value === OrderTypeEnum.NONE;
   }
 
   public isAsc(): boolean {
-    return this.value === OrderTypeEnum.ASC;
+    return this._value === OrderTypeEnum.ASC;
   }
 
   public isDesc(): boolean {
-    return this.value === OrderTypeEnum.DESC;
+    return this._value === OrderTypeEnum.DESC;
   }
 
   protected throwErrorForInvalidValue(value: OrderTypeEnum): void {
