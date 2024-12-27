@@ -21,7 +21,7 @@ import {
   MIN_PROFILE_PHONE_NUMBER_LENGTH,
   ProfileGenderEnum,
 } from '@user/domain/constants/general-rules';
-import { AddressDTO } from '@user/infrastructure/controllers/user/commands/create-user/dtos/address.dto';
+import { AddressDTO } from '@user/infrastructure/controllers/commands/create-user/dtos/address.dto';
 
 export class ProfileDTO {
   @IsArray()

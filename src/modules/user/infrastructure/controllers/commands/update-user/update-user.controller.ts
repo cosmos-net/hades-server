@@ -4,8 +4,8 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { UpdateUserCommand } from '@user/application/commands/use-cases/update-user/update-user.command';
-import { UpdateUserInput } from '@user/infrastructure/controllers/user/commands/update-user/update-user-input.dto';
-import { UpdateUserOutputDto } from '@user/infrastructure/controllers/user/commands/update-user/update-user-output.dto';
+import { UpdateUserInput } from '@user/infrastructure/controllers/commands/update-user/update-user-input.dto';
+import { UpdateUserOutputDto } from '@user/infrastructure/controllers/commands/update-user/update-user-output.dto';
 
 @Controller()
 export class UpdateUserController {
