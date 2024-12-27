@@ -30,7 +30,7 @@ async function bootstrap(): Promise<void> {
 
   app.useGlobalPipes(
     new ValidationPipeWithExceptionFactory(),
-    new ValidationPipe({ forbidUnknownValues: true }),
+    new ValidationPipe({ forbidUnknownValues: true, whitelist: true }),
   );
 
   app.useGlobalInterceptors(new TransformInterceptor(), new TimeOutInterceptor());
