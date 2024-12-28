@@ -7,7 +7,7 @@ import { DestroyUserUseCase } from '@user/application/commands/use-cases/destroy
 import { UpdateUserUseCase } from '@user/application/commands/use-cases/update-user/update-user.use-case';
 import { GetUserUseCase } from '@user/application/queries/use-cases/get-user/get-user.use-case';
 import { ListUserUseCase } from '@user/application/queries/use-cases/list-user/list-user.use-case';
-import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
+import { ACCOUNT_REPOSITORY, PROFILE_REPOSITORY, USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { ArchiveUserDomainService } from '@user/domain/domain-services/archive-user.domain-service';
 import { CreateUserDomainService } from '@user/domain/domain-services/create-user.domain-service';
 import { DestroyUserDomainService } from '@user/domain/domain-services/destroy-user.domain-service';
@@ -25,6 +25,8 @@ import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/user-typeorm.repository';
+import { ProfileTypeormRepository } from '../persistence/typeorm/repositories/profile-typeorm.repository';
+import { AccountTypeormRepository } from '../persistence/typeorm/repositories/account-typeorm.repository';
 
 @Module({
   imports: [
@@ -46,11 +48,62 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     DestroyUserDomainService,
     GetUserDomainService,
     ListUserDomainService,
+    // Inversion of dependencies, Control principle (IoC) to domain services
+    {
+      provide: CreateUserDomainService,
+      useFactory: (accountRepository: AccountTypeormRepository, profileRepository: ProfileTypeormRepository): CreateUserDomainService => {
+        return new CreateUserDomainService(accountRepository, profileRepository);
+      },
+      inject: [ACCOUNT_REPOSITORY, PROFILE_REPOSITORY],
+    },
+    {
+      provide: UpdateUserDomainService,
+      useFactory: (userRepository: UserTypeormRepository): UpdateUserDomainService => {
+        return new UpdateUserDomainService(userRepository);
+      },
+      inject: [USER_REPOSITORY],
+    },
+    {
+      provide: ArchiveUserDomainService,
+      useFactory: (userRepository: UserTypeormRepository): ArchiveUserDomainService => {
+        return new ArchiveUserDomainService(userRepository);
+      },
+      inject: [USER_REPOSITORY],
+    },
+    {
+      provide: DestroyUserDomainService,
+      useFactory: (userRepository: UserTypeormRepository): DestroyUserDomainService => {
+        return new DestroyUserDomainService(userRepository);
+      },
+      inject: [USER_REPOSITORY],
+    },
+    {
+      provide: GetUserDomainService,
+      useFactory: (userRepository: UserTypeormRepository): GetUserDomainService => {
+        return new GetUserDomainService(userRepository);
+      },
+      inject: [USER_REPOSITORY],
+    },
+    {
+      provide: ListUserDomainService,
+      useFactory: (userRepository: UserTypeormRepository): ListUserDomainService => {
+        return new ListUserDomainService(userRepository);
+      },
+      inject: [USER_REPOSITORY],
+    },
     // Event Handlers
     // Repositories
     {
       provide: USER_REPOSITORY,
       useClass: UserTypeormRepository,
+    },
+    {
+      provide: ACCOUNT_REPOSITORY,
+      useClass: AccountTypeormRepository,
+    },
+    {
+      provide: PROFILE_REPOSITORY,
+      useClass: ProfileTypeormRepository,
     },
   ],
   controllers: [
