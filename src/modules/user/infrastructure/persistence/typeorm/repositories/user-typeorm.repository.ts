@@ -10,10 +10,10 @@ import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
 import { UserModel } from '@user/domain/models/user/user.model';
-import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
+import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 
 @Injectable()
 export class UserTypeormRepository
@@ -31,37 +31,38 @@ export class UserTypeormRepository
   async persist(userAggregate: UserAggregate): Promise<UserAggregate> {
     return await this.entityManager.transaction(
       async (manager: EntityManager): Promise<UserAggregate> => {
-        const user = userAggregate.userModel.toPrimitives();
-        const profile = userAggregate.profileModel.toPrimitives();
-        const accounts = userAggregate.accountsModel.map(
-          (account): IAccountSchemaPrimitives => account.toPrimitives(),
-        );
+        const { userModel, profileModel, accountsModel } = userAggregate;
+  
+        const partialUser = userModel.toPartialPrimitives();
+        const partialProfile = profileModel.toPartialPrimitives();
+        const partialAccounts = accountsModel.map((account): Partial<IAccountSchemaPrimitives> => account.toPartialPrimitives());
 
         // Save or update user entity
-        const savedUser = await manager.save(UserEntity, user);
+        const savedUser = await manager.save(UserEntity, partialUser);
+        userModel.hydrate(savedUser);
 
         // Set foreign key for profile entity
         const savedProfile = await manager.save(ProfileEntity, {
-          ...profile,
+          ...partialProfile,
           user: savedUser,
         });
+        profileModel.hydrate(savedProfile);
 
-        // Set foreign key for each account entity
-        const savedAccounts = [];
-        for (const account of accounts) {
+        for (const partialAccount of partialAccounts) {
           const savedAccount = await manager.save(AccountEntity, {
-            ...account,
+            ...partialAccount,
             user: savedUser,
           });
 
-          savedAccounts.push(savedAccount);
+          const accountMatch = accountsModel.find((account): boolean => account.uuid === savedAccount.uuid);
+          accountMatch.hydrate(savedAccount);
         }
 
         // Hydrate the aggregate with the saved entities
         userAggregate.hydrate({
-          userModel: new UserModel(savedUser),
-          profileModel: new ProfileModel(savedProfile),
-          accountsModel: savedAccounts.map((account): AccountModel => new AccountModel(account)),
+          userModel,
+          profileModel,
+          accountsModel,
         });
 
         return userAggregate;
