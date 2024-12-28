@@ -26,11 +26,19 @@ export interface IUserSchemaPrimitivesAggregate {
   profile: IProfileSchemaPrimitives;
 }
 
+export interface IUserSchemaPartialPrimitivesAggregate {
+  user: Partial<IUserSchemaPrimitives>;
+  accounts: Partial<IAccountSchemaPrimitives>[];
+  profile: Partial<IProfileSchemaPrimitives>;
+}
+
 export class UserAggregate extends AggregateRoot {
   private readonly entities: IUserSchemaAggregate;
 
   constructor(entities: IUserSchemaAggregate) {
     super();
+    this.entities = {} as IUserSchemaAggregate;
+
     this.hydrate(entities);
   }
 
@@ -49,10 +57,7 @@ export class UserAggregate extends AggregateRoot {
   public hydrate(entities: IUserSchemaAggregate): void {
     const { userModel, accountsModel, profileModel } = entities;
 
-    if (userModel) {
-      this.entities.userModel = userModel;
-    }
-
+    this.entities.userModel = userModel;
     this.entities.accountsModel = accountsModel;
     this.entities.profileModel = profileModel;
   }
@@ -67,9 +72,23 @@ export class UserAggregate extends AggregateRoot {
     };
   }
 
+  public toPartialPrimitives(): IUserSchemaPartialPrimitivesAggregate {
+    return {
+      user: this.userModel.toPartialPrimitives(),
+      profile: this.profileModel.toPartialPrimitives(),
+      accounts: this.accountsModel.map(
+        (accountModel): Partial<IAccountSchemaPrimitives> => accountModel.toPartialPrimitives(),
+      ),
+    };
+  }
+
   // TODO: map more fields to emit the event
   public create(): void {
-    this.apply(new UserCreatedEvent(this.userModel.uuid, this.userModel.status));
+    this.userModel.create();
+    this.profileModel.create();
+    this.accountsModel.forEach((accountModel): void => accountModel.create());
+
+    this.apply(new UserCreatedEvent(this.userModel, this.accountsModel, this.profileModel));
   }
 
   public update(
