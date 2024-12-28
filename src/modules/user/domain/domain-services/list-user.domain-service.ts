@@ -1,7 +1,7 @@
 import { Criteria } from '@common/domain/criteria/criteria';
 import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
-import { UserNotFoundException } from '@user/domain/exceptions/user-not-found.exception';
+import { UserNotFoundException } from '@user/domain/exceptions/user/user-not-found.exception';
 
 export class ListUserDomainService {
   constructor(private readonly userRepository: IUserRepositoryContract) {}
