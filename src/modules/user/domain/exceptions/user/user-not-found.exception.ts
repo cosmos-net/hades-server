@@ -1,6 +1,6 @@
-import ValidationDomainException from '@common/domain/exceptions/validation.exception';
+import ResourceNotFoundDomainException from '@common/domain/exceptions/resource-not-found.exception';
 
-export class UserNotFoundException extends ValidationDomainException {
+export class UserNotFoundException extends ResourceNotFoundDomainException {
   public static readonly USER_NOT_FOUND = 'USER_NOT_FOUND';
 
   constructor(public readonly message: string) {
