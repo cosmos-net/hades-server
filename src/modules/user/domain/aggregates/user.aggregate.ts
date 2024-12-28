@@ -38,7 +38,6 @@ export class UserAggregate extends AggregateRoot {
   constructor(entities: IUserSchemaAggregate) {
     super();
     this.entities = {} as IUserSchemaAggregate;
-
     this.hydrate(entities);
   }
 
@@ -96,10 +95,12 @@ export class UserAggregate extends AggregateRoot {
     profile?: DeepPartialProfileBaseSchema,
   ): void {
     if (accounts) {
-      this.entities.accountsModel.forEach((accountModel): void => {
-        const account = accounts.find((account): boolean => account.uuid === accountModel.uuid);
+      accounts.forEach((account): void => {
+        const accountModel = this.entities.accountsModel.find(
+          (accountModel): boolean => accountModel.uuid === account.uuid,
+        );
 
-        if (account) {
+        if (accountModel) {
           accountModel.update(account);
         }
       });
