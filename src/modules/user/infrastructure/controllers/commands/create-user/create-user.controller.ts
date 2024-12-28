@@ -18,11 +18,13 @@ export class CreateUserController {
     try {
       const accounts = createUserDto.accounts.map((account) => ({ ...account, uuid: UUIDv4() }));
       const profile = { ...createUserDto.profile, uuid: UUIDv4() };
+      const user = { uuid: UUIDv4() };
   
       const result = await this.commandBus.execute<CreateUserCommand, UserAggregate>(
         new CreateUserCommand({
           accounts,
           profile,
+          user,
         }),
       );
 
