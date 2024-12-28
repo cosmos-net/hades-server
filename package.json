@@ -89,6 +89,20 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src/"
+    ],
+    "moduleNameMapper": {
+      "^@core(|/.*)$": "<rootDir>/modules/core/$1",
+      "^@common(|/.*)$": "<rootDir>/modules/common/$1",
+      "^@user(|/.*)$": "<rootDir>/modules/user/$1",
+      "^@session(|/.*)$": "<rootDir>/modules/session/$1",
+      "^@role(|/.*)$": "<rootDir>/modules/role/$1",
+      "^@assignment(|/.*)$": "<rootDir>/modules/assignment/$1",
+      "^@permission(|/.*)$": "<rootDir>/modules/permission/$1",
+      "^@policy(|/.*)$": "<rootDir>/modules/policy/$1",
+      "^@helpers(|/.*)$": "<rootDir>/helpers/$1"
+    }
   }
 }
