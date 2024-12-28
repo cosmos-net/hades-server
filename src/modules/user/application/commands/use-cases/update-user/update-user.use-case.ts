@@ -20,11 +20,7 @@ export class UpdateUserUseCase implements ICommandHandler<UpdateUserCommand> {
   async execute(command: UpdateUserCommand): Promise<UserAggregate> {
     const { uuid, accounts, profile } = command;
 
-    const userAggregate = await this.UpdateUserDomainService.go({
-      uuid,
-      accounts,
-      profile,
-    });
+    const userAggregate = await this.UpdateUserDomainService.go(uuid, accounts, profile);
 
     const user = this.publisher.mergeObjectContext(userAggregate);
 
