@@ -1,6 +1,7 @@
 import { ICommand } from '@nestjs/cqrs';
 
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
+import { StatusEnum } from '@user/domain/enums/user-status-enum';
 
 export interface IAddressCommand {
   readonly street: string;
@@ -28,14 +29,24 @@ export interface IAccountCommand {
   readonly username: string;
   readonly email: string;
   readonly password: string;
+  readonly passwordConfirmation: string;
+}
+
+export interface IUserCommand {
+  readonly uuid: string;
+  readonly status: StatusEnum;
 }
 
 export class CreateUserCommand implements ICommand {
+  public readonly user: IUserCommand;
   public readonly profile: IProfileCommand;
   public readonly accounts: IAccountCommand[];
 
-  constructor(root: CreateUserCommand) {
-    this.profile = root.profile;
-    this.accounts = root.accounts;
+  constructor({ user, profile, accounts }: { user?: Partial<IUserCommand>, profile: IProfileCommand, accounts: IAccountCommand[] }) {
+    const status = user?.status ?? StatusEnum.PENDING;
+
+    this.user = { uuid: profile.uuid, status };
+    this.profile = profile;
+    this.accounts = accounts
   }
 }
