@@ -60,7 +60,16 @@ export class CreateUserOutputDto {
         secondLastName: root.profileModel.secondLastName,
         phoneNumber: root.profileModel.phoneNumber,
         gender: root.profileModel.gender,
-        address: root.profileModel.address,
+        address: {
+          street: root.profileModel.address.street,
+          extNumber: root.profileModel.address.extNumber,
+          intNumber: root.profileModel.address.intNumber,
+          neighborhood: root.profileModel.address.neighborhood,
+          zipCode: root.profileModel.address.zipCode,
+          city: root.profileModel.address.city,
+          state: root.profileModel.address.state,
+          country: root.profileModel.address.country,
+        }
       },
     };
   }
