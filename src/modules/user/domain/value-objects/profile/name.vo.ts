@@ -8,6 +8,7 @@ import {
 export class Name extends NameValueObject {
   constructor(value: string) {
     super(value);
+    this.validate();
   }
 
   private readonly _regex = regexCustomBuilderHelper({
@@ -26,7 +27,7 @@ export class Name extends NameValueObject {
     if (!isValid) {
       //TODO: Handle domain error
       throw new Error(
-        `Name must be between ${MIN_PROFILE_NAME_LENGTH} and ${MAX_PROFILE_NAME_LENGTH} characters and contain only letters`,
+        `The Name ${this._value} is not valid. It must have a length between ${MIN_PROFILE_NAME_LENGTH} and ${MAX_PROFILE_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     }
   }
