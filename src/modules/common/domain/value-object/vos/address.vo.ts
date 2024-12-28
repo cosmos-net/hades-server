@@ -14,15 +14,17 @@ interface IAddressSchema {
 export class Address {
   public readonly _entityRoot: IAddressSchema;
 
-  constructor(Address: IAddressSchema) {
-    this._entityRoot.street = Address.street;
-    this._entityRoot.extNumber = Address.extNumber;
-    this._entityRoot.intNumber = Address.intNumber || null;
-    this._entityRoot.neighborhood = Address.neighborhood;
-    this._entityRoot.zipCode = Address.zipCode;
-    this._entityRoot.city = Address.city;
-    this._entityRoot.state = Address.state;
-    this._entityRoot.country = Address.country;
+  constructor(address: IAddressSchema) {
+    this._entityRoot = {} as IAddressSchema;
+
+    this._entityRoot.street = address.street;
+    this._entityRoot.extNumber = address.extNumber;
+    this._entityRoot.intNumber = address.intNumber || null;
+    this._entityRoot.neighborhood = address.neighborhood;
+    this._entityRoot.zipCode = address.zipCode;
+    this._entityRoot.city = address.city;
+    this._entityRoot.state = address.state;
+    this._entityRoot.country = address.country;
 
     this.validate();
   }
