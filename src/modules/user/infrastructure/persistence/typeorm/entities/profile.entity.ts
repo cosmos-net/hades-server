@@ -10,6 +10,7 @@ import {
 } from '@user/domain/constants/general-rules';
 import { IProfileSchemaPrimitives } from '@user/domain/schemas/profile/profile.schema-primitive';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
+import { stringArrayTransformer } from '@common/infrastructure/persistence/typeorm/transformers/string-array.transformer.helper';
 
 @Entity('profiles')
 export class ProfileEntity extends TypeormBaseEntity implements IProfileSchemaPrimitives {
@@ -22,6 +23,7 @@ export class ProfileEntity extends TypeormBaseEntity implements IProfileSchemaPr
   @Column({
     type: 'text',
     nullable: false,
+    transformer: stringArrayTransformer,
   })
   names: string[];
 
