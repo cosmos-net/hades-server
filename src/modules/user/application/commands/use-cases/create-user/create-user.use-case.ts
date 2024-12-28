@@ -18,9 +18,9 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
   ) {}
 
   async execute(command: CreateUserCommand): Promise<UserAggregate> {
-    const { accounts, profile } = command;
+    const { user, accounts, profile } = command;
 
-    const userAggregate = await this.createUserDomainService.go(accounts, profile);
+    const userAggregate = await this.createUserDomainService.go(user, accounts, profile);
     const userContext = this.publisher.mergeObjectContext(userAggregate);
 
     await this.repository.persist(userAggregate);
