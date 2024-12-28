@@ -12,20 +12,19 @@ export default class Username extends StringValueObject {
   }
 
   private readonly _regex = regexCustomBuilderHelper({
-    allowSpaces: true,
-    allowNumbers: true,
-    allowCaseInsensitive: false,
     minLength: MIN_ACCOUNT_USER_NAME_LENGTH,
     maxLength: MAX_ACCOUNT_USER_NAME_LENGTH,
+    allowCaseInsensitive: true,
     allowLetters: true,
+    allowNumbers: true,
+    allowSpaces: false,
     specialChars: '-.$@*',
   });
 
   protected validate(): void {
-    const isInValidValue = this._regex.test(this._value);
+    const isValid = this._regex.test(this._value);
 
-    // TODO Username exception for invalid username
-    if (isInValidValue) {
+    if (!isValid) {
       throw new Error(`Invalid username: ${this._value}`);
     }
   }

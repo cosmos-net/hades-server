@@ -27,7 +27,7 @@ export class LastName extends StringValueObject {
     if (!isValid) {
       //TODO: Handle exception domain
       throw new Error(
-        `Last name ${this._value} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters and no spaces.`,
+        `Last name ${this._value} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     }
   }
