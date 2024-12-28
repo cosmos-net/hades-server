@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { ArrayMinSize, ArrayNotEmpty, IsArray, IsNotEmpty, IsNotEmptyObject, IsOptional, IsUUID, ValidateIf, ValidateNested } from 'class-validator';
+import { ArrayMinSize, ArrayNotEmpty, IsArray, IsNotEmpty, IsNotEmptyObject, IsUUID, ValidateIf, ValidateNested } from 'class-validator';
 
 import { AccountDTO } from '@user/infrastructure/controllers/commands/update-user/dtos/account.dto';
 import { ProfileDTO } from '@user/infrastructure/controllers/commands/update-user/dtos/profile.dto';
