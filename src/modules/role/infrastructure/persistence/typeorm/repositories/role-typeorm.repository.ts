@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Criteria } from '@common/domain/criteria/criteria';
-import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
+import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/repositories/typeorm-repository';
 import { IOptions, IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { ListRoleModel } from '@role/domain/models/role-list.model';
-import { RoleEntity } from '@role/infrastructure/persistence/entities/role.entity';
+import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/role.entity';
 import { RoleModel } from '@role/domain/models/role.model';
 import { isUUID } from '@helpers/regex/regex-validator-uuid.helper';
 
