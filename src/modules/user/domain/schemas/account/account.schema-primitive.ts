@@ -5,6 +5,7 @@ export interface IAccountBaseSchema {
   uuid: string;
   username: string;
   password: string;
+  passwordConfirmation?: string;
   email: string;
 }
 

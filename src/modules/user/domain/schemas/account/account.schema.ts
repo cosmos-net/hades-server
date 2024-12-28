@@ -14,6 +14,7 @@ export interface IAccountSchema {
   username: Username;
   email: Email;
   password: Password;
+  passwordConfirmation?: Password;
   createdAt: CreatedAt;
   updatedAt: UpdatedAt;
   archivedAt: ArchivedAt;
