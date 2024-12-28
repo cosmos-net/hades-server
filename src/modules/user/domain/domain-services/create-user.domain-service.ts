@@ -7,7 +7,7 @@ import { UserModel } from '@user/domain/models/user/user.model';
 import { IUserBaseSchema } from '@user/domain/schemas/user/user.schema-primitive';
 import { IAccountRepositoryContract } from '@user/domain/contracts/account-repository.contract';
 import { IProfileRepositoryContract } from '@user/domain/contracts/profile-repository.contract';
-import { UserIsNotAvailableException } from '../exceptions/account/user-is-not-available.exception';
+import { UserIsNotAvailableException } from '@user/domain/exceptions/user/user-is-not-available.exception';
 
 export class CreateUserDomainService {
   constructor(
