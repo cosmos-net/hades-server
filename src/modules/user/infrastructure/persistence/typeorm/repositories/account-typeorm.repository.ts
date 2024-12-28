@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
+import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/repositories/typeorm-repository';
 import { IAccountRepositoryContract } from '@user/domain/contracts/account-repository.contract';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 
