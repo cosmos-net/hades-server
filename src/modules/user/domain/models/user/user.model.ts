@@ -3,18 +3,20 @@ import { AggregateRoot } from '@nestjs/cqrs';
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
-import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
+import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IUserSchema } from '@user/domain/schemas/user/user.schema';
-import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
+import { IUserBaseSchema, IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 import { UserStatus } from '@user/domain/value-objects/user/user-status.vo';
+import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 
 export class UserModel extends AggregateRoot {
   private readonly _entityRoot: IUserSchema;
 
   constructor(entity: IUserSchemaPrimitives);
-  constructor(uuid: string, status: string);
+  constructor(uuid: string, status: StatusEnum);
   constructor(uuidOrSchema: string | IUserSchemaPrimitives, status?: StatusEnum) {
     super();
+    this._entityRoot = {} as IUserSchema;
 
     if (typeof uuidOrSchema === 'object') {
       this.hydrate(uuidOrSchema);
@@ -24,8 +26,8 @@ export class UserModel extends AggregateRoot {
     }
   }
 
-  get id(): number {
-    return this._entityRoot.id._value;
+  get id(): number | undefined {
+    return this._entityRoot.id?._value;
   }
 
   get uuid(): string {
@@ -64,6 +66,17 @@ export class UserModel extends AggregateRoot {
     };
   }
 
+  public toPartialPrimitives(): Partial<IUserSchemaPrimitives> {
+    return {
+      ...(this.id && { id: this.id }),
+      ...(this.uuid && { uuid: this.uuid }),
+      ...(this.status && { status: this.status }),
+      ...(this.archivedAt && { archivedAt: this.archivedAt }),
+      ...(this.createdAt && { createdAt: this.createdAt }),
+      ...(this.updatedAt && { updatedAt: this.updatedAt }),
+    };
+  }
+
   public archive(): void {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
   }
@@ -76,7 +89,13 @@ export class UserModel extends AggregateRoot {
     }
   }
 
-  public static fromPrimitives(entity: IUserSchemaPrimitives): UserModel {
-    return new UserModel(entity);
+  public create(): void {
+    this._entityRoot.createdAt = new CreatedAt(new Date());
+    this._entityRoot.updatedAt = new CreatedAt(new Date());
+    this._entityRoot.status = new UserStatus(StatusEnum.PENDING);
+  }
+
+  public static fromPrimitives(entity: IUserBaseSchema): UserModel {
+    return new UserModel(entity.uuid, entity.status);
   }
 }

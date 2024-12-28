@@ -8,7 +8,7 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { DeepPartial } from '@helpers/types/partials.helper';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
-import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
+import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IProfileSchema } from '@user/domain/schemas/profile/profile.schema';
 import {
   IProfileAddressSchema,
@@ -44,6 +44,8 @@ export class ProfileModel extends AggregateRoot {
     address?: IProfileAddressSchema,
   ) {
     super();
+    this._entityRoot = {} as IProfileSchema;
+    
     if (entityOrUuid instanceof Object) {
       this.hydrate(entityOrUuid);
     } else if (typeof entityOrUuid === 'string') {
@@ -103,8 +105,8 @@ export class ProfileModel extends AggregateRoot {
     return this._entityRoot.createdAt._value;
   }
 
-  get updatedAt(): Date {
-    return this._entityRoot.updatedAt._value;
+  get updatedAt(): Date | undefined {
+    return this._entityRoot.updatedAt?._value;
   }
 
   get archivedAt(): Date | undefined {
@@ -174,6 +176,22 @@ export class ProfileModel extends AggregateRoot {
     };
   }
 
+  public toPartialPrimitives(): Partial<IProfileBaseSchema> {
+    return {
+      ...(this.id && { id: this.id }),
+      ...(this.uuid && { uuid: this.uuid }),
+      ...(this.names && { names: this.names }),
+      ...(this.lastName && { lastName: this.lastName }),
+      ...(this.secondLastName && { secondLastName: this.secondLastName }),
+      ...(this.phoneNumber && { phoneNumber: this.phoneNumber }),
+      ...(this.gender && { gender: this.gender }),
+      ...(this.address && { address: this.address }),
+      ...(this.createdAt && { createdAt: this.createdAt }),
+      ...(this.updatedAt && { updatedAt: this.updatedAt }),
+      ...(this.archivedAt && { archivedAt: this.archivedAt }),
+    };
+  }
+
   public update(entity: DeepPartial<IProfileBaseSchema>): void {
     if (entity.names && entity.names.length > 0) {
       this._entityRoot.names = entity.names.map((name): Name => new Name(name));
@@ -213,5 +231,9 @@ export class ProfileModel extends AggregateRoot {
         `User with uuid ${this.uuid} cannot be destroyed because it is not archived`,
       );
     }
+  }
+
+  public create(): void {
+    this._entityRoot.createdAt = new CreatedAt(new Date());
   }
 }

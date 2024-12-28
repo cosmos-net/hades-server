@@ -15,7 +15,8 @@ import {
 } from '@user/domain/schemas/account/account.schema-primitive';
 import Password from '@user/domain/value-objects/account/password.vo';
 import Username from '@user/domain/value-objects/account/username.vo';
-import { UserNotArchivedException } from '@user/domain/exceptions/user-not-archived.exception';
+import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
+import { AccountConfirmationPasswordException } from '@user/domain/exceptions/account/account-confirmation-password.exception';
 
 export class AccountModel extends AggregateRoot {
   private readonly _entityRoot: IAccountSchema;
@@ -29,6 +30,8 @@ export class AccountModel extends AggregateRoot {
     password?: string,
   ) {
     super();
+    this._entityRoot = {} as IAccountSchema;
+
     if (entityOrUuid instanceof Object) {
       this.hydrate(entityOrUuid);
     } else if (typeof entityOrUuid === 'string') {
@@ -36,6 +39,7 @@ export class AccountModel extends AggregateRoot {
       this._entityRoot.username = new Username(username);
       this._entityRoot.email = new Email(email);
       this._entityRoot.password = new Password(password);
+      this._entityRoot.passwordConfirmation = new Password(password);
     }
   }
 
@@ -57,6 +61,10 @@ export class AccountModel extends AggregateRoot {
 
   get password(): string {
     return this._entityRoot.password._value;
+  }
+
+  get passwordConfirmation(): string {
+    return this._entityRoot.passwordConfirmation._value;
   }
 
   get createdAt(): Date {
@@ -89,6 +97,7 @@ export class AccountModel extends AggregateRoot {
     this._entityRoot.username = new Username(entity.username);
     this._entityRoot.email = new Email(entity.email);
     this._entityRoot.password = new Password(entity.password);
+    this._entityRoot.passwordConfirmation = new Password(entity.password);
     this._entityRoot.createdAt = new CreatedAt(entity.createdAt);
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
   }
@@ -104,10 +113,24 @@ export class AccountModel extends AggregateRoot {
       username: this.username,
       email: this.email,
       password: this.password,
+      passwordConfirmation: this.password,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       archivedAt: this.archivedAt,
       sessions: this.sessions.getItems,
+    };
+  }
+
+  public toPartialPrimitives(): Partial<IAccountSchemaPrimitives> {
+    return {
+      ...(this.id && { id: this.id }),
+      ...(this.uuid && { uuid: this.uuid }),
+      ...(this.username && { username: this.username }),
+      ...(this.email && { email: this.email }),
+      ...(this.password && { password: this.password }),
+      ...(this.createdAt && { createdAt: this.createdAt }),
+      ...(this.updatedAt && { updatedAt: this.updatedAt }),
+      ...(this.archivedAt && { archivedAt: this.archivedAt }),
     };
   }
 
@@ -135,5 +158,14 @@ export class AccountModel extends AggregateRoot {
         `User with uuid ${this.uuid} cannot be destroyed because it is not archived`,
       );
     }
+  }
+
+  public create(): void {
+    if (this.password !== this.passwordConfirmation) {
+      throw new AccountConfirmationPasswordException('Password and password confirmation must be equal');
+    }
+
+    this._entityRoot.createdAt = new CreatedAt(new Date());
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
   }
 }
