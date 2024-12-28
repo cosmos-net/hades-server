@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 
 import { Criteria } from '@common/domain/criteria/criteria';
-import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
+import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/repositories/typeorm-repository';
 import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
