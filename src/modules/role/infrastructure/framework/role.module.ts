@@ -15,8 +15,8 @@ import { UpdateRoleDomainService } from '@role/domain/domain-service/update-role
 import { ListRoleDomainService } from '@role/domain/domain-service/list-role.domain-service';
 import { CreateRoleController } from '@role/infrastructure/controllers/commands/create-role/create-role.controller';
 import { RoleReDescribedEventHandler } from '@role/infrastructure/events-handler/success/role-redescribed.event-handler';
-import { RoleEntity } from '@role/infrastructure/persistence/entities/role.entity';
-import { RoleTypeormRepository } from '@role/infrastructure/persistence/repositories/role-typeorm.repository';
+import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/role.entity';
+import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/repositories/role-typeorm.repository';
 import { ArchiveRoleController } from '@role/infrastructure/controllers/commands/archive-role/archive-role.controller';
 import { DestroyRoleController } from '@role/infrastructure/controllers/commands/destroy-role/destroy-role.controller';
 import { UpdateRoleController } from '@role/infrastructure/controllers/commands/update-role/update-role.controller';
