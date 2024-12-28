@@ -82,7 +82,7 @@ export class UserTypeormRepository
     return result.affected > 0;
   }
 
-  async getOneBy(uuid: string): Promise<UserAggregate> {
+  async getOneBy(uuid: string): Promise<UserAggregate | null> {
     const entity = await this.repository.findOne({
       where: { uuid },
       relations: {
@@ -90,6 +90,10 @@ export class UserTypeormRepository
         profile: true,
       },
     });
+
+    if (!entity) {
+      return null;
+    }
 
     const user = new UserModel(entity);
     const profile = new ProfileModel(entity.profile);
