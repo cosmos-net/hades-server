@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 
+import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/repositories/typeorm-repository';
 import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
@@ -89,13 +90,14 @@ export class UserTypeormRepository
     return result.affected > 0;
   }
 
-  async getOneBy(uuid: string): Promise<UserAggregate | null> {
+  async getOneBy(uuid: string, options?: IOptions): Promise<UserAggregate | null> {
     const entity = await this.repository.findOne({
       where: { uuid },
       relations: {
         accounts: true,
         profile: true,
       },
+      ...(options?.withArchived && { withArchived: true }),
     });
 
     if (!entity) {
