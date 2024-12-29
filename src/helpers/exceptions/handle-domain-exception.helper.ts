@@ -20,7 +20,7 @@ const INTERNAL_SERVER_ERROR = 500;
 
 export default function handleDomainException(error: DomainException): StructureError {
   const exceptionType = error.constructor as typeof DomainException;
-  
+
   if (exceptionMapping.has(exceptionType)) {
     return {
       statusCode: exceptionMapping.get(exceptionType),
@@ -28,21 +28,32 @@ export default function handleDomainException(error: DomainException): Structure
     };
   }
 
-  if (error instanceof BusinessConflictDomainException || error instanceof ConcurrencyDomainException || error instanceof DependencyViolationDomainException) {
+  if (
+    error instanceof BusinessConflictDomainException ||
+    error instanceof ConcurrencyDomainException ||
+    error instanceof DependencyViolationDomainException
+  ) {
     return {
       statusCode: 409,
       message: error.message,
     };
   }
 
-  if (error instanceof DomainLimitExceededDomainException || error instanceof InsufficientFundsDomainException || error instanceof InvalidOperationDomainException) {
+  if (
+    error instanceof DomainLimitExceededDomainException ||
+    error instanceof InsufficientFundsDomainException ||
+    error instanceof InvalidOperationDomainException
+  ) {
     return {
       statusCode: 400,
       message: error.message,
     };
   }
 
-  if (error instanceof DomainNotAllowedDomainException || error instanceof UnauthorizedAccessDomainException) {
+  if (
+    error instanceof DomainNotAllowedDomainException ||
+    error instanceof UnauthorizedAccessDomainException
+  ) {
     return {
       statusCode: 403,
       message: error.message,
