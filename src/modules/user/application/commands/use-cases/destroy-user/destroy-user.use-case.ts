@@ -6,7 +6,6 @@ import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { DestroyUserDomainService } from '@user/domain/domain-services/destroy-user.domain-service';
-import { UserModel } from '@user/domain/models/user/user.model';
 
 @Injectable()
 @CommandHandler(DestroyUserCommand)
@@ -24,7 +23,7 @@ export class DestroyUserUseCase implements ICommandHandler<DestroyUserCommand> {
     const userAggregate = await this.DestroyUserDomainService.go(uuid);
     const userContext = this.publisher.mergeObjectContext(userAggregate);
 
-    await this.repository.destroy(uuid);
+    await this.repository.destroy(userAggregate);
 
     userContext.commit();
 
