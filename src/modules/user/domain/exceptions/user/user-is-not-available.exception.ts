@@ -1,4 +1,4 @@
-import BusinessConflictDomainException from "@common/domain/exceptions/business-conflict.exception";
+import BusinessConflictDomainException from '@common/domain/exceptions/business-conflict.exception';
 
 export class UserIsNotAvailableException extends BusinessConflictDomainException {
   public static readonly USER_IS_NOT_AVAILABLE = 'USER_IS_NOT_AVAILABLE';
