@@ -1,12 +1,12 @@
 import { PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, OneToMany, Entity } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
+import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import {
   MAX_ACCOUNT_EMAIL_LENGTH,
   MAX_ACCOUNT_USER_NAME_LENGTH,
 } from '@user/domain/constants/general-rules';
 import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
-import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
 
 @Entity('accounts')
@@ -42,7 +42,7 @@ export class AccountEntity extends TypeormBaseEntity implements IAccountSchemaPr
   })
   password: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.accounts, {
+  @ManyToOne((): typeof UserEntity => UserEntity, (user): AccountEntity[] => user.accounts, {
     nullable: false,
     cascade: false,
     eager: false,
@@ -54,6 +54,10 @@ export class AccountEntity extends TypeormBaseEntity implements IAccountSchemaPr
   })
   user: UserEntity;
 
-  @OneToMany(() => SessionEntity, (session) => session.account, { cascade: true, nullable: true })
+  @OneToMany(
+    (): typeof SessionEntity => SessionEntity,
+    (session): AccountEntity => session.account,
+    { cascade: true, nullable: true },
+  )
   sessions?: SessionEntity[] | null;
 }
