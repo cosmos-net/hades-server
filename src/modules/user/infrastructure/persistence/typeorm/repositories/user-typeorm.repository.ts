@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, DeleteResult } from 'typeorm';
 
 import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
@@ -84,10 +84,28 @@ export class UserTypeormRepository
     return result.affected > 0;
   }
 
-  async destroy(uuid: string): Promise<boolean> {
-    const result = await this.repository.delete({ uuid });
+  async destroy(userAggregate: UserAggregate): Promise<boolean> {
+    return await this.entityManager.transaction(
+      async (manager: EntityManager): Promise<boolean> => {
+        const { userModel, accountsModel, profileModel } = userAggregate;
+        const promises: Promise<DeleteResult>[] = [];
 
-    return result.affected > 0;
+        // Delete accounts
+        for (const account of accountsModel) {
+          promises.push(manager.delete(AccountEntity, { uuid: account.uuid }));
+        }
+
+        // Delete profile
+        promises.push(manager.delete(ProfileEntity, { uuid: profileModel.uuid }));
+
+        // Delete user
+        promises.push(manager.delete(UserEntity, { uuid: userModel.uuid }));
+
+        await Promise.all(promises);
+
+        return true;
+      },
+    );
   }
 
   async getOneBy(uuid: string, options?: IOptions): Promise<UserAggregate | null> {
