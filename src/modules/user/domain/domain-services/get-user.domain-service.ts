@@ -5,13 +5,13 @@ import { UserNotFoundException } from '@user/domain/exceptions/user/user-not-fou
 export class GetUserDomainService {
   constructor(private readonly userRepository: IUserRepositoryContract) {}
 
-  async go(uuid: string): Promise<UserAggregate> {
-    const user = await this.userRepository.getOneBy(uuid);
+  async go(uuid: string, withArchived: boolean): Promise<UserAggregate> {
+    const userAggregate = await this.userRepository.getOneBy(uuid, { withArchived });
 
-    if (!user) {
+    if (!userAggregate) {
       throw new UserNotFoundException(`User with uuid ${uuid} not found`);
     }
 
-    return user;
+    return userAggregate;
   }
 }

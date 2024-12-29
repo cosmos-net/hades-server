@@ -97,7 +97,7 @@ export class UserTypeormRepository
         accounts: true,
         profile: true,
       },
-      ...(options?.withArchived && { withArchived: true }),
+      ...(options?.withArchived && { withDeleted: true }),
     });
 
     if (!entity) {
