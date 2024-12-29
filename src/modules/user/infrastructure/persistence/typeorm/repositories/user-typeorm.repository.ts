@@ -79,13 +79,13 @@ export class UserTypeormRepository
   }
 
   async archive(uuid: string): Promise<boolean> {
-    const result = await this.repository.softDelete(uuid);
+    const result = await this.repository.softDelete({ uuid });
 
     return result.affected > 0;
   }
 
   async destroy(uuid: string): Promise<boolean> {
-    const result = await this.repository.delete(uuid);
+    const result = await this.repository.delete({ uuid });
 
     return result.affected > 0;
   }
