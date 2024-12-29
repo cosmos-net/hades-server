@@ -1,3 +1,5 @@
+import { ProfileModel } from '@user/domain/models/profile/profile.model';
+
 export abstract class IProfileRepositoryContract {
-  abstract isPhoneAvailable(phoneNumber: string): Promise<boolean>;
+  abstract getOneBy(phoneNumberOrUUID: string): Promise<ProfileModel>;
 }
