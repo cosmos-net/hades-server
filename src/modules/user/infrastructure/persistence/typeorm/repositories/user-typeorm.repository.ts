@@ -10,10 +10,10 @@ import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
 import { UserModel } from '@user/domain/models/user/user.model';
+import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
-import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 
 @Injectable()
 export class UserTypeormRepository
@@ -32,13 +32,16 @@ export class UserTypeormRepository
     return await this.entityManager.transaction(
       async (manager: EntityManager): Promise<UserAggregate> => {
         const { userModel, profileModel, accountsModel } = userAggregate;
-  
+
         const partialUser = userModel.toPartialPrimitives();
         const partialProfile = profileModel.toPartialPrimitives();
-        const partialAccounts = accountsModel.map((account): Partial<IAccountSchemaPrimitives> => account.toPartialPrimitives());
+        const partialAccounts = accountsModel.map(
+          (account): Partial<IAccountSchemaPrimitives> => account.toPartialPrimitives(),
+        );
 
         // Save or update user entity
         const savedUser = await manager.save(UserEntity, partialUser);
+
         userModel.hydrate(savedUser);
 
         // Set foreign key for profile entity
@@ -46,6 +49,7 @@ export class UserTypeormRepository
           ...partialProfile,
           user: savedUser,
         });
+
         profileModel.hydrate(savedProfile);
 
         for (const partialAccount of partialAccounts) {
@@ -54,7 +58,10 @@ export class UserTypeormRepository
             user: savedUser,
           });
 
-          const accountMatch = accountsModel.find((account): boolean => account.uuid === savedAccount.uuid);
+          const accountMatch = accountsModel.find(
+            (account): boolean => account.uuid === savedAccount.uuid,
+          );
+
           accountMatch.hydrate(savedAccount);
         }
 
