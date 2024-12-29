@@ -1,4 +1,5 @@
+import { AccountModel } from '@user/domain/models/account/account.model';
+
 export abstract class IAccountRepositoryContract {
-  abstract isUsernameAvailable(username: string): Promise<boolean>;
-  abstract isEmailAvailable(email: string): Promise<boolean>;
+  abstract getOneBy(UsernameOrEmailOrUUID: string): Promise<AccountModel>;
 }
