@@ -1,6 +1,6 @@
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
-import { UserAlreadyArchivedException } from '@user/domain/exceptions/user/user-already-archivd.exception';
+import { UserAlreadyArchivedException } from '@user/domain/exceptions/user/user-already-archived.exception';
 import { UserNotFoundException } from '@user/domain/exceptions/user/user-not-found.exception';
 
 export class ArchiveUserDomainService {
