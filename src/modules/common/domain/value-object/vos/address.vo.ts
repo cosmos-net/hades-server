@@ -1,6 +1,6 @@
 import InvalidOperationDomainException from '@common/domain/exceptions/invalid-operation.exception';
 
-interface IAddressSchema {
+export interface IAddressSchema {
   street: string;
   extNumber: string;
   intNumber?: string | null;
