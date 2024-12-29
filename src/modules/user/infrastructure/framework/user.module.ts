@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { ArchiveUserUseCase } from '@user/application/commands/use-cases/archive-user/archive-user.use-case';
 import { CreateUserUseCase } from '@user/application/commands/use-cases/create-user/create-user.use-case';
 import { DestroyUserUseCase } from '@user/application/commands/use-cases/destroy-user/destroy-user.use-case';
 import { UpdateUserUseCase } from '@user/application/commands/use-cases/update-user/update-user.use-case';
 import { GetUserUseCase } from '@user/application/queries/use-cases/get-user/get-user.use-case';
 import { ListUserUseCase } from '@user/application/queries/use-cases/list-user/list-user.use-case';
-import { ACCOUNT_REPOSITORY, PROFILE_REPOSITORY, USER_REPOSITORY } from '@user/domain/constants/injection-tokens';
+import {
+  ACCOUNT_REPOSITORY,
+  PROFILE_REPOSITORY,
+  USER_REPOSITORY,
+} from '@user/domain/constants/injection-tokens';
 import { ArchiveUserDomainService } from '@user/domain/domain-services/archive-user.domain-service';
 import { CreateUserDomainService } from '@user/domain/domain-services/create-user.domain-service';
 import { DestroyUserDomainService } from '@user/domain/domain-services/destroy-user.domain-service';
@@ -22,11 +28,10 @@ import { GetUserController } from '@user/infrastructure/controllers/queries/get-
 import { ListUserController } from '@user/infrastructure/controllers/queries/list-user/list-user.controller';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
-import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
+import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/account-typeorm.repository';
+import { ProfileTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/profile-typeorm.repository';
 import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/user-typeorm.repository';
-import { ProfileTypeormRepository } from '../persistence/typeorm/repositories/profile-typeorm.repository';
-import { AccountTypeormRepository } from '../persistence/typeorm/repositories/account-typeorm.repository';
 
 @Module({
   imports: [
@@ -51,17 +56,24 @@ import { AccountTypeormRepository } from '../persistence/typeorm/repositories/ac
     // Inversion of dependencies, Control principle (IoC) to domain services
     {
       provide: CreateUserDomainService,
-      useFactory: (accountRepository: AccountTypeormRepository, profileRepository: ProfileTypeormRepository): CreateUserDomainService => {
+      useFactory: (
+        accountRepository: AccountTypeormRepository,
+        profileRepository: ProfileTypeormRepository,
+      ): CreateUserDomainService => {
         return new CreateUserDomainService(accountRepository, profileRepository);
       },
       inject: [ACCOUNT_REPOSITORY, PROFILE_REPOSITORY],
     },
     {
       provide: UpdateUserDomainService,
-      useFactory: (userRepository: UserTypeormRepository): UpdateUserDomainService => {
-        return new UpdateUserDomainService(userRepository);
+      useFactory: (
+        userRepository: UserTypeormRepository,
+        accountRepository: AccountTypeormRepository,
+        profileRepository: ProfileTypeormRepository,
+      ): UpdateUserDomainService => {
+        return new UpdateUserDomainService(userRepository, accountRepository, profileRepository);
       },
-      inject: [USER_REPOSITORY],
+      inject: [USER_REPOSITORY, ACCOUNT_REPOSITORY, PROFILE_REPOSITORY],
     },
     {
       provide: ArchiveUserDomainService,
