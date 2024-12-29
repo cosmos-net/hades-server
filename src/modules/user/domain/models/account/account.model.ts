@@ -8,6 +8,8 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { ListSessionModel } from '@session/domain/models/session-list.model';
 import { SessionModel } from '@session/domain/models/session.model';
+import { AccountConfirmationPasswordException } from '@user/domain/exceptions/account/account-confirmation-password.exception';
+import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IAccountSchema } from '@user/domain/schemas/account/account.schema';
 import {
   IAccountBaseSchema,
@@ -15,8 +17,6 @@ import {
 } from '@user/domain/schemas/account/account.schema-primitive';
 import Password from '@user/domain/value-objects/account/password.vo';
 import Username from '@user/domain/value-objects/account/username.vo';
-import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
-import { AccountConfirmationPasswordException } from '@user/domain/exceptions/account/account-confirmation-password.exception';
 
 export class AccountModel extends AggregateRoot {
   private readonly _entityRoot: IAccountSchema;
@@ -83,12 +83,12 @@ export class AccountModel extends AggregateRoot {
     return this._entityRoot.sessions;
   }
 
-  public hydrate(entity: IAccountSchemaPrimitives) {
+  public hydrate(entity: IAccountSchemaPrimitives): void {
     if (entity.id) this._entityRoot.id = new Id(entity.id);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
     if (entity.sessions) {
       this._entityRoot.sessions = new ListSessionModel({
-        items: entity.sessions.map((session) => new SessionModel(session)),
+        items: entity.sessions.map((session): SessionModel => new SessionModel(session)),
         total: entity.sessions.length,
       });
     }
@@ -145,7 +145,7 @@ export class AccountModel extends AggregateRoot {
     //TODO: Handler a domain to emit an event
   }
 
-  public archive() {
+  public archive(): void {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
     if (this._entityRoot.sessions?.getTotal > 0) {
       this._entityRoot.sessions.archiveSessions();
@@ -162,7 +162,9 @@ export class AccountModel extends AggregateRoot {
 
   public create(): void {
     if (this.password !== this.passwordConfirmation) {
-      throw new AccountConfirmationPasswordException('Password and password confirmation must be equal');
+      throw new AccountConfirmationPasswordException(
+        'Password and password confirmation must be equal',
+      );
     }
 
     this._entityRoot.createdAt = new CreatedAt(new Date());
