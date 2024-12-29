@@ -23,7 +23,7 @@ export class ArchiveUserUseCase implements ICommandHandler<ArchiveUserCommand> {
     const userAggregate = await this.archiveUserDomainService.go(uuid);
     const userContext = this.publisher.mergeObjectContext(userAggregate);
 
-    await this.repository.archive(uuid);
+    await this.repository.persist(userAggregate);
 
     userContext.commit();
 
