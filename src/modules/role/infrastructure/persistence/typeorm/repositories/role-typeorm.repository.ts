@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/repositories/typeorm-repository';
-import { IOptions, IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
-import { ListRoleModel } from '@role/domain/models/role-list.model';
-import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/role.entity';
-import { RoleModel } from '@role/domain/models/role.model';
 import { isUUID } from '@helpers/regex/regex-validator-uuid.helper';
+import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
+import { ListRoleModel } from '@role/domain/models/role-list.model';
+import { RoleModel } from '@role/domain/models/role.model';
+import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/role.entity';
 
 @Injectable()
 export class RoleTypeormRepository
@@ -43,7 +44,9 @@ export class RoleTypeormRepository
   public async getOneBy(nameOrUUID: string, options?: IOptions): Promise<RoleModel> {
     const isUUIDPattern = isUUID(nameOrUUID);
 
-    const result = isUUIDPattern ? await this.getOneByUUID(nameOrUUID, options) : await this.getOneByName(nameOrUUID, options);
+    const result = isUUIDPattern
+      ? await this.getOneByUUID(nameOrUUID, options)
+      : await this.getOneByName(nameOrUUID, options);
 
     if (!result) {
       return null;
@@ -53,8 +56,6 @@ export class RoleTypeormRepository
 
     return roleModel;
   }
-
-
 
   public async persist(model: RoleModel): Promise<RoleModel> {
     const primitives = model.toPartialPrimitives();
@@ -73,7 +74,7 @@ export class RoleTypeormRepository
   }
 
   public async destroy(uuid: string): Promise<boolean> {
-    const result = await this.repository.delete({uuid});
+    const result = await this.repository.delete({ uuid });
 
     return result.affected > 0;
   }
