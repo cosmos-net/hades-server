@@ -9,36 +9,36 @@ export class ListSessionModel {
   private total: number;
 
   constructor(listSession: IListSessionSchemaPrimitive) {
-    this.items = listSession.items.map((session) => new SessionModel(session));
+    this.items = listSession.items.map((session): SessionModel => new SessionModel(session));
     this.total = listSession.total;
   }
 
   public get getItems(): ISessionSchemaPrimitive[] {
-    return this.items.map((session) => session.toPrimitives());
+    return this.items.map((session): ISessionSchemaPrimitive => session.toPrimitives());
   }
 
   public get getTotal(): number {
     return this.total;
   }
 
-  public hydrate(sessions: ISessionSchemaPrimitive[]) {
+  public hydrate(sessions: ISessionSchemaPrimitive[]): void {
     this.setItems(sessions);
   }
 
-  public archiveSessions() {
-    this.items.forEach((session) => session.archive());
+  public archiveSessions(): void {
+    this.items.forEach((session): void => session.archive());
   }
 
-  private setTotal(total: number) {
+  private setTotal(total: number): void {
     this.total = total;
   }
 
-  private setItems(items: ISessionSchemaPrimitive[]) {
-    items.forEach((item) => this.addItems(item));
+  private setItems(items: ISessionSchemaPrimitive[]): void {
+    items.forEach((item): void => this.addItems(item));
     this.setTotal(items.length);
   }
 
-  private addItems(item: ISessionSchemaPrimitive) {
+  private addItems(item: ISessionSchemaPrimitive): void {
     this.items.push(new SessionModel(item));
   }
 }
