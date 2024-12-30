@@ -2,13 +2,19 @@ import { SelectQueryBuilder, Document } from 'typeorm';
 
 import { Criteria } from '@common/domain/criteria/criteria';
 import { Filter } from '@common/domain/criteria/filters/filter';
-import { Filters } from '@common/domain/criteria/filters/filters';
 import { OperatorsEnum } from '@common/domain/criteria/operators-enum';
-import { Order } from '@common/domain/criteria/orders/order';
 
 export class TypeormQueryBuilderCriteriaConverter<T extends Document> {
+  private readonly transformers: Map<
+    OperatorsEnum,
+    (queryBuilder: SelectQueryBuilder<T>, filter: Filter) => SelectQueryBuilder<T>
+  >;
+
   constructor() {
-    this.transformers = new Map<OperatorsEnum, (filter: Filter) => SelectQueryBuilder<T>>([
+    this.transformers = new Map<
+      OperatorsEnum,
+      (queryBuilder: SelectQueryBuilder<T>, filter: Filter) => SelectQueryBuilder<T>
+    >([
       [OperatorsEnum.EQ, this.equalFilter.bind(this)],
       [OperatorsEnum.NE, this.notEqualFilter.bind(this)],
       [OperatorsEnum.GT, this.greaterThanFilter.bind(this)],
@@ -34,192 +40,257 @@ export class TypeormQueryBuilderCriteriaConverter<T extends Document> {
     ]);
   }
 
-  private readonly transformers: Map<OperatorsEnum, (filter: Filter) => SelectQueryBuilder<T>>;
-  private selectQueryBuilder: SelectQueryBuilder<T>;
-
-  public convert(
-    criteria: Criteria,
-    selectQueryBuilderParam: SelectQueryBuilder<T>,
-  ): SelectQueryBuilder<T> {
-    this.selectQueryBuilder = selectQueryBuilderParam;
-    this.createQueryBuilderBase(criteria);
-
-    if (criteria.hasFilters()) {
-      this.generateFilters(criteria.filters);
-    }
-
-    return this.selectQueryBuilder;
-  }
-
-  private generateFilters(filters: Filters): SelectQueryBuilder<T> {
-    const listFilters = filters.getFilters();
-
-    listFilters.forEach((filter): void => {
-      const operator = filter.operator;
-      const transformer = this.transformers.get(operator as unknown as OperatorsEnum);
-
-      if (!transformer) {
-        throw new Error(`Operator ${String(operator)} not supported`);
+  public convert(queryBuilder: SelectQueryBuilder<T>, criteria: Criteria): SelectQueryBuilder<T> {
+    criteria.filters.getFilters().forEach((filter): void => {
+      const transformer = this.transformers.get(filter.operator as unknown as OperatorsEnum);
+      if (transformer) {
+        transformer(queryBuilder, filter);
       }
-
-      transformer(filter);
     });
 
-    return this.selectQueryBuilder;
-  }
+    const orderBy = criteria.order.getOrderBy();
+    const orderType = criteria.order.getOrderType();
 
-  private createQueryBuilderBase(criteria: Criteria): SelectQueryBuilder<T> {
-    this.selectQueryBuilder.skip(criteria.offset);
-    this.selectQueryBuilder.take(criteria.limit);
-
-    if (criteria.hasOrder()) {
-      this.generateOrder(criteria.order);
-    }
-
-    if (criteria.hasWithArchived()) {
-      this.selectQueryBuilder.withDeleted();
-    }
-
-    return this.selectQueryBuilder;
-  }
-
-  protected generateOrder(order: Order): SelectQueryBuilder<T> {
-    const orderBy = order.getOrderBy();
-    const orderType = order.getOrderType();
-
-    let sort: 'ASC' | 'DESC';
+    let sortDirection: 'ASC' | 'DESC';
     if (orderType === 'ASC') {
-      sort = 'ASC';
+      sortDirection = 'ASC';
     } else if (orderType === 'NONE') {
-      sort = 'DESC';
+      sortDirection = 'DESC';
     } else {
-      sort = 'ASC';
+      sortDirection = 'ASC';
     }
 
-    this.selectQueryBuilder.orderBy(orderBy, sort);
+    const fieldWithAlias = this.getFieldWithAlias(queryBuilder, orderBy);
+    if (fieldWithAlias) {
+      queryBuilder.addOrderBy(fieldWithAlias, sortDirection);
+    } else {
+      queryBuilder.addOrderBy(orderBy, sortDirection);
+    }
 
-    return this.selectQueryBuilder;
+    return queryBuilder;
   }
 
-  private equalFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} = :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
+  private getFieldWithAlias(queryBuilder: SelectQueryBuilder<T>, field: string): string | null {
+    const alias = queryBuilder.alias || 'user';
+    return `${alias}.${field}`;
   }
 
-  private notEqualFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} != :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private greaterThanFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} > :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private greaterThanOrEqualFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} >= :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private lessThanFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} < :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private lessThanOrEqualFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} <= :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private inFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} IN (:...${filter.field})`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private notInFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} NOT IN (:...${filter.field})`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private likeFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} LIKE :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private notLikeFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} NOT LIKE :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private ilikeFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} ILIKE :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private notILikeFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} NOT ILIKE :${filter.field}`, {
-      [String(filter.field)]: filter.value,
-    });
-  }
-
-  private startsWithFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} LIKE :${filter.field}`, {
-      [String(filter.field)]: `${filter.value}%`,
-    });
-  }
-
-  private endsWithFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} LIKE :${filter.field}`, {
-      [String(filter.field)]: `%${filter.value}`,
-    });
-  }
-
-  private betweenFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(
-      `${filter.field} BETWEEN :${filter.field}1 AND :${filter.field}2`,
+  private equalFilter(queryBuilder: SelectQueryBuilder<T>, filter: Filter): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} = :${filter.field}`,
       {
-        [`${filter.field}1`]: filter.value[0],
-        [`${filter.field}2`]: filter.value[1],
+        [String(filter.field)]: filter.value,
       },
     );
   }
 
-  private isNullFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} IS NULL`);
+  private notEqualFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} != :${filter.field}`,
+      {
+        [String(filter.field)]: filter.value,
+      },
+    );
   }
 
-  private isNotNullFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} IS NOT NULL`);
+  private greaterThanFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} > :${filter.field}`,
+      {
+        [String(filter.field)]: filter.value,
+      },
+    );
   }
 
-  private isEmptyFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} = ''`);
+  private greaterThanOrEqualFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} >= :${filter.field}`,
+      {
+        [String(filter.field)]: filter.value,
+      },
+    );
   }
 
-  private isNotEmptyFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} != ''`);
+  private lessThanFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} < :${filter.field}`,
+      {
+        [String(filter.field)]: filter.value,
+      },
+    );
   }
 
-  private isTrueFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} = true`);
+  private lessThanOrEqualFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} <= :${filter.field}`,
+      {
+        [String(filter.field)]: filter.value,
+      },
+    );
   }
 
-  private isFalseFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field} = false`);
+  private inFilter(queryBuilder: SelectQueryBuilder<T>, filter: Filter): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} IN (:...${filter.field})`,
+      {
+        [String(filter.field)]: filter.value,
+      },
+    );
   }
 
-  private withDeletedFilter(filter: Filter): SelectQueryBuilder<T> {
-    return this.selectQueryBuilder.andWhere(`${filter.field}.deleted_at IS NOT NULL`);
+  private notInFilter(queryBuilder: SelectQueryBuilder<T>, filter: Filter): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} NOT IN (:...${filter.field})`,
+      {
+        [String(filter.field)]: filter.value,
+      },
+    );
+  }
+
+  private likeFilter(queryBuilder: SelectQueryBuilder<T>, filter: Filter): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} LIKE :${filter.field}`,
+      {
+        [String(filter.field)]: `%${filter.value}%`,
+      },
+    );
+  }
+
+  private notLikeFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} NOT LIKE :${filter.field}`,
+      {
+        [String(filter.field)]: `%${filter.value}%`,
+      },
+    );
+  }
+
+  private ilikeFilter(queryBuilder: SelectQueryBuilder<T>, filter: Filter): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} ILIKE :${filter.field}`,
+      {
+        [String(filter.field)]: `%${filter.value}%`,
+      },
+    );
+  }
+
+  private notILikeFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} NOT ILIKE :${filter.field}`,
+      {
+        [String(filter.field)]: `%${filter.value}%`,
+      },
+    );
+  }
+
+  private startsWithFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} LIKE :${filter.field}`,
+      {
+        [String(filter.field)]: `${filter.value}%`,
+      },
+    );
+  }
+
+  private endsWithFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} LIKE :${filter.field}`,
+      {
+        [String(filter.field)]: `%${filter.value}`,
+      },
+    );
+  }
+
+  private betweenFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    const [from, to] = filter.value as unknown as [string, string];
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} BETWEEN :from AND :to`,
+      { from, to },
+    );
+  }
+
+  private isNullFilter(queryBuilder: SelectQueryBuilder<T>, filter: Filter): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} IS NULL`,
+    );
+  }
+
+  private isNotNullFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} IS NOT NULL`,
+    );
+  }
+
+  private isEmptyFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} = '{}'`,
+    );
+  }
+
+  private isNotEmptyFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} != '{}'`,
+    );
+  }
+
+  private isTrueFilter(queryBuilder: SelectQueryBuilder<T>, filter: Filter): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} = TRUE`,
+    );
+  }
+
+  private isFalseFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.andWhere(
+      `${this.getFieldWithAlias(queryBuilder, String(filter.field))} = FALSE`,
+    );
+  }
+
+  private withDeletedFilter(
+    queryBuilder: SelectQueryBuilder<T>,
+    _filter: Filter,
+  ): SelectQueryBuilder<T> {
+    return queryBuilder.withDeleted();
   }
 }
