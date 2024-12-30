@@ -25,7 +25,7 @@ interface IProfile {
 
 interface IAccount {
   id: number;
-  uuid: string
+  uuid: string;
   username: string;
   email: string;
 }
@@ -36,7 +36,6 @@ interface ICreateUserOutputDto {
   status: string;
   accounts: IAccount[];
   profile: IProfile;
-
 }
 
 export class UpdateUserOutputDto {
@@ -47,12 +46,14 @@ export class UpdateUserOutputDto {
       id: root.userModel.id,
       uuid: root.userModel.uuid,
       status: root.userModel.status,
-      accounts: root.accountsModel.map((account) => ({
-        id: account.id,
-        uuid: account.uuid,
-        username: account.username,
-        email: account.email,
-      })),
+      accounts: root.accountsModel.map(
+        (account): IAccount => ({
+          id: account.id,
+          uuid: account.uuid,
+          username: account.username,
+          email: account.email,
+        }),
+      ),
       profile: {
         id: root.profileModel.id,
         uuid: root.profileModel.uuid,

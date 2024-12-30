@@ -11,9 +11,9 @@ export class GetUserUseCase implements IQueryHandler<GetUserQuery> {
   constructor(private readonly getUserDomainService: GetUserDomainService) {}
 
   async execute(query: GetUserQuery): Promise<UserAggregate> {
-    const { uuid } = query;
+    const { uuid, withArchived } = query;
 
-    const userAggregate = await this.getUserDomainService.go(uuid);
+    const userAggregate = await this.getUserDomainService.go(uuid, withArchived);
 
     return userAggregate;
   }

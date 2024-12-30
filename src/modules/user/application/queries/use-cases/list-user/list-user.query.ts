@@ -25,7 +25,7 @@ export const USER_OPTIONS_ORDER_BY_VALUE = [
   'archivedAt',
 ] as const;
 
-export type USER_OPTIONS_ORDER_BY_VALUE_TYPE = typeof USER_OPTIONS_ORDER_BY_VALUE[number];
+export type USER_OPTIONS_ORDER_BY_VALUE_TYPE = (typeof USER_OPTIONS_ORDER_BY_VALUE)[number];
 
 export class ListUserQuery implements IQuery {
   public readonly orderType: OrderTypeEnum;
@@ -38,11 +38,14 @@ export class ListUserQuery implements IQuery {
 
   public readonly filtersMap: Array<Map<string, PrimitivesType>>;
 
+  public readonly withArchived: boolean;
+
   constructor(props: ListUserQuery) {
     this.orderType = props.orderType;
     this.orderBy = props.orderBy;
     this.limit = props.limit;
     this.offset = props.offset;
     this.filtersMap = props.filtersMap;
+    this.withArchived = props.withArchived;
   }
 }

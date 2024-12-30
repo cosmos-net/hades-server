@@ -1,13 +1,17 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
+import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
+import Id from '@common/domain/value-object/vos/id.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IUserSchema } from '@user/domain/schemas/user/user.schema';
-import { IUserBaseSchema, IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
+import {
+  IUserBaseSchema,
+  IUserSchemaPrimitives,
+} from '@user/domain/schemas/user/user.schema-primitive';
 import { UserStatus } from '@user/domain/value-objects/user/user-status.vo';
-import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 
 export class UserModel extends AggregateRoot {
   private readonly _entityRoot: IUserSchema;
@@ -51,8 +55,13 @@ export class UserModel extends AggregateRoot {
   }
 
   public hydrate(entity: IUserSchemaPrimitives): void {
+    this._entityRoot.id = new Id(entity.id);
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.status = new UserStatus(entity.status);
+    this._entityRoot.createdAt = new CreatedAt(entity.createdAt);
+    this._entityRoot.updatedAt = new CreatedAt(entity.updatedAt);
+
+    if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
   }
 
   public toPrimitives(): IUserSchemaPrimitives {
