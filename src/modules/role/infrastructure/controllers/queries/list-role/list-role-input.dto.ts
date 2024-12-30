@@ -41,7 +41,7 @@ export class ListRoleInputDto extends InputPaginationDto {
   public readonly description?: string;
 
   @IsOptional()
-  @Transform(({ value }) => {
+  @Transform(({ value }): boolean => {
     if (typeof value === 'string') {
       return value.toLowerCase() === 'true';
     }
@@ -50,42 +50,42 @@ export class ListRoleInputDto extends InputPaginationDto {
   @IsBoolean()
   public readonly withArchived?: boolean = false;
 
-  @ValidateIf((o) => o.createdAtTo !== undefined)
+  @ValidateIf((o): boolean => o.createdAtTo !== undefined)
   @IsDefined({ message: 'createdAtFrom is required when createdAtTo is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly createdAtFrom?: string;
 
-  @ValidateIf((o) => o.createdAtFrom !== undefined)
+  @ValidateIf((o): boolean => o.createdAtFrom !== undefined)
   @IsDefined({ message: 'createdAtTo is required when createdAtFrom is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly createdAtTo?: string;
 
-  @ValidateIf((o) => o.updatedAtTo !== undefined)
+  @ValidateIf((o): boolean => o.updatedAtTo !== undefined)
   @IsDefined({ message: 'updatedAtFrom is required when updatedAtTo is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly updatedAtFrom?: string;
 
-  @ValidateIf((o) => o.updatedAtFrom !== undefined)
+  @ValidateIf((o): boolean => o.updatedAtFrom !== undefined)
   @IsDefined({ message: 'updatedAtTo is required when updatedAtFrom is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly updatedAtTo?: string;
 
-  @ValidateIf((o) => o.archivedAtTo !== undefined)
+  @ValidateIf((o): boolean => o.archivedAtTo !== undefined)
   @IsDefined({ message: 'deletedAtFrom is required when deletedAtTo is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly archivedAtFrom?: string;
 
-  @ValidateIf((o) => o.archivedAtFrom !== undefined)
+  @ValidateIf((o): boolean => o.archivedAtFrom !== undefined)
   @IsDefined({ message: 'archivedAtTo is required when archivedAtFrom is present' })
   @IsISO8601()
   @IsOptional()
@@ -169,6 +169,8 @@ export class ListRoleInputDto extends InputPaginationDto {
       filtersMapper.push(mapArchivedAtTo);
     }
 
-    return filtersMapper.map((filter) => new Map(Object.entries(filter)));
+    return filtersMapper.map(
+      (filter): Map<string, PrimitivesType> => new Map(Object.entries(filter)),
+    );
   }
 }
