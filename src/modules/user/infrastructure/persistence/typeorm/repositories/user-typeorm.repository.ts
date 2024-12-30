@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager, DeleteResult } from 'typeorm';
+import { Repository, EntityManager, DeleteResult, SelectQueryBuilder } from 'typeorm';
 
 import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
@@ -27,6 +27,14 @@ export class UserTypeormRepository
     private readonly entityManager: EntityManager,
   ) {
     super();
+  }
+
+  createSelectQueryBuilder(): SelectQueryBuilder<UserEntity> {
+    const selectQueryBuilder = this.repository.createQueryBuilder('user');
+    selectQueryBuilder.leftJoinAndSelect('user.profile', 'profile');
+    selectQueryBuilder.leftJoinAndSelect('user.accounts', 'accounts');
+
+    return selectQueryBuilder;
   }
 
   async persist(userAggregate: UserAggregate): Promise<UserAggregate> {
@@ -90,15 +98,11 @@ export class UserTypeormRepository
         const { userModel, accountsModel, profileModel } = userAggregate;
         const promises: Promise<DeleteResult>[] = [];
 
-        // Delete accounts
         for (const account of accountsModel) {
           promises.push(manager.delete(AccountEntity, { uuid: account.uuid }));
         }
 
-        // Delete profile
         promises.push(manager.delete(ProfileEntity, { uuid: profileModel.uuid }));
-
-        // Delete user
         promises.push(manager.delete(UserEntity, { uuid: userModel.uuid }));
 
         await Promise.all(promises);
@@ -136,9 +140,10 @@ export class UserTypeormRepository
   }
 
   async matching(criteria: Criteria): Promise<ListUserAggregate> {
-    const query = this.getQueryByCriteria(criteria);
+    const selectQueryBuilder = this.createSelectQueryBuilder();
+    const query = this.getQueryBuilderByCriteria(criteria, selectQueryBuilder);
 
-    const [items, total] = await this.repository.findAndCount(query);
+    const [items, total] = await query.getManyAndCount();
 
     const userAggregate = items.map((item): UserAggregate => {
       const user = new UserModel(item);
