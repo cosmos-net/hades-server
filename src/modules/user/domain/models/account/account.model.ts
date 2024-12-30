@@ -117,7 +117,7 @@ export class AccountModel extends AggregateRoot {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       archivedAt: this.archivedAt,
-      sessions: this.sessions.getItems,
+      sessions: this.sessions?.getItems,
     };
   }
 
