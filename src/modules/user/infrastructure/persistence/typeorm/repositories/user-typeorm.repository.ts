@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, DeleteResult, SelectQueryBuilder } from 'typeorm';
 
+import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
-import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/typeorm-repository';
+import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/repositories/typeorm-repository';
 import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
 import { UserModel } from '@user/domain/models/user/user.model';
+import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
-import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 
 @Injectable()
 export class UserTypeormRepository
@@ -28,17 +29,28 @@ export class UserTypeormRepository
     super();
   }
 
+  createSelectQueryBuilder(): SelectQueryBuilder<UserEntity> {
+    const selectQueryBuilder = this.repository.createQueryBuilder('user');
+    selectQueryBuilder.leftJoinAndSelect('user.profile', 'profile');
+    selectQueryBuilder.leftJoinAndSelect('user.accounts', 'accounts');
+
+    return selectQueryBuilder;
+  }
+
   async persist(userAggregate: UserAggregate): Promise<UserAggregate> {
     return await this.entityManager.transaction(
       async (manager: EntityManager): Promise<UserAggregate> => {
         const { userModel, profileModel, accountsModel } = userAggregate;
-  
+
         const partialUser = userModel.toPartialPrimitives();
         const partialProfile = profileModel.toPartialPrimitives();
-        const partialAccounts = accountsModel.map((account): Partial<IAccountSchemaPrimitives> => account.toPartialPrimitives());
+        const partialAccounts = accountsModel.map(
+          (account): Partial<IAccountSchemaPrimitives> => account.toPartialPrimitives(),
+        );
 
         // Save or update user entity
         const savedUser = await manager.save(UserEntity, partialUser);
+
         userModel.hydrate(savedUser);
 
         // Set foreign key for profile entity
@@ -46,6 +58,7 @@ export class UserTypeormRepository
           ...partialProfile,
           user: savedUser,
         });
+
         profileModel.hydrate(savedProfile);
 
         for (const partialAccount of partialAccounts) {
@@ -54,7 +67,10 @@ export class UserTypeormRepository
             user: savedUser,
           });
 
-          const accountMatch = accountsModel.find((account): boolean => account.uuid === savedAccount.uuid);
+          const accountMatch = accountsModel.find(
+            (account): boolean => account.uuid === savedAccount.uuid,
+          );
+
           accountMatch.hydrate(savedAccount);
         }
 
@@ -71,25 +87,44 @@ export class UserTypeormRepository
   }
 
   async archive(uuid: string): Promise<boolean> {
-    const result = await this.repository.softDelete(uuid);
+    const result = await this.repository.softDelete({ uuid });
 
     return result.affected > 0;
   }
 
-  async destroy(uuid: string): Promise<boolean> {
-    const result = await this.repository.delete(uuid);
+  async destroy(userAggregate: UserAggregate): Promise<boolean> {
+    return await this.entityManager.transaction(
+      async (manager: EntityManager): Promise<boolean> => {
+        const { userModel, accountsModel, profileModel } = userAggregate;
+        const promises: Promise<DeleteResult>[] = [];
 
-    return result.affected > 0;
+        for (const account of accountsModel) {
+          promises.push(manager.delete(AccountEntity, { uuid: account.uuid }));
+        }
+
+        promises.push(manager.delete(ProfileEntity, { uuid: profileModel.uuid }));
+        promises.push(manager.delete(UserEntity, { uuid: userModel.uuid }));
+
+        await Promise.all(promises);
+
+        return true;
+      },
+    );
   }
 
-  async getOneBy(uuid: string): Promise<UserAggregate> {
+  async getOneBy(uuid: string, options?: IOptions): Promise<UserAggregate | null> {
     const entity = await this.repository.findOne({
       where: { uuid },
       relations: {
         accounts: true,
         profile: true,
       },
+      ...(options?.withArchived && { withDeleted: true }),
     });
+
+    if (!entity) {
+      return null;
+    }
 
     const user = new UserModel(entity);
     const profile = new ProfileModel(entity.profile);
@@ -105,9 +140,10 @@ export class UserTypeormRepository
   }
 
   async matching(criteria: Criteria): Promise<ListUserAggregate> {
-    const query = this.getQueryByCriteria(criteria);
+    const selectQueryBuilder = this.createSelectQueryBuilder();
+    const query = this.getQueryBuilderByCriteria(criteria, selectQueryBuilder);
 
-    const [items, total] = await this.repository.findAndCount(query);
+    const [items, total] = await query.getManyAndCount();
 
     const userAggregate = items.map((item): UserAggregate => {
       const user = new UserModel(item);

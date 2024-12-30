@@ -18,7 +18,7 @@ export class UpdateUserController {
       const result = await this.commandBus.execute<UpdateUserCommand, UserAggregate>(
         new UpdateUserCommand({
           uuid: updateUserInputDto.uuid,
-          accounts: updateUserInputDto.account,
+          accounts: updateUserInputDto.accounts,
           profile: updateUserInputDto.profile,
         }),
       );

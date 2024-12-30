@@ -1,11 +1,11 @@
-import { UserAggregate } from "@user/domain/aggregates/user.aggregate";
+import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 
 export class DestroyUserOutputDto {
   public readonly uuid: string;
-  public readonly archivedAt: Date;
-  
+  public readonly destroyedAt: Date;
+
   constructor(root: UserAggregate) {
     this.uuid = root.userModel.uuid;
-    this.archivedAt = root.userModel.archivedAt;
+    this.destroyedAt = root.userModel.archivedAt;
   }
 }

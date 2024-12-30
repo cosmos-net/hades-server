@@ -1,10 +1,7 @@
+import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
 import { ListRoleModel } from '@role/domain/models/role-list.model';
 import { RoleModel } from '@role/domain/models/role.model';
-
-export interface IOptions {
-  withArchived: boolean;
-}
 
 export abstract class IRoleRepositoryContract {
   abstract persist(role: RoleModel): Promise<RoleModel>;

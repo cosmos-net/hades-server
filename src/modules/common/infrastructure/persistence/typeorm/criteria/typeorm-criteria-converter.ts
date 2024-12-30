@@ -86,7 +86,7 @@ export class TypeormCriteriaConverter<T extends Document> {
     const filtersGenerated: FindOptionsWhere<T>[] = [];
     const listFilters = filters.getFilters();
 
-    listFilters.forEach((filter) => {
+    listFilters.forEach((filter): void => {
       const operator = filter.getOperator();
       const transformer = this.transformers.get(operator);
 
@@ -256,6 +256,8 @@ export class TypeormCriteriaConverter<T extends Document> {
   private withDeletedFilter(filter: Filter): FindOptionsWhere<T> {
     const field = filter.getField() as keyof T;
 
-    return { [field]: Raw((alias) => `${alias} IS NOT NULL`) } as FindOptionsWhere<T>;
+    return {
+      [field]: Raw((alias): string => `${alias}.deleted_at IS NOT NULL`),
+    } as FindOptionsWhere<T>;
   }
 }

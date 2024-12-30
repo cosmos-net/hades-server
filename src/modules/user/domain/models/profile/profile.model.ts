@@ -1,6 +1,6 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
-import { Address } from '@common/domain/value-object/vos/address.vo';
+import { Address, IAddressSchema } from '@common/domain/value-object/vos/address.vo';
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
@@ -45,7 +45,7 @@ export class ProfileModel extends AggregateRoot {
   ) {
     super();
     this._entityRoot = {} as IProfileSchema;
-    
+
     if (entityOrUuid instanceof Object) {
       this.hydrate(entityOrUuid);
     } else if (typeof entityOrUuid === 'string') {
@@ -97,8 +97,8 @@ export class ProfileModel extends AggregateRoot {
     return this._entityRoot.gender._value;
   }
 
-  get address(): Address {
-    return this._entityRoot.address;
+  get address(): IAddressSchema {
+    return this._entityRoot.address._entityRoot;
   }
 
   get createdAt(): Date {

@@ -30,8 +30,8 @@ export class ListRoleController {
       );
 
       return new ListRoleOutputDto(result.getItems, page, limit, result.getTotal);
-    } catch (error: any) {
-      throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }

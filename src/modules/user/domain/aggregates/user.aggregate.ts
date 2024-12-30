@@ -1,5 +1,6 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
+import { UserArchivedEvent } from '@user/domain/events/events-success-domain/user-archived.event';
 import { UserCreatedEvent } from '@user/domain/events/events-success-domain/user-created.event';
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
@@ -38,7 +39,6 @@ export class UserAggregate extends AggregateRoot {
   constructor(entities: IUserSchemaAggregate) {
     super();
     this.entities = {} as IUserSchemaAggregate;
-
     this.hydrate(entities);
   }
 
@@ -96,10 +96,12 @@ export class UserAggregate extends AggregateRoot {
     profile?: DeepPartialProfileBaseSchema,
   ): void {
     if (accounts) {
-      this.entities.accountsModel.forEach((accountModel): void => {
-        const account = accounts.find((account): boolean => account.uuid === accountModel.uuid);
+      accounts.forEach((account): void => {
+        const accountModel = this.entities.accountsModel.find(
+          (accountModel): boolean => accountModel.uuid === account.uuid,
+        );
 
-        if (account) {
+        if (accountModel) {
           accountModel.update(account);
         }
       });
@@ -114,6 +116,8 @@ export class UserAggregate extends AggregateRoot {
     this.entities.userModel.archive();
     this.entities.profileModel.archive();
     this.entities.accountsModel.forEach((accountModel): void => accountModel.archive());
+
+    this.apply(new UserArchivedEvent(this.userModel, this.accountsModel, this.profileModel));
   }
 
   public destroy(): void {
