@@ -1,41 +1,42 @@
+import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
+import { SessionModel } from '@session/domain/models/session.model';
+
 export class CreateSessionOutputDto {
   public readonly id: number;
   public readonly uuid: string;
   public readonly sessionId: string;
   public readonly sessionType: string;
   public readonly sessionDuration: number;
-  public readonly sessionClosedType: string;
   public readonly token: string;
-  public readonly expiresIn: Date;
+  public readonly expiresInAt: Date;
   public readonly loggedInAt: Date;
-  public readonly loggedOutAt: Date;
   public readonly ipAddress: string;
   public readonly refreshToken: string;
   public readonly userAgent: string;
   public readonly failedAttempts: number;
   public readonly origin: string;
   public readonly location: string;
+  public readonly status: SessionStatusEnum;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
 
-  constructor(root: CreateSessionOutputDto) {
-    this.id = root.id;
-    this.uuid = root.uuid;
-    this.sessionId = root.sessionId;
-    this.sessionType = root.sessionType;
-    this.sessionDuration = root.sessionDuration;
-    this.sessionClosedType = root.sessionClosedType;
-    this.token = root.token;
-    this.expiresIn = root.expiresIn;
-    this.loggedInAt = root.loggedInAt;
-    this.loggedOutAt = root.loggedOutAt;
-    this.ipAddress = root.ipAddress;
-    this.refreshToken = root.refreshToken;
-    this.userAgent = root.userAgent;
-    this.failedAttempts = root.failedAttempts;
-    this.origin = root.origin;
-    this.location = root.location;
-    this.createdAt = root.createdAt;
-    this.updatedAt = root.updatedAt;
+  constructor(session: SessionModel) {
+    this.id = session.id;
+    this.uuid = session.uuid;
+    this.sessionId = session.sessionId;
+    this.sessionType = session.sessionType;
+    this.sessionDuration = session.sessionDuration;
+    this.token = session.token;
+    this.expiresInAt = session.expiresInAt;
+    this.loggedInAt = session.loggedInAt;
+    this.ipAddress = session.ipAddress;
+    this.refreshToken = session.refreshToken;
+    this.userAgent = session.userAgent;
+    this.failedAttempts = session.failedAttempts;
+    this.origin = session.origin;
+    this.location = session.location;
+    this.status = session.status;
+    this.createdAt = session.createdAt;
+    this.updatedAt = session.updatedAt;
   }
 }

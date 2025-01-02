@@ -1,5 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
-import { Request} from 'express';
+import { Request } from 'express';
 import { Observable, throwError } from 'rxjs';
 
 interface IError {

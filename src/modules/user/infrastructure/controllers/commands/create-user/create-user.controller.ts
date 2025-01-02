@@ -5,9 +5,9 @@ import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { CreateUserCommand } from '@user/application/commands/use-cases/create-user/create-user.command';
+import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { CreateUserInputDto } from '@user/infrastructure/controllers/commands/create-user/create-user-input.dto';
 import { CreateUserOutputDto } from '@user/infrastructure/controllers/commands/create-user/create-user-output.dto';
-import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 
 @Controller()
 export class CreateUserController {
@@ -19,7 +19,7 @@ export class CreateUserController {
       const accounts = createUserDto.accounts.map((account) => ({ ...account, uuid: UUIDv4() }));
       const profile = { ...createUserDto.profile, uuid: UUIDv4() };
       const user = { uuid: UUIDv4() };
-  
+
       const result = await this.commandBus.execute<CreateUserCommand, UserAggregate>(
         new CreateUserCommand({
           accounts,
@@ -29,8 +29,8 @@ export class CreateUserController {
       );
 
       return new CreateUserOutputDto(result);
-    } catch (error: any) {
-      throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }
