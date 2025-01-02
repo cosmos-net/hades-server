@@ -69,7 +69,7 @@ export class CreateUserOutputDto {
           city: root.profileModel.address.city,
           state: root.profileModel.address.state,
           country: root.profileModel.address.country,
-        }
+        },
       },
     };
   }

@@ -79,8 +79,8 @@ export class AccountModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  get sessions(): ListSessionModel {
-    return this._entityRoot.sessions;
+  get sessions(): ListSessionModel | null {
+    return this._entityRoot.sessions || null;
   }
 
   public hydrate(entity: IAccountSchemaPrimitives): void {

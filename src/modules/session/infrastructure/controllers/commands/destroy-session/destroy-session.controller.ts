@@ -16,12 +16,14 @@ export class DestroySessionController {
   async destroy(
     @Payload() destroySessionDto: DestroySessionInputDto,
   ): Promise<DestroySessionOutputDto> {
-    try{
-      const result = await this.commandBus.execute<DestroySessionCommand, SessionModel>(new DestroySessionCommand({ uuid: destroySessionDto.uuid }));
-    
+    try {
+      const result = await this.commandBus.execute<DestroySessionCommand, SessionModel>(
+        new DestroySessionCommand({ uuid: destroySessionDto.uuid }),
+      );
+
       return new DestroySessionOutputDto(!!result);
-    }catch (error: any) {
-          throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }

@@ -26,10 +26,7 @@ import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.
 import { DestroyRoleUseCase } from '@role/application/commands/use-cases/destroy-role/destroy-role.use-case';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([RoleEntity]),
-    CqrsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([RoleEntity]), CqrsModule],
   providers: [
     // UseCases
     CreateRoleUseCase,
@@ -52,7 +49,7 @@ import { DestroyRoleUseCase } from '@role/application/commands/use-cases/destroy
         return new CreateRoleDomainService(roleRepository);
       },
       inject: [IRoleRepositoryContract],
-    }, 
+    },
     {
       provide: UpdateRoleDomainService,
       useFactory: (roleRepository: IRoleRepositoryContract): UpdateRoleDomainService => {

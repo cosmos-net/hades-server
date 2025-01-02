@@ -1,5 +1,5 @@
 import { PartialExcept } from '@helpers/types/partials.helper';
-import { ISessionSchemaPrimitive } from '@session/domain/schemas/session.schema-primitive';
+import { ISessionSchemaPrimitives } from '@session/domain/schemas/session.schema-primitives';
 
 export interface IAccountBaseSchema {
   uuid: string;
@@ -14,7 +14,7 @@ export interface IAccountSchemaPrimitives extends IAccountBaseSchema {
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date;
-  sessions?: ISessionSchemaPrimitive[];
+  sessions?: ISessionSchemaPrimitives[];
 }
 
 export interface IListAccountSchemaPrimitive {

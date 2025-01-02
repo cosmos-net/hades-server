@@ -6,19 +6,21 @@ export class CreateRoleDomainService {
   constructor(private readonly repository: IRoleRepositoryContract) {}
 
   async go(uuid: string, name: string, description?: string): Promise<RoleModel> {
-      const roleModel = await this.repository.getOneBy(name, { withArchived: true });
+    const roleModel = await this.repository.getOneBy(name, { withArchived: true });
 
-      if (roleModel) {
-        if (roleModel.archivedAt) {
-          throw new RoleNameException(`Role name already exists but is archived with date ${roleModel.archivedAt}`);
-        }
-
-        throw new RoleNameException('Role name already exists');
+    if (roleModel) {
+      if (roleModel.archivedAt) {
+        throw new RoleNameException(
+          `Role name already exists but is archived with date ${roleModel.archivedAt}`,
+        );
       }
 
-      const role = new RoleModel(uuid, name, description);
-      role.create();
+      throw new RoleNameException('Role name already exists');
+    }
 
-      return role;
+    const role = new RoleModel(uuid, name, description);
+    role.create();
+
+    return role;
   }
 }

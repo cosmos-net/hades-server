@@ -1,7 +1,6 @@
+import { IsString, IsNotEmpty, IsNumber, Length, IsUUID } from 'class-validator';
+
 import { SESSION } from '@session/domain/constants/general-rules';
-import { IsString, IsNotEmpty, IsNumber, Length } from 'class-validator';
-
-
 
 export class CreateSessionInput {
   @IsString()
@@ -17,11 +16,6 @@ export class CreateSessionInput {
   @IsNumber()
   @IsNotEmpty()
   public readonly sessionDuration: number;
-
-  @IsString()
-  @IsNotEmpty()
-  @Length(SESSION.SESSION_CLOSED_TYPE.MIN_LENGTH, SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH)
-  public readonly sessionClosedType: string;
 
   @IsString()
   @IsNotEmpty()
@@ -54,4 +48,7 @@ export class CreateSessionInput {
   @IsNotEmpty()
   @Length(SESSION.LOCATION.MIN_LENGTH, SESSION.LOCATION.MAX_LENGTH)
   public readonly location: string;
+
+  @IsUUID()
+  public readonly accountUUID: string;
 }

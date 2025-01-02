@@ -19,13 +19,13 @@ export class UpdateRoleController {
         new UpdateRoleCommand({
           uuid: updateRoleInputDto.uuid,
           name: updateRoleInputDto.name,
-          description: updateRoleInputDto.description
+          description: updateRoleInputDto.description,
         }),
       );
 
       return new UpdateRoleOutputDto(result);
-    } catch (error: any) {
-      throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }

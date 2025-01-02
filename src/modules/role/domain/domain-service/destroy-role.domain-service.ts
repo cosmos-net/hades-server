@@ -6,7 +6,7 @@ export class DestroyRoleDomainService {
   constructor(private readonly roleRepository: IRoleRepositoryContract) {}
 
   async go(uuid: string): Promise<RoleModel> {
-    const roleModel = await this.roleRepository.getOneBy(uuid, { withArchived : true });
+    const roleModel = await this.roleRepository.getOneBy(uuid, { withArchived: true });
 
     if (!roleModel) {
       throw new RoleNotFoundException(`Role with uuid ${uuid} not found`);

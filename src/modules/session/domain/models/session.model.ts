@@ -5,30 +5,58 @@ import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
+import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
-import { ISessionSchemaPrimitive } from '@session/domain/schemas/session.schema-primitive';
-import ExpiresIn from '@session/domain/value-objects/session/expires-in.vo';
-import SessionFailedAttempts from '@session/domain/value-objects/session/failed-attempts.vo';
-import SessionIpAddress from '@session/domain/value-objects/session/ip-address.vo';
-import SessionLocation from '@session/domain/value-objects/session/location.vo';
-import LoggedInAt from '@session/domain/value-objects/session/logged-in-at.vo';
-import LoggedOutAt from '@session/domain/value-objects/session/logged-out-at.vo';
-import SessionOrigin from '@session/domain/value-objects/session/origin.vo';
-import SessionRefreshToken from '@session/domain/value-objects/session/refresh-token.vo';
-import SessionClosedType from '@session/domain/value-objects/session/session-closed-type.vo';
-import SessionDuration from '@session/domain/value-objects/session/session-duration.vo';
-import SessionId from '@session/domain/value-objects/session/session-id.vo';
-import SessionType from '@session/domain/value-objects/session/session-type.vo';
-import SessionToken from '@session/domain/value-objects/session/token.vo';
-import SessionUserAgent from '@session/domain/value-objects/session/user-agent.vo';
-import { SessionArchivedEvent } from '../events/events-success-domain/session-archive.event';
+import {
+  ISessionBaseSchema,
+  ISessionSchemaPrimitives,
+} from '@session/domain/schemas/session.schema-primitives';
+import ExpiresIn from '@session/domain/value-objects/expires-in.vo';
+import SessionFailedAttempts from '@session/domain/value-objects/failed-attempts.vo';
+import SessionIpAddress from '@session/domain/value-objects/ip-address.vo';
+import SessionLocation from '@session/domain/value-objects/location.vo';
+import LoggedInAt from '@session/domain/value-objects/logged-in-at.vo';
+import SessionOrigin from '@session/domain/value-objects/origin.vo';
+import SessionRefreshToken from '@session/domain/value-objects/refresh-token.vo';
+import SessionClosedType from '@session/domain/value-objects/session-closed-type.vo';
+import SessionDuration from '@session/domain/value-objects/session-duration.vo';
+import SessionId from '@session/domain/value-objects/session-id.vo';
+import { SessionStatus } from '@session/domain/value-objects/session-status.vo';
+import SessionType from '@session/domain/value-objects/session-type.vo';
+import SessionToken from '@session/domain/value-objects/token.vo';
+import SessionUserAgent from '@session/domain/value-objects/user-agent.vo';
 
 export class SessionModel extends AggregateRoot {
   private readonly _entityRoot: ISessionSchema;
 
-  constructor(entity: ISessionSchemaPrimitive) {
+  constructor(entity: ISessionSchemaPrimitives);
+  constructor(sessionBaseSchema: ISessionBaseSchema);
+  constructor(entityOrBaseSchema: ISessionSchemaPrimitives | ISessionBaseSchema) {
     super();
-    this.hydrate(entity);
+    this._entityRoot = {} as ISessionSchema;
+
+    if ('id' in entityOrBaseSchema) {
+      this.hydrate(entityOrBaseSchema);
+    } else {
+      this._entityRoot.uuid = new UUID(entityOrBaseSchema.uuid);
+      this._entityRoot.sessionId = new SessionId(entityOrBaseSchema.sessionId);
+      this._entityRoot.sessionType = new SessionType(entityOrBaseSchema.sessionType);
+      this._entityRoot.sessionDuration = new SessionDuration(entityOrBaseSchema.sessionDuration);
+      this._entityRoot.token = new SessionToken(entityOrBaseSchema.token);
+      this._entityRoot.ipAddress = new SessionIpAddress(entityOrBaseSchema.ipAddress);
+      this._entityRoot.refreshToken = new SessionRefreshToken(entityOrBaseSchema.refreshToken);
+      this._entityRoot.userAgent = new SessionUserAgent(entityOrBaseSchema.userAgent);
+      this._entityRoot.failedAttempts = new SessionFailedAttempts(
+        entityOrBaseSchema.failedAttempts,
+      );
+      this._entityRoot.origin = new SessionOrigin(entityOrBaseSchema.origin);
+      this._entityRoot.location = new SessionLocation(entityOrBaseSchema.location);
+
+      this._entityRoot.status = new SessionStatus(SessionStatusEnum.ACTIVE);
+      this._entityRoot.createdAt = new CreatedAt(new Date());
+      this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    }
   }
 
   get id(): number | undefined {
@@ -59,8 +87,8 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.token._value;
   }
 
-  get expiresIn(): Date {
-    return this._entityRoot.expiresIn._value;
+  get expiresInAt(): Date {
+    return this._entityRoot.expiresInAt._value;
   }
 
   get loggedInAt(): Date {
@@ -95,6 +123,10 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.location._value;
   }
 
+  get status(): SessionStatusEnum {
+    return this._entityRoot.status._value;
+  }
+
   get createdAt(): Date {
     return this._entityRoot.createdAt._value;
   }
@@ -107,7 +139,7 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.archivedAt._value;
   }
 
-  public hydrate(entity: ISessionSchemaPrimitive) {
+  public hydrate(entity: ISessionSchemaPrimitives): void {
     if (entity.id) this._entityRoot.id = new Id(entity.id);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
 
@@ -117,9 +149,8 @@ export class SessionModel extends AggregateRoot {
     this._entityRoot.sessionDuration = new SessionDuration(entity.sessionDuration);
     this._entityRoot.sessionClosedType = new SessionClosedType(entity.sessionClosedType);
     this._entityRoot.token = new SessionToken(entity.token);
-    this._entityRoot.expiresIn = new ExpiresIn(entity.expiresIn);
+    this._entityRoot.expiresInAt = new ExpiresIn(entity.expiresInAt);
     this._entityRoot.loggedInAt = new LoggedInAt(entity.loggedInAt);
-    this._entityRoot.loggedOutAt = new LoggedOutAt(entity.loggedOutAt);
     this._entityRoot.ipAddress = new SessionIpAddress(entity.ipAddress);
     this._entityRoot.refreshToken = new SessionRefreshToken(entity.refreshToken);
     this._entityRoot.userAgent = new SessionUserAgent(entity.userAgent);
@@ -130,7 +161,7 @@ export class SessionModel extends AggregateRoot {
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
   }
 
-  public toPrimitives(): ISessionSchemaPrimitive {
+  public toPrimitives(): ISessionSchemaPrimitives {
     return {
       id: this.id,
       uuid: this.uuid,
@@ -139,22 +170,56 @@ export class SessionModel extends AggregateRoot {
       sessionDuration: this.sessionDuration,
       sessionClosedType: this.sessionClosedType,
       token: this.token,
-      expiresIn: this.expiresIn,
+      expiresInAt: this.expiresInAt,
       loggedInAt: this.loggedInAt,
-      loggedOutAt: this.loggedOutAt,
       ipAddress: this.ipAddress,
       refreshToken: this.refreshToken,
       userAgent: this.userAgent,
       failedAttempts: this.failedAttempts,
       origin: this.origin,
       location: this.location,
+      status: this.status,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       archivedAt: this.archivedAt,
     };
   }
 
+  public toPartialPrimitives(): Partial<ISessionSchemaPrimitives> {
+    //TODO: Refactor this
+    return {
+      ...(this.id && { id: this.id }),
+      ...(this.uuid && { uuid: this.uuid }),
+      ...(this.sessionId && { sessionId: this.sessionId }),
+      ...(this.sessionType && { sessionType: this.sessionType }),
+      ...(this.sessionDuration && { sessionDuration: this.sessionDuration }),
+      ...(this.sessionClosedType && { sessionClosedType: this.sessionClosedType }),
+      ...(this.token && { token: this.token }),
+      ...(this.expiresInAt && { expiresIn: this.expiresInAt }),
+      ...(this.loggedInAt && { loggedInAt: this.loggedInAt }),
+      ...(this.ipAddress && { ipAddress: this.ipAddress }),
+      ...(this.refreshToken && { refreshToken: this.refreshToken }),
+      ...(this.userAgent && { userAgent: this.userAgent }),
+      ...(this.failedAttempts && { failedAttempts: this.failedAttempts }),
+      ...(this.origin && { origin: this.origin }),
+      ...(this.location && { location: this.location }),
+      ...(this.status && { status: this.status }),
+      ...(this.createdAt && { createdAt: this.createdAt }),
+      ...(this.updatedAt && { updatedAt: this.updatedAt }),
+      ...(this.archivedAt && { archivedAt: this.archivedAt }),
+      ...(this.loggedOutAt && { loggedOutAt: this.loggedOutAt }),
+    };
+  }
+
   public archive(): void {
-      this._entityRoot.archivedAt = new ArchivedAt(new Date());
-    }
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
+  }
+
+  public create(): void {
+    this.apply(new SessionCreatedEvent(this.toPrimitives()));
+  }
+
+  public static fromPrimitives(entity: ISessionBaseSchema): SessionModel {
+    return new SessionModel(entity);
+  }
 }

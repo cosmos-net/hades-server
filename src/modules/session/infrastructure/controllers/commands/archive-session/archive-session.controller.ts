@@ -13,13 +13,17 @@ export class ArchiveSessionController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @MessagePattern({ cmd: CMDS_HADES.SESSION.ARCHIVE })
-  async archive(@Payload() archiveSessionDto: ArchiveSessionInputDto): Promise<ArchiveSessionOutputDto>{
+  async archive(
+    @Payload() archiveSessionDto: ArchiveSessionInputDto,
+  ): Promise<ArchiveSessionOutputDto> {
     try {
-          const result = await this.commandBus.execute<ArchiveSessionCommand, SessionModel>(new ArchiveSessionCommand({ uuid: archiveSessionDto.uuid }));
-    
-          return new ArchiveSessionOutputDto(result);
-        } catch (error: any) {
-          throw new RpcException(error);
-        }
+      const result = await this.commandBus.execute<ArchiveSessionCommand, SessionModel>(
+        new ArchiveSessionCommand({ uuid: archiveSessionDto.uuid }),
+      );
+
+      return new ArchiveSessionOutputDto(result);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
+    }
   }
 }

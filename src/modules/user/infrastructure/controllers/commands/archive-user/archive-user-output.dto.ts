@@ -1,4 +1,4 @@
-import { UserAggregate } from "@user/domain/aggregates/user.aggregate";
+import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 
 export class ArchiveUserOutputDto {
   public readonly uuid: string;
