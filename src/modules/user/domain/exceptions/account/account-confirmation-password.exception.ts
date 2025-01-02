@@ -1,4 +1,4 @@
-import BusinessConflictDomainException from "@common/domain/exceptions/business-conflict.exception";
+import BusinessConflictDomainException from '@common/domain/exceptions/business-conflict.exception';
 
 export class AccountConfirmationPasswordException extends BusinessConflictDomainException {
   public static readonly ACCOUNT_CONFIRMATION_PASSWORD = 'ACCOUNT_CONFIRMATION_PASSWORD';

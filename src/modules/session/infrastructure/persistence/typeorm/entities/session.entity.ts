@@ -1,13 +1,14 @@
+import { Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import { SESSION } from '@session/domain/constants/general-rules';
-import { ISessionSchemaPrimitive } from '@session/domain/schemas/session.schema-primitive';
+import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
+import { ISessionSchemaPrimitives } from '@session/domain/schemas/session.schema-primitives';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
-import { Length } from 'class-validator';
 
 @Entity('sessions')
-export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPrimitive {
+export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPrimitives {
   @PrimaryGeneratedColumn('identity', { type: 'int', name: 'id' })
   id: number;
 
@@ -31,7 +32,7 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   token: string;
 
   @Column({ type: 'timestamp' })
-  expiresIn: Date;
+  expiresInAt: Date;
 
   @Column({ type: 'timestamp' })
   loggedInAt: Date;
@@ -42,7 +43,7 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   @Column({ type: 'varchar', length: SESSION.IP_ADDRESS.MAX_LENGTH })
   ipAddress: string;
 
-  @Column({ type: 'text'})
+  @Column({ type: 'text' })
   @Length(SESSION.REFRESH_TOKEN.MIN_LENGTH, SESSION.REFRESH_TOKEN.MAX_LENGTH)
   refreshToken: string;
 
@@ -57,6 +58,13 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
 
   @Column({ type: 'varchar', length: SESSION.LOCATION.MAX_LENGTH })
   location: string;
+
+  @Column({
+    type: 'enum',
+    enum: SessionStatusEnum,
+    default: 'pending',
+  })
+  status: SessionStatusEnum;
 
   @ManyToOne(() => AccountEntity, (account) => account.sessions, { nullable: false })
   account: AccountEntity;

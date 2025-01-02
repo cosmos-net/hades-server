@@ -19,14 +19,14 @@ interface IProfile {
   names: string;
   lastName: string;
   secondLastName: string;
-  phoneNumber: string,
+  phoneNumber: string;
   gender: ProfileGenderEnum;
   address: IAddress;
 }
 
 interface IAccount {
   id: number;
-  uuid: string
+  uuid: string;
   username: string;
   email: string;
 }
@@ -47,31 +47,33 @@ export class ListUserOutputDto extends PaginationOutputDto<IListUserOutputDto> {
   constructor(items: ListUserAggregate, page: number, limit: number) {
     const itemsPrimitives = items.toPrimitives();
     const total = items.getTotal;
-    const itemsMapped = itemsPrimitives.map(({ user, profile, accounts }): IListUserOutputDto => ({
-      user: {
-        id: user.id,
-        uuid: user.uuid,
-        status: user.status,
-      },
-      profile: {
-        id: profile.id,
-        uuid: profile.uuid,
-        names: profile.names.join(' '),
-        lastName: profile.lastName,
-        secondLastName: profile.secondLastName,
-        phoneNumber: profile.phoneNumber,
-        gender: profile.gender,
-        address: profile.address,
-      },
-      accounts: accounts.map(
-        (account): IAccount => ({
-          id: account.id,
-          uuid: account.uuid,
-          username: account.username,
-          email: account.email,
-        }),
-      ),
-    }));
+    const itemsMapped = itemsPrimitives.map(
+      ({ user, profile, accounts }): IListUserOutputDto => ({
+        user: {
+          id: user.id,
+          uuid: user.uuid,
+          status: user.status,
+        },
+        profile: {
+          id: profile.id,
+          uuid: profile.uuid,
+          names: profile.names.join(' '),
+          lastName: profile.lastName,
+          secondLastName: profile.secondLastName,
+          phoneNumber: profile.phoneNumber,
+          gender: profile.gender,
+          address: profile.address,
+        },
+        accounts: accounts.map(
+          (account): IAccount => ({
+            id: account.id,
+            uuid: account.uuid,
+            username: account.username,
+            email: account.email,
+          }),
+        ),
+      }),
+    );
 
     super(itemsMapped, page, limit, total);
   }

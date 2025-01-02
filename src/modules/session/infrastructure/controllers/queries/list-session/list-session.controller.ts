@@ -3,10 +3,10 @@ import { QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { ListSessionInputDto } from './list-session-input.dto';
-import { ListSessionOutputDto } from './list-session-output.dto';
 import { ListSessionQuery } from '@session/application/queries/list-session/list-session.query';
 import { ListSessionModel } from '@session/domain/models/session-list.model';
+import { ListSessionInputDto } from '@session/infrastructure/controllers/queries/list-session/list-session-input.dto';
+import { ListSessionOutputDto } from '@session/infrastructure/controllers/queries/list-session/list-session-output.dto';
 
 @Controller()
 export class ListSessionController {
@@ -30,8 +30,8 @@ export class ListSessionController {
       );
 
       return new ListSessionOutputDto(result.getItems, page, limit, result.getTotal);
-    } catch (error: any) {
-      throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }

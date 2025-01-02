@@ -1,8 +1,14 @@
-import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Length } from 'class-validator';
-
 import {
-  SESSION
-} from '@session/domain/constants/general-rules';
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Length,
+} from 'class-validator';
+
+import { SESSION } from '@session/domain/constants/general-rules';
 
 export class UpdateSessionInputDto {
   @IsUUID()

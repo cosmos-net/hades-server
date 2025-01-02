@@ -1,3 +1,4 @@
 export interface IOptions {
-  withArchived: boolean;
+  withArchived?: boolean;
+  include?: string[];
 }

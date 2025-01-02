@@ -12,7 +12,9 @@ export class UpdateSessionController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @MessagePattern({ cmd: CMDS_HADES.SESSION.UPDATE })
-  async update(@Payload() updateSessionInputDto: UpdateSessionInputDto): Promise<UpdateSessionOutputDto> {
+  async update(
+    @Payload() updateSessionInputDto: UpdateSessionInputDto,
+  ): Promise<UpdateSessionOutputDto> {
     return this.commandBus.execute(
       new UpdateSessionCommand({
         uuid: updateSessionInputDto.uuid,
