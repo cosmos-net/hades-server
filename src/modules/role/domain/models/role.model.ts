@@ -2,6 +2,7 @@ import { AggregateRoot } from '@nestjs/cqrs';
 
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import Description from '@common/domain/value-object/vos/description.vo';
+import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
@@ -11,10 +12,9 @@ import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role
 import { RoleDestroyedEvent } from '@role/domain/events/events-success-domain/role-destroyed.event';
 import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/role-redescribed.event';
 import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
+import { RoleNotArchivedException } from '@role/domain/exceptions/role-not-archived-exception';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
 import { IRoleSchemaPrimitive } from '@role/domain/schemas/role.schema-primitive';
-import Id from '@common/domain/value-object/vos/id.vo';
-import { RoleNotArchivedException } from '../exceptions/role-not-archived-exception';
 
 export class RoleModel extends AggregateRoot {
   private readonly _entityRoot: IRoleSchema;
@@ -96,9 +96,8 @@ export class RoleModel extends AggregateRoot {
       ...(this.createdAt && { createdAt: this.createdAt }),
       ...(this.updatedAt && { updatedAt: this.updatedAt }),
       ...(this.archivedAt && { archivedAt: this.archivedAt }),
-    }
+    };
   }
-    
 
   public create(): void {
     this.apply(new RoleCreatedEvent(this.uuid, this.name));
@@ -137,7 +136,9 @@ export class RoleModel extends AggregateRoot {
 
   public destroy(uuid: string, name: string): void {
     if (!this.archivedAt) {
-      throw new RoleNotArchivedException(`Role with uuid ${uuid} requires to be archived before destroyed`);
+      throw new RoleNotArchivedException(
+        `Role with uuid ${uuid} requires to be archived before destroyed`,
+      );
     }
 
     this.apply(new RoleDestroyedEvent(uuid, name, new Date()));

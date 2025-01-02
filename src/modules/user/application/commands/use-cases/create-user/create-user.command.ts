@@ -42,11 +42,19 @@ export class CreateUserCommand implements ICommand {
   public readonly profile: IProfileCommand;
   public readonly accounts: IAccountCommand[];
 
-  constructor({ user, profile, accounts }: { user?: Partial<IUserCommand>, profile: IProfileCommand, accounts: IAccountCommand[] }) {
+  constructor({
+    user,
+    profile,
+    accounts,
+  }: {
+    user?: Partial<IUserCommand>;
+    profile: IProfileCommand;
+    accounts: IAccountCommand[];
+  }) {
     const status = user?.status ?? StatusEnum.PENDING;
 
     this.user = { uuid: profile.uuid, status };
     this.profile = profile;
-    this.accounts = accounts
+    this.accounts = accounts;
   }
 }

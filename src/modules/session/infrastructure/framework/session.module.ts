@@ -4,10 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([SessionEntity]),
-    CqrsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([SessionEntity]), CqrsModule],
   providers: [
     // UseCases
     // Domain Services

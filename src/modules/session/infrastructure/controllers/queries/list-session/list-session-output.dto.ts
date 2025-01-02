@@ -8,7 +8,7 @@ interface IListSessionOutputDto {
   sessionDuration: number;
   sessionClosedType: string;
   token: string;
-  expiresIn: Date;
+  expiresInAt: Date;
   loggedInAt: Date;
   loggedOutAt?: Date;
   ipAddress: string;

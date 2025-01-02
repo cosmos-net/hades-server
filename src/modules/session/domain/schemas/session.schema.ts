@@ -3,20 +3,21 @@ import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import ExpiresIn from '@session/domain/value-objects/session/expires-in.vo';
-import SessionFailedAttempts from '@session/domain/value-objects/session/failed-attempts.vo';
-import SessionIpAddress from '@session/domain/value-objects/session/ip-address.vo';
-import SessionLocation from '@session/domain/value-objects/session/location.vo';
-import LoggedInAt from '@session/domain/value-objects/session/logged-in-at.vo';
-import LoggedOutAt from '@session/domain/value-objects/session/logged-out-at.vo';
-import SessionOrigin from '@session/domain/value-objects/session/origin.vo';
-import SessionRefreshToken from '@session/domain/value-objects/session/refresh-token.vo';
-import SessionClosedType from '@session/domain/value-objects/session/session-closed-type.vo';
-import SessionDuration from '@session/domain/value-objects/session/session-duration.vo';
-import SessionId from '@session/domain/value-objects/session/session-id.vo';
-import SessionType from '@session/domain/value-objects/session/session-type.vo';
-import SessionToken from '@session/domain/value-objects/session/token.vo';
-import SessionUserAgent from '@session/domain/value-objects/session/user-agent.vo';
+import ExpiresInAt from '@session/domain/value-objects/expires-in.vo';
+import SessionFailedAttempts from '@session/domain/value-objects/failed-attempts.vo';
+import SessionIpAddress from '@session/domain/value-objects/ip-address.vo';
+import SessionLocation from '@session/domain/value-objects/location.vo';
+import LoggedInAt from '@session/domain/value-objects/logged-in-at.vo';
+import LoggedOutAt from '@session/domain/value-objects/logged-out-at.vo';
+import SessionOrigin from '@session/domain/value-objects/origin.vo';
+import SessionRefreshToken from '@session/domain/value-objects/refresh-token.vo';
+import SessionClosedType from '@session/domain/value-objects/session-closed-type.vo';
+import SessionDuration from '@session/domain/value-objects/session-duration.vo';
+import SessionId from '@session/domain/value-objects/session-id.vo';
+import { SessionStatus } from '@session/domain/value-objects/session-status.vo';
+import SessionType from '@session/domain/value-objects/session-type.vo';
+import SessionToken from '@session/domain/value-objects/token.vo';
+import SessionUserAgent from '@session/domain/value-objects/user-agent.vo';
 
 export interface ISessionSchema {
   id: Id;
@@ -26,7 +27,7 @@ export interface ISessionSchema {
   sessionDuration: SessionDuration;
   sessionClosedType: SessionClosedType;
   token: SessionToken;
-  expiresIn: ExpiresIn;
+  expiresInAt: ExpiresInAt;
   loggedInAt: LoggedInAt;
   loggedOutAt: LoggedOutAt;
   ipAddress: SessionIpAddress;
@@ -38,4 +39,5 @@ export interface ISessionSchema {
   createdAt: CreatedAt;
   updatedAt: UpdatedAt;
   archivedAt: ArchivedAt;
+  status: SessionStatus;
 }

@@ -15,11 +15,13 @@ export class ArchiveRoleController {
   @MessagePattern({ cmd: CMDS_HADES.ROLE.ARCHIVE })
   async archive(@Payload() archiveRoleDto: ArchiveRoleInputDto): Promise<ArchiveRoleOutputDto> {
     try {
-      const result = await this.commandBus.execute<ArchiveRoleCommand, RoleModel>(new ArchiveRoleCommand({ uuid: archiveRoleDto.uuid }));
+      const result = await this.commandBus.execute<ArchiveRoleCommand, RoleModel>(
+        new ArchiveRoleCommand({ uuid: archiveRoleDto.uuid }),
+      );
 
       return new ArchiveRoleOutputDto(result);
-    } catch (error: any) {
-      throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }

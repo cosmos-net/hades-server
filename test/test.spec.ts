@@ -31,42 +31,42 @@ describe('LastName Value Object', () => {
   describe('Invalid Last Names', () => {
     it('should throw an error if the last name is empty', () => {
       expect(() => new LastName('')).toThrow(
-        `Last name  is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`
+        `Last name  is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     });
 
     it('should throw an error if the last name contains numbers', () => {
       const invalidName = 'Gonzalez123';
       expect(() => new LastName(invalidName)).toThrow(
-        `Last name ${invalidName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`
+        `Last name ${invalidName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     });
 
     it('should throw an error if the last name contains spaces', () => {
       const invalidName = 'Gonzalez Perez';
       expect(() => new LastName(invalidName)).toThrow(
-        `Last name ${invalidName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`
+        `Last name ${invalidName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     });
 
     it('should throw an error if the last name contains special characters', () => {
       const invalidName = 'Gonzalez@';
       expect(() => new LastName(invalidName)).toThrow(
-        `Last name ${invalidName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`
+        `Last name ${invalidName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     });
 
     it('should throw an error if the last name is shorter than the minimum length', () => {
       const shortName = 'Al'; // Adjust based on MIN_PROFILE_LAST_NAME_LENGTH
       expect(() => new LastName(shortName)).toThrow(
-        `Last name ${shortName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`
+        `Last name ${shortName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     });
 
     it('should throw an error if the last name exceeds the maximum length', () => {
       const longName = 'A'.repeat(MAX_PROFILE_LAST_NAME_LENGTH + 1);
       expect(() => new LastName(longName)).toThrow(
-        `Last name ${longName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`
+        `Last name ${longName} is not valid. It must have a length between ${MIN_PROFILE_LAST_NAME_LENGTH} and ${MAX_PROFILE_LAST_NAME_LENGTH}, only letters, no spaces, no special characters, no numbers.`,
       );
     });
   });

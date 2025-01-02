@@ -24,8 +24,8 @@ export class UpdateUserController {
       );
 
       return new UpdateUserOutputDto(result);
-    } catch (error: any) {
-      throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }
