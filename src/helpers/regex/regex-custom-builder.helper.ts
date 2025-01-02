@@ -36,7 +36,6 @@ const regexCustomBuilderHelper = (options: RegExOptions): RegExp => {
   const isMinGreaterThanMax = isMinAndMaxLengthDefined && options.minLength > options.maxLength;
 
   if (isMinAndMaxLengthDefined) {
-
     if (isMinGreaterThanMax) {
       throw new Error('Min length cannot be greater than max length');
     }

@@ -10,7 +10,6 @@ import { MicroserviceExceptionFilter } from './exception-filters/microservice-ex
 import { HttpExceptionFilter } from './exception-filters/http-exception.filter';
 import { TimeOutInterceptor } from './globals/timeout-interceptor';
 
-
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(CoreModule, {
     transport: Transport.NATS,

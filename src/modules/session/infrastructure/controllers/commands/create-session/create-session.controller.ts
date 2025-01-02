@@ -5,9 +5,9 @@ import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { CreateSessionCommand } from '@session/application/commands/use-cases/create-session/create-session.command';
+import { SessionModel } from '@session/domain/models/session.model';
 import { CreateSessionInput } from '@session/infrastructure/controllers/commands/create-session/create-session-input.dto';
 import { CreateSessionOutputDto } from '@session/infrastructure/controllers/commands/create-session/create-session-output.dto';
-import { SessionModel } from '@session/domain/models/session.model';
 
 @Controller()
 export class CreateSessionController {
@@ -15,13 +15,15 @@ export class CreateSessionController {
 
   @MessagePattern({ cmd: CMDS_HADES.SESSION.CREATE })
   async create(@Payload() createSessionDto: CreateSessionInput): Promise<CreateSessionOutputDto> {
-    try{
+    try {
       const uuid = UUIDv4();
-      const result = await this.commandBus.execute<CreateSessionCommand, SessionModel>(new CreateSessionCommand({ ...createSessionDto, uuid }));
+      const result = await this.commandBus.execute<CreateSessionCommand, SessionModel>(
+        new CreateSessionCommand({ ...createSessionDto, uuid }),
+      );
 
       return new CreateSessionOutputDto(result);
-    }catch (error: any) {
-      throw new RpcException(error);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }

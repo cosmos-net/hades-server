@@ -13,7 +13,7 @@ interface IError {
 }
 
 interface IBodyResponse {
-  stack?: string
+  stack?: string;
   error?: IError | string;
 }
 
@@ -42,7 +42,10 @@ export class MicroserviceExceptionFilter implements RpcExceptionFilter<RpcExcept
     }
 
     if (typeof error === 'object') {
-      const errorDetails = typeof bodyResponse.error === 'object' ? bodyResponse.error : { message: 'Internal Server Error', name: 'Error', status: 500, stack: '' };
+      const errorDetails =
+        typeof bodyResponse.error === 'object'
+          ? bodyResponse.error
+          : { message: 'Internal Server Error', name: 'Error', status: 500, stack: '' };
       const message = errorDetails.message ?? 'Internal Server Error';
       const name = errorDetails.name ?? 'Error';
       const status = errorDetails.status ?? 500;

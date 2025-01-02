@@ -1,27 +1,27 @@
 import { SessionModel } from '@session/domain/models/session.model';
 import {
-  IListSessionSchemaPrimitive,
-  ISessionSchemaPrimitive,
-} from '@session/domain/schemas/session.schema-primitive';
+  IListSessionSchemaPrimitives,
+  ISessionSchemaPrimitives,
+} from '@session/domain/schemas/session.schema-primitives';
 
 export class ListSessionModel {
   private readonly items: SessionModel[];
   private total: number;
 
-  constructor(listSession: IListSessionSchemaPrimitive) {
+  constructor(listSession: IListSessionSchemaPrimitives) {
     this.items = listSession.items.map((session): SessionModel => new SessionModel(session));
     this.total = listSession.total;
   }
 
-  public get getItems(): ISessionSchemaPrimitive[] {
-    return this.items.map((session): ISessionSchemaPrimitive => session.toPrimitives());
+  public get getItems(): ISessionSchemaPrimitives[] {
+    return this.items.map((session): ISessionSchemaPrimitives => session.toPrimitives());
   }
 
   public get getTotal(): number {
     return this.total;
   }
 
-  public hydrate(sessions: ISessionSchemaPrimitive[]): void {
+  public hydrate(sessions: ISessionSchemaPrimitives[]): void {
     this.setItems(sessions);
   }
 
@@ -33,12 +33,12 @@ export class ListSessionModel {
     this.total = total;
   }
 
-  private setItems(items: ISessionSchemaPrimitive[]): void {
+  private setItems(items: ISessionSchemaPrimitives[]): void {
     items.forEach((item): void => this.addItems(item));
     this.setTotal(items.length);
   }
 
-  private addItems(item: ISessionSchemaPrimitive): void {
+  private addItems(item: ISessionSchemaPrimitives): void {
     this.items.push(new SessionModel(item));
   }
 }

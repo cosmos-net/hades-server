@@ -15,11 +15,13 @@ export class GetRoleController {
   @MessagePattern({ cmd: CMDS_HADES.ROLE.GET })
   async get(@Payload() getRoleInputDto: GetRoleInputDto): Promise<GetRoleOutputDto> {
     try {
-    const result = await this.queryBus.execute<GetRoleQuery, RoleModel>(new GetRoleQuery(getRoleInputDto));
+      const result = await this.queryBus.execute<GetRoleQuery, RoleModel>(
+        new GetRoleQuery(getRoleInputDto),
+      );
 
-    return new GetRoleOutputDto(result);
-    } catch (error: any) {
-      throw new RpcException(error);
+      return new GetRoleOutputDto(result);
+    } catch (error: unknown) {
+      throw new RpcException(error as Error);
     }
   }
 }
