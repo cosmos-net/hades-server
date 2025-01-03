@@ -5,7 +5,7 @@ import { SESSION } from '@session/domain/constants/general-rules';
 export class CreateSessionInput {
   @IsString()
   @IsNotEmpty()
-  @Length(SESSION.SESSION_ID.MAX_LENGTH, SESSION.SESSION_ID.MIN_LENGTH)
+  @Length(SESSION.SESSION_ID.MIN_LENGTH, SESSION.SESSION_ID.MAX_LENGTH)
   public readonly sessionId: string;
 
   @IsString()
