@@ -24,6 +24,7 @@ export interface ISessionSchemaPrimitives extends ISessionBaseSchema {
   loggedInAt: Date;
   expiresInAt: Date;
   status: SessionStatusEnum;
+  loggedOutAt?: Date;
 }
 
 export interface IListSessionSchemaPrimitives {
