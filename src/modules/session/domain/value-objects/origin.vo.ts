@@ -19,7 +19,7 @@ export default class SessionOrigin extends StringValueObject {
     specialChars: '',
   });
 
-  private validate() {
+  private validate(): void {
     const isValid = this._regex.test(this._value);
 
     if (!isValid) {

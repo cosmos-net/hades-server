@@ -12,14 +12,14 @@ export default class SessionUserAgent extends StringValueObject {
   private readonly _regex = regexCustomBuilderHelper({
     allowSpaces: true,
     allowNumbers: true,
-    allowCaseInsensitive: false,
+    allowCaseInsensitive: true,
     minLength: SESSION.USER_AGENT.MIN_LENGTH,
     maxLength: SESSION.USER_AGENT.MAX_LENGTH,
     allowLetters: true,
-    specialChars: '',
+    specialChars: '/()[]{};.,-_',
   });
 
-  private validate() {
+  private validate(): void {
     const isValid = this._regex.test(this._value);
 
     if (!isValid) {
