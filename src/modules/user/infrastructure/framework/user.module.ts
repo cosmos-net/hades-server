@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { ArchiveUserUseCase } from '@user/application/commands/use-cases/archive-user/archive-user.use-case';
 import { CreateUserUseCase } from '@user/application/commands/use-cases/create-user/create-user.use-case';
 import { DestroyUserUseCase } from '@user/application/commands/use-cases/destroy-user/destroy-user.use-case';
@@ -34,10 +33,7 @@ import { ProfileTypeormRepository } from '@user/infrastructure/persistence/typeo
 import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/user-typeorm.repository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserEntity, AccountEntity, ProfileEntity, SessionEntity]),
-    CqrsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([UserEntity, AccountEntity, ProfileEntity]), CqrsModule],
   providers: [
     // UseCases
     CreateUserUseCase,
@@ -126,6 +122,6 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     GetUserController,
     ListUserController,
   ],
-  exports: [],
+  exports: [ACCOUNT_REPOSITORY], // Exporta ACCOUNT_REPOSITORY
 })
 export class UserModule {}
