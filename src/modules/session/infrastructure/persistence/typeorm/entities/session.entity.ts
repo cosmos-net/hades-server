@@ -24,18 +24,18 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   @Column({ type: 'int' })
   sessionDuration: number;
 
-  @Column({ type: 'varchar', length: SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH })
-  sessionClosedType: string;
+  @Column({ type: 'varchar', length: SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH, nullable: true })
+  sessionClosedType: string | null;
 
   @Column({ type: 'text' })
   @Length(SESSION.TOKEN.MIN_LENGTH, SESSION.TOKEN.MAX_LENGTH)
   token: string;
 
-  @Column({ type: 'timestamp' })
-  expiresInAt: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  expiresInAt: Date | null;
 
-  @Column({ type: 'timestamp' })
-  loggedInAt: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  loggedInAt: Date | null;
 
   @Column({ type: 'timestamp', nullable: true })
   loggedOutAt?: Date;
