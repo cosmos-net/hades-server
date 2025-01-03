@@ -49,7 +49,13 @@ export class SessionTypeormRepository
 
   public async persist(model: SessionModel): Promise<SessionModel> {
     const primitives = model.toPartialPrimitives();
-    const entity = await this.repository.save(primitives);
+    const account = model.account.toPrimitives();
+
+    const entity = await this.repository.save({
+      ...primitives,
+      account,
+    });
+
     const roleModel = new SessionModel(entity);
 
     return roleModel;
