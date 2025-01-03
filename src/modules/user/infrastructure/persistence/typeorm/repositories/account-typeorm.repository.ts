@@ -41,30 +41,33 @@ export class AccountTypeormRepository
   ): Promise<AccountEntity | null> {
     const entity = await this.repository.findOne({
       where: { username },
-      ...options,
+      ...(options?.withArchived && { withDeleted: true }),
+      ...(options?.include && { relations: options.include }),
     });
     return entity;
   }
 
-  private async getOneByEmail(email: string, options: IOptions): Promise<AccountEntity | null> {
+  private async getOneByEmail(email: string, options?: IOptions): Promise<AccountEntity | null> {
     const entity = await this.repository.findOne({
       where: { email },
-      ...options,
+      ...(options?.withArchived && { withDeleted: true }),
+      ...(options?.include && { relations: options.include }),
     });
 
     return entity;
   }
 
-  private async getOneByUUID(uuid: string, options: IOptions): Promise<AccountEntity | null> {
+  private async getOneByUUID(uuid: string, options?: IOptions): Promise<AccountEntity | null> {
     const entity = await this.repository.findOne({
       where: { uuid },
-      ...options,
+      ...(options?.withArchived && { withDeleted: true }),
+      ...(options?.include && { relations: options.include }),
     });
 
     return entity;
   }
 
-  async getOneBy(UsernameOrEmailOrUUID: string, options: IOptions): Promise<AccountModel | null> {
+  async getOneBy(UsernameOrEmailOrUUID: string, options?: IOptions): Promise<AccountModel | null> {
     const isUUIDPattern = isUUID(UsernameOrEmailOrUUID);
     const isEmailPattern = isEmail(UsernameOrEmailOrUUID);
 
