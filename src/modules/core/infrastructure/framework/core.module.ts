@@ -7,12 +7,14 @@ import { databasesLoader } from '@core/infrastructure/framework/loaders/database
 import { PostgresType } from '@core/infrastructure/framework/loaders/postgres.type';
 import { mainConfigOptions } from '@core/infrastructure/framework/options/config.options';
 import { RoleModule } from '@role/infrastructure/framework/role.module';
+import { SessionModule } from '@session/infrastructure/framework/session.module';
 import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
   imports: [
     UserModule,
     RoleModule,
+    SessionModule,
     ConfigModule.forRoot(mainConfigOptions),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forFeature(databasesLoader.postgres)],
