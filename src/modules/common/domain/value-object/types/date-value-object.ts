@@ -6,7 +6,7 @@ export abstract class DateValueObject extends ValueObject<Date> {
     this.ensureIsDate();
   }
 
-  private isValid() {
+  private isValid(): boolean {
     return this._value instanceof Date;
   }
 
