@@ -1,6 +1,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
+import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Description from '@common/domain/value-object/vos/description.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
@@ -68,7 +69,7 @@ export class RoleModel extends AggregateRoot {
     this._entityRoot.id = new Id(entity.id);
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.name = new Name(entity.name);
-    this._entityRoot.createdAt = new UpdatedAt(entity.createdAt);
+    this._entityRoot.createdAt = new CreatedAt(entity.createdAt);
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
 
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
