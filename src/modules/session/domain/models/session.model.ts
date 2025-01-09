@@ -7,6 +7,7 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
+import { SessionStatusChangedEvent } from '@session/domain/events/events-success-domain/session-status-changed.event';
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
 import {
   ISessionBaseSchema,
@@ -234,5 +235,12 @@ export class SessionModel extends AggregateRoot {
 
   public create(): void {
     this.apply(new SessionCreatedEvent(this.toPrimitives()));
+  }
+
+  public changeStatus(status: SessionStatusEnum): void {
+    this._entityRoot.status = new SessionStatus(status);
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
   }
 }
