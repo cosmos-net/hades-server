@@ -31,3 +31,13 @@ export interface IListSessionSchemaPrimitives {
   total: number;
   items: ISessionSchemaPrimitives[];
 }
+
+export interface ISessionUpdateFailedPrimitives {
+  uuid: string;
+  sessionDuration: number;
+  token: string;
+  expiresInAt: Date;
+  loggedInAt: Date;
+  refreshToken: string;
+  failedAttempts: number;
+}
