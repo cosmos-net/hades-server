@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CreateSessionUseCase } from '@session/application/commands/use-cases/create-session/create-session.use-case';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
-import { CreateSessionDomainService } from '@session/domain/domain-service/create-session.domain-service';
+import { CreateSessionDomainService } from '@session/domain/domain-services/create-session.domain-service';
 import { CreateSessionController } from '@session/infrastructure/controllers/commands/create-session/create-session.controller';
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { SessionTypeormRepository } from '@session/infrastructure/persistence/typeorm/repositories/session-typeorm.repository';
@@ -33,12 +33,9 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
     // Inversion of dependencies, Control principle (IoC) to domain services
     {
       provide: CreateSessionDomainService,
-      useFactory: (
-        sessionRepository: SessionTypeormRepository,
-        accountRepository: AccountTypeormRepository,
-      ): CreateSessionDomainService =>
-        new CreateSessionDomainService(sessionRepository, accountRepository),
-      inject: [SESSION_REPOSITORY, ACCOUNT_REPOSITORY],
+      useFactory: (accountRepository: AccountTypeormRepository): CreateSessionDomainService =>
+        new CreateSessionDomainService(accountRepository),
+      inject: [ACCOUNT_REPOSITORY],
     },
     {
       provide: SESSION_REPOSITORY,

@@ -35,6 +35,7 @@ export class CreateSessionInput {
   @Length(SESSION.USER_AGENT.MIN_LENGTH, SESSION.USER_AGENT.MAX_LENGTH)
   public readonly userAgent: string;
 
+  //TODO: Remove this field, because filedAttempts is calculated in the domain
   @IsNumber()
   @IsNotEmpty()
   public readonly failedAttempts: number;
