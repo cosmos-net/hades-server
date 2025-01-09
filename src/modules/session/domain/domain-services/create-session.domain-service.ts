@@ -1,15 +1,11 @@
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
-import { ISessionRepositoryContract } from '@session/domain/contracts/session-repository.contract';
 import { SessionNotValidException } from '@session/domain/exceptions/session-not-valid.exception';
 import { SessionModel } from '@session/domain/models/session.model';
 import { ISessionBaseSchema } from '@session/domain/schemas/session.schema-primitives';
 import { IAccountRepositoryContract } from '@user/domain/contracts/account-repository.contract';
 
 export class CreateSessionDomainService {
-  constructor(
-    private readonly repositorySession: ISessionRepositoryContract,
-    private readonly repositoryAccount: IAccountRepositoryContract,
-  ) {}
+  constructor(private readonly repositoryAccount: IAccountRepositoryContract) {}
 
   async go(sessionBaseSchema: ISessionBaseSchema, accountUUID: string): Promise<SessionModel> {
     const account = await this.repositoryAccount.getOneBy(accountUUID, {
