@@ -1,5 +1,6 @@
 import { SessionModel } from '@session/domain/models/session.model';
 
+// TODO: handler other properties to response api
 export class ActivateInvalidSessionOutputDto {
   public readonly id: number;
   public readonly uuid: string;
