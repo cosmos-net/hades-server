@@ -8,6 +8,7 @@ import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
 import { SessionStatusChangedEvent } from '@session/domain/events/events-success-domain/session-status-changed.event';
+import { SessionStatusNotChangedException } from '@session/domain/exceptions/session-status-not-changed.exception';
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
 import {
   ISessionBaseSchema,
@@ -145,6 +146,72 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot?.account;
   }
 
+  private changeStatus(status: SessionStatusEnum): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this.validateStatusChange(currentStatus, status);
+
+    this._entityRoot.status = new SessionStatus(status);
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  private validateStatusChange(
+    currentStatus: SessionStatusEnum,
+    newStatus: SessionStatusEnum,
+  ): void {
+    if (currentStatus === newStatus) {
+      throw new SessionStatusNotChangedException(
+        `Session with UUID ${this.uuid} has the same status ${currentStatus}`,
+      );
+    }
+
+    if (this.isFinalStatus(currentStatus)) {
+      throw new SessionStatusNotChangedException(
+        `Session with UUID ${this.uuid} is already ${currentStatus.toLowerCase()}, cannot change status`,
+      );
+    }
+
+    if (this.isInvalidStatusChange(currentStatus, newStatus)) {
+      throw new SessionStatusNotChangedException(
+        `Session with UUID ${this.uuid} is ${currentStatus.toLowerCase()}, cannot change status to ${newStatus.toLowerCase()}`,
+      );
+    }
+  }
+
+  private isFinalStatus(status: SessionStatusEnum): boolean {
+    return [
+      SessionStatusEnum.EXPIRED,
+      SessionStatusEnum.CLOSED,
+      SessionStatusEnum.SUSPENDED,
+    ].includes(status);
+  }
+
+  private isInvalidStatusChange(
+    currentStatus: SessionStatusEnum,
+    newStatus: SessionStatusEnum,
+  ): boolean {
+    const invalidTransitions: { [key in SessionStatusEnum]?: SessionStatusEnum[] } = {
+      [SessionStatusEnum.ACTIVE]: [SessionStatusEnum.INVALID, SessionStatusEnum.PENDING],
+      [SessionStatusEnum.INACTIVE]: [SessionStatusEnum.INVALID, SessionStatusEnum.PENDING],
+      [SessionStatusEnum.INVALID]: [
+        SessionStatusEnum.INACTIVE,
+        SessionStatusEnum.EXPIRED,
+        SessionStatusEnum.CLOSED,
+        SessionStatusEnum.SUSPENDED,
+      ],
+      [SessionStatusEnum.PENDING]: [
+        SessionStatusEnum.INACTIVE,
+        SessionStatusEnum.EXPIRED,
+        SessionStatusEnum.CLOSED,
+        SessionStatusEnum.SUSPENDED,
+      ],
+    };
+
+    return invalidTransitions[currentStatus]?.includes(newStatus) ?? false;
+  }
+
   public hydrate(entity: ISessionSchemaPrimitives): void {
     if (entity.id) this._entityRoot.id = new Id(entity.id);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
@@ -237,10 +304,7 @@ export class SessionModel extends AggregateRoot {
     this.apply(new SessionCreatedEvent(this.toPrimitives()));
   }
 
-  public changeStatus(status: SessionStatusEnum): void {
-    this._entityRoot.status = new SessionStatus(status);
-    this._entityRoot.updatedAt = new UpdatedAt(new Date());
-
-    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  public active(): void {
+    this.changeStatus(SessionStatusEnum.ACTIVE);
   }
 }
