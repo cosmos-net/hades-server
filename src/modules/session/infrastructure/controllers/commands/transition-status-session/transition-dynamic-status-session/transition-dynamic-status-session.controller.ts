@@ -21,7 +21,7 @@ import { TransitionDynamicStatusSessionOutputDto } from '@session/infrastructure
 export class TransitionDynamicStatusSessionController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.SESSION.UPDATE })
+  @MessagePattern({ cmd: CMDS_HADES.SESSION.TRANSITION_STATUS })
   async activateInvalidSession(
     @Payload() activateInactivateSessionInputDto: TransitionDynamicStatusSessionInputDto,
   ): Promise<TransitionDynamicStatusSessionOutputDto> {

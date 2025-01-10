@@ -12,7 +12,7 @@ import { ActivateInvalidSessionOutputDto } from '@session/infrastructure/control
 export class ActivateInvalidSessionController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.SESSION.UPDATE })
+  @MessagePattern({ cmd: CMDS_HADES.SESSION.ACTIVATE_INVALID })
   async activateInvalidSession(
     @Payload() activateInactivateSessionInputDto: ActivateInvalidSessionInputDto,
   ): Promise<ActivateInvalidSessionOutputDto> {
