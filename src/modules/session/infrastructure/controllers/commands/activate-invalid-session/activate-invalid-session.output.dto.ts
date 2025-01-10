@@ -1,3 +1,5 @@
+import { SessionModel } from '@session/domain/models/session.model';
+
 export class ActivateInvalidSessionOutputDto {
   public readonly id: number;
   public readonly uuid: string;
@@ -6,7 +8,7 @@ export class ActivateInvalidSessionOutputDto {
   public readonly refreshToken: string;
   public readonly failedAttempts: number;
 
-  constructor(root: ActivateInvalidSessionOutputDto) {
+  constructor(root: SessionModel) {
     this.id = root.id;
     this.uuid = root.uuid;
     this.sessionClosedType = root.sessionClosedType;
