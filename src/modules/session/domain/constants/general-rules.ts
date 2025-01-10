@@ -8,7 +8,7 @@ export const SESSION = {
     MIN_LENGTH: 1,
   },
   SESSION_DURATION: {
-    MAX_LENGTH: 50,
+    MAX_LENGTH: 999999,
     MIN_LENGTH: 1,
   },
   SESSION_CLOSED_TYPE: {
