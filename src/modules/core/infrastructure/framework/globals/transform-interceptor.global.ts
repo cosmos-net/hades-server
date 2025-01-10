@@ -14,7 +14,7 @@ export interface IResponse<T> {
 export class TransformInterceptor<T> implements NestInterceptor<T, IResponse<T>> {
   intercept(context: ExecutionContext, next: CallHandler): Observable<IResponse<T>> {
     return next.handle().pipe(
-      map((data) => {
+      map((data): IResponse<T> => {
         const response = context.switchToHttp().getResponse();
 
         if (data === undefined) {
