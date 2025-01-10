@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { ActivateInvalidSessionCommand } from '@session/application/commands/use-cases/activate-invalid-session/activate-invalid-session.command';
+import { ActivateInvalidSessionCommand } from '@session/application/use-cases/commands/activate-invalid-session/activate-invalid-session.command';
 import { SessionModel } from '@session/domain/models/session.model';
 import { ActivateInvalidSessionInputDto } from '@session/infrastructure/controllers/commands/activate-invalid-session/activate-invalid-session.input.dto';
 import { ActivateInvalidSessionOutputDto } from '@session/infrastructure/controllers/commands/activate-invalid-session/activate-invalid-session.output.dto';

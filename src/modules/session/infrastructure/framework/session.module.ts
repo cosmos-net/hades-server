@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ActiveInvalidSessionUseCase } from '@session/application/commands/use-cases/activate-invalid-session/activate-invalid-session.use-case';
-import { CreateSessionUseCase } from '@session/application/commands/use-cases/create-session/create-session.use-case';
+import { ActiveInvalidSessionUseCase } from '@session/application/use-cases/commands/activate-invalid-session/activate-invalid-session.use-case';
+import { CreateSessionUseCase } from '@session/application/use-cases/commands/create-session/create-session.use-case';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';
 import { CreateSessionDomainService } from '@session/domain/domain-services/create-session.domain-service';

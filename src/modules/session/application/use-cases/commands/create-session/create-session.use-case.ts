@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateSessionCommand } from '@session/application/commands/use-cases/create-session/create-session.command';
+import { CreateSessionCommand } from '@session/application/use-cases/commands/create-session/create-session.command';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ISessionRepositoryContract } from '@session/domain/contracts/session-repository.contract';
 import { CreateSessionDomainService } from '@session/domain/domain-services/create-session.domain-service';

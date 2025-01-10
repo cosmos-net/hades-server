@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { ActivateInvalidSessionCommand } from '@session/application/commands/use-cases/activate-invalid-session/activate-invalid-session.command';
+import { ActivateInvalidSessionCommand } from '@session/application/use-cases/commands/activate-invalid-session/activate-invalid-session.command';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ISessionRepositoryContract } from '@session/domain/contracts/session-repository.contract';
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';

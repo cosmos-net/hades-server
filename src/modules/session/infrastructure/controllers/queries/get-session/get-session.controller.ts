@@ -3,7 +3,7 @@ import { QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { GetSessionQuery } from '@session/application/queries/get-session/get-session.query';
+import { GetSessionQuery } from '@session/application/use-cases/queries/get-session/get-session.query';
 import { SessionModel } from '@session/domain/models/session.model';
 import { GetSessionInputDto } from '@session/infrastructure/controllers/queries/get-session/get-session-input.dto';
 import { GetSessionOutputDto } from '@session/infrastructure/controllers/queries/get-session/get-session-output.dto';
