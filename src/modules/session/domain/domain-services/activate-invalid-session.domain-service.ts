@@ -2,11 +2,11 @@ import { SessionStatusEnum } from '@session/domain/constants/session-status.enum
 import { ISessionRepositoryContract } from '@session/domain/contracts/session-repository.contract';
 import { SessionNotValidException } from '@session/domain/exceptions/session-not-valid.exception';
 import { SessionModel } from '@session/domain/models/session.model';
-import { ISessionActivateInactivateSchemaPrimitives } from '@session/domain/schemas/session.schema-primitives';
+import { ISessionActivateInvalidSchemaPrimitives } from '@session/domain/schemas/session.schema-primitives';
 
-export class ActivateInactiveSessionDomainService {
+export class ActivateInvalidSessionDomainService {
   constructor(private readonly repositorySession: ISessionRepositoryContract) {}
-  async go(schema: ISessionActivateInactivateSchemaPrimitives): Promise<SessionModel> {
+  async go(schema: ISessionActivateInvalidSchemaPrimitives): Promise<SessionModel> {
     const sessionModel = await this.repositorySession.getOneBy(schema.uuid);
 
     if (!sessionModel) {

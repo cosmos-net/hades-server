@@ -1,11 +1,12 @@
 import {
-  IsDate,
   IsNotEmpty,
-  IsNumber,
-  IsOptional,
   IsString,
   IsUUID,
   Length,
+  IsNumber,
+  Max,
+  Min,
+  IsISO8601,
 } from 'class-validator';
 
 import { SESSION } from '@session/domain/constants/general-rules';
@@ -15,22 +16,32 @@ export class ActivateInvalidSessionInputDto {
   @IsNotEmpty()
   public readonly uuid: string;
 
+  @IsNumber()
+  @Min(SESSION.SESSION_DURATION.MIN_LENGTH)
+  @Max(SESSION.SESSION_DURATION.MAX_LENGTH)
+  @IsNotEmpty()
+  public readonly sessionDuration: number;
+
   @IsString()
-  @IsOptional()
-  @Length(SESSION.SESSION_CLOSED_TYPE.MIN_LENGTH, SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH)
-  public readonly sessionClosedType: string;
+  @Length(SESSION.TOKEN.MIN_LENGTH, SESSION.TOKEN.MAX_LENGTH)
+  @IsNotEmpty()
+  public readonly token: string;
 
-  @IsOptional()
-  @IsDate()
-  public readonly loggedOutAt: Date;
+  @IsISO8601()
+  // @Transform(({ value }) => {
+  //   return new Date(value);
+  // })
+  @IsNotEmpty()
+  public readonly expiresInAt: string;
 
-  @IsOptional()
+  @IsISO8601()
+  // @Transform(({ value }) => {
+  //   return new Date(value);
+  // })
+  @IsNotEmpty()
+  public readonly loggedInAt: string;
+
   @IsString()
   @Length(SESSION.REFRESH_TOKEN.MIN_LENGTH, SESSION.REFRESH_TOKEN.MAX_LENGTH)
   public readonly refreshToken: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @Length(SESSION.REFRESH_TOKEN.MIN_LENGTH, SESSION.REFRESH_TOKEN.MAX_LENGTH)
-  public readonly failedAttempts: number;
 }
