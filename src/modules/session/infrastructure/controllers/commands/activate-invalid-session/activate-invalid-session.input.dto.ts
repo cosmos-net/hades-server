@@ -1,11 +1,12 @@
 import {
-  IsDate,
   IsNotEmpty,
-  IsOptional,
   IsString,
   IsUUID,
   Length,
   IsNumber,
+  Max,
+  Min,
+  IsISO8601,
 } from 'class-validator';
 
 import { SESSION } from '@session/domain/constants/general-rules';
@@ -16,7 +17,8 @@ export class ActivateInvalidSessionInputDto {
   public readonly uuid: string;
 
   @IsNumber()
-  @Length(SESSION.SESSION_DURATION.MIN_LENGTH, SESSION.SESSION_DURATION.MAX_LENGTH)
+  @Min(SESSION.SESSION_DURATION.MIN_LENGTH)
+  @Max(SESSION.SESSION_DURATION.MAX_LENGTH)
   @IsNotEmpty()
   public readonly sessionDuration: number;
 
@@ -25,15 +27,20 @@ export class ActivateInvalidSessionInputDto {
   @IsNotEmpty()
   public readonly token: string;
 
-  @IsDate()
+  @IsISO8601()
+  // @Transform(({ value }) => {
+  //   return new Date(value);
+  // })
   @IsNotEmpty()
-  public readonly expiresInAt: Date;
+  public readonly expiresInAt: string;
 
-  @IsOptional()
-  @IsDate()
-  public readonly loggedInAt: Date;
+  @IsISO8601()
+  // @Transform(({ value }) => {
+  //   return new Date(value);
+  // })
+  @IsNotEmpty()
+  public readonly loggedInAt: string;
 
-  @IsOptional()
   @IsString()
   @Length(SESSION.REFRESH_TOKEN.MIN_LENGTH, SESSION.REFRESH_TOKEN.MAX_LENGTH)
   public readonly refreshToken: string;
