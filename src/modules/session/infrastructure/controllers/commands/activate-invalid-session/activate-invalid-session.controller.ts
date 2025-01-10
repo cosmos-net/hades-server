@@ -13,7 +13,7 @@ export class ActivateInvalidSessionController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @MessagePattern({ cmd: CMDS_HADES.SESSION.UPDATE })
-  async update(
+  async activateInvalidSession(
     @Payload() activateInactivateSessionInputDto: ActivateInvalidSessionInputDto,
   ): Promise<ActivateInvalidSessionOutputDto> {
     try {
@@ -22,11 +22,12 @@ export class ActivateInvalidSessionController {
           uuid: activateInactivateSessionInputDto.uuid,
           sessionDuration: activateInactivateSessionInputDto.sessionDuration,
           token: activateInactivateSessionInputDto.token,
-          expiresInAt: activateInactivateSessionInputDto.expiresInAt,
-          loggedInAt: activateInactivateSessionInputDto.loggedInAt,
+          expiresInAt: new Date(activateInactivateSessionInputDto.expiresInAt),
+          loggedInAt: new Date(activateInactivateSessionInputDto.loggedInAt),
           refreshToken: activateInactivateSessionInputDto.refreshToken,
         }),
       );
+
       return new ActivateInvalidSessionOutputDto(result);
     } catch (error: unknown) {
       throw new RpcException(error as Error);
