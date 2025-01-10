@@ -1,13 +1,13 @@
-export class UpdateSessionOutputDto {
-  public readonly id: number;
+import { ICommand } from '@nestjs/cqrs';
+
+export class ActivateInactiveSessionCommand implements ICommand {
   public readonly uuid: string;
   public readonly sessionClosedType: string;
   public readonly loggedOutAt: Date;
   public readonly refreshToken: string;
   public readonly failedAttempts: number;
 
-  constructor(root: UpdateSessionOutputDto) {
-    this.id = root.id;
+  constructor(root: ActivateInactiveSessionCommand) {
     this.uuid = root.uuid;
     this.sessionClosedType = root.sessionClosedType;
     this.loggedOutAt = root.loggedOutAt;

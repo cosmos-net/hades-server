@@ -33,10 +33,10 @@ export class SessionTypeormRepository
     return entity;
   }
 
-  public async getOneBy(nameOrUUID: string, options?: IOptions): Promise<SessionModel> {
-    const isUUIDPattern = isUUID(nameOrUUID);
+  public async getOneBy(UUID: string, options?: IOptions): Promise<SessionModel | null> {
+    const isUUIDPattern = isUUID(UUID);
 
-    const result = isUUIDPattern ? await this.getOneByUUID(nameOrUUID, options) : null;
+    const result = isUUIDPattern ? await this.getOneByUUID(UUID, options) : null;
 
     if (!result) {
       return null;

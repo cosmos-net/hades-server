@@ -31,3 +31,8 @@ export interface IListSessionSchemaPrimitives {
   total: number;
   items: ISessionSchemaPrimitives[];
 }
+
+export type ISessionActivateInactivateSchemaPrimitives = Pick<
+  ISessionSchemaPrimitives,
+  'uuid' | 'sessionDuration' | 'token' | 'expiresInAt' | 'loggedInAt' | 'refreshToken'
+>;
