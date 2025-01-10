@@ -32,7 +32,7 @@ export interface IListSessionSchemaPrimitives {
   items: ISessionSchemaPrimitives[];
 }
 
-export type ISessionActivateInactivateSchemaPrimitives = Pick<
+export type ISessionActivateInvalidSchemaPrimitives = Pick<
   ISessionSchemaPrimitives,
   'uuid' | 'sessionDuration' | 'token' | 'expiresInAt' | 'loggedInAt' | 'refreshToken'
 >;
