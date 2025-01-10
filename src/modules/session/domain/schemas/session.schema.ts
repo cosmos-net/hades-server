@@ -18,6 +18,7 @@ import { SessionStatus } from '@session/domain/value-objects/session-status.vo';
 import SessionType from '@session/domain/value-objects/session-type.vo';
 import SessionToken from '@session/domain/value-objects/token.vo';
 import SessionUserAgent from '@session/domain/value-objects/user-agent.vo';
+import { AccountModel } from '@user/domain/models/account/account.model';
 
 export interface ISessionSchema {
   id: Id;
@@ -40,4 +41,5 @@ export interface ISessionSchema {
   updatedAt: UpdatedAt;
   archivedAt: ArchivedAt;
   status: SessionStatus;
+  account?: AccountModel;
 }

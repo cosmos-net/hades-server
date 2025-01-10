@@ -16,10 +16,10 @@ export default class SessionLocation extends StringValueObject {
     minLength: SESSION.LOCATION.MIN_LENGTH,
     maxLength: SESSION.LOCATION.MAX_LENGTH,
     allowLetters: true,
-    specialChars: '',
+    specialChars: ',.-',
   });
 
-  private validate() {
+  private validate(): void {
     const isValid = this._regex.test(this._value);
 
     if (!isValid) {

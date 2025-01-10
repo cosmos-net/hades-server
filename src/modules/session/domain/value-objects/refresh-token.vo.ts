@@ -12,14 +12,14 @@ export default class SessionRefreshToken extends StringValueObject {
   private readonly _regex = regexCustomBuilderHelper({
     allowSpaces: false,
     allowNumbers: true,
-    allowCaseInsensitive: false,
+    allowCaseInsensitive: true,
     minLength: SESSION.REFRESH_TOKEN.MIN_LENGTH,
     maxLength: SESSION.REFRESH_TOKEN.MAX_LENGTH,
     allowLetters: true,
     specialChars: '',
   });
 
-  private validate() {
+  private validate(): void {
     const isValid = this._regex.test(this._value);
 
     if (!isValid) {
