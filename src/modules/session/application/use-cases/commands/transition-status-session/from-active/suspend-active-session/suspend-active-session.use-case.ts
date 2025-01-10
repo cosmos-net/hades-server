@@ -9,7 +9,7 @@ import { SessionModel } from '@session/domain/models/session.model';
 
 @Injectable()
 @CommandHandler(SuspendActiveSessionCommand)
-export class CloseActiveSessionUseCase implements ICommandHandler<SuspendActiveSessionCommand> {
+export class SuspendActiveSessionUseCase implements ICommandHandler<SuspendActiveSessionCommand> {
   constructor(
     @Inject(SESSION_REPOSITORY)
     private readonly repository: ISessionRepositoryContract,
