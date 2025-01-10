@@ -251,4 +251,82 @@ export class SessionModel extends AggregateRoot {
 
     this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
   }
+
+  inactive(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.INACTIVE,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  expire(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.EXPIRED,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  close(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.CLOSED,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  suspend(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.SUSPENDED,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  invalid(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.INVALID,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  pending(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.PENDING,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
 }

@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ActiveInvalidSessionUseCase } from '@session/application/use-cases/commands/activate-invalid-session/activate-invalid-session.use-case';
 import { CreateSessionUseCase } from '@session/application/use-cases/commands/create-session/create-session.use-case';
+import { ActiveInvalidSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-invalid/activate-invalid-session/activate-invalid-session.use-case';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';
 import { CreateSessionDomainService } from '@session/domain/domain-services/create-session.domain-service';
-import { ActivateInvalidSessionController } from '@session/infrastructure/controllers/commands/activate-invalid-session/activate-invalid-session.controller';
 import { CreateSessionController } from '@session/infrastructure/controllers/commands/create-session/create-session.controller';
+import { ActivateInvalidSessionController } from '@session/infrastructure/controllers/commands/transition-status-session/activate-invalid-session/activate-invalid-session.controller';
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { SessionTypeormRepository } from '@session/infrastructure/persistence/typeorm/repositories/session-typeorm.repository';
 import { ACCOUNT_REPOSITORY } from '@user/domain/constants/injection-tokens';
