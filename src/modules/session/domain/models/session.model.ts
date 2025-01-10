@@ -114,8 +114,8 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.userAgent._value;
   }
 
-  get failedAttempts(): number {
-    return this._entityRoot.failedAttempts._value;
+  get failedAttempts(): number | undefined {
+    return this._entityRoot.failedAttempts?._value;
   }
 
   get origin(): string {
@@ -221,6 +221,9 @@ export class SessionModel extends AggregateRoot {
       this._entityRoot.sessionClosedType = new SessionClosedType(entity.sessionClosedType);
     if (entity.expiresInAt) this._entityRoot.expiresInAt = new ExpiresInAt(entity.expiresInAt);
 
+    if (entity.failedAttempts)
+      this._entityRoot.failedAttempts = new SessionFailedAttempts(entity.failedAttempts);
+
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.sessionId = new SessionId(entity.sessionId);
     this._entityRoot.sessionType = new SessionType(entity.sessionType);
@@ -229,7 +232,6 @@ export class SessionModel extends AggregateRoot {
     this._entityRoot.ipAddress = new SessionIpAddress(entity.ipAddress);
     this._entityRoot.refreshToken = new SessionRefreshToken(entity.refreshToken);
     this._entityRoot.userAgent = new SessionUserAgent(entity.userAgent);
-    this._entityRoot.failedAttempts = new SessionFailedAttempts(entity.failedAttempts);
     this._entityRoot.origin = new SessionOrigin(entity.origin);
     this._entityRoot.location = new SessionLocation(entity.location);
     this._entityRoot.createdAt = new CreatedAt(entity.createdAt);
