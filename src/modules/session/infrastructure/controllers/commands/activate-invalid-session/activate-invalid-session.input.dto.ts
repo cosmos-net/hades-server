@@ -10,7 +10,7 @@ import {
 
 import { SESSION } from '@session/domain/constants/general-rules';
 
-export class UpdateSessionInputDto {
+export class ActivateInvalidSessionInputDto {
   @IsUUID()
   @IsNotEmpty()
   public readonly uuid: string;
