@@ -21,8 +21,6 @@ export class CreateSessionDomainService {
       throw new SessionNotValidException(`Account with UUID ${accountUUID} is archived`);
     }
 
-    //TODO: validate if user is active
-
     const { sessions: sessionList } = account;
 
     if (sessionList) {

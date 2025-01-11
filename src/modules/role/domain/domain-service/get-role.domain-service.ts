@@ -1,10 +1,11 @@
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { RoleNotFoundException } from '@role/domain/exceptions/role-not-found.exception';
+import { RoleModel } from '@role/domain/models/role.model';
 
 export class GetRoleDomainService {
   constructor(private readonly roleRepository: IRoleRepositoryContract) {}
 
-  async go(uuid: string, withArchived?: boolean) {
+  async go(uuid: string, withArchived?: boolean): Promise<RoleModel> {
     const role = await this.roleRepository.getOneBy(uuid, { withArchived });
 
     if (!role) {

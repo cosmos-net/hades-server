@@ -13,9 +13,11 @@ import { ExpireInactiveSessionUseCase } from '@session/application/use-cases/com
 import { SuspendInactiveSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-inactive/suspend-inactive-session/suspend-inactive-session.use-case';
 import { ActiveInvalidSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-invalid/activate-invalid-session/activate-invalid-session.use-case';
 import { ActivatePendingSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-pending/activate-pending-session/activate-pending-session.use-case';
+import { GetSessionUseCase } from '@session/application/use-cases/queries/get-session/get-session.use-case';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';
 import { CreateSessionDomainService } from '@session/domain/domain-services/create-session.domain-service';
+import { GetSessionDomainService } from '@session/domain/domain-services/get-session.domain-service';
 import { TransitionStatusSessionDomainService } from '@session/domain/domain-services/transition-status-session.domain-service';
 import { CreateSessionController } from '@session/infrastructure/controllers/commands/create-session/create-session.controller';
 import { ActivateInvalidSessionController } from '@session/infrastructure/controllers/commands/transition-status-session/activate-invalid-session/activate-invalid-session.controller';
@@ -44,7 +46,7 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
     // UpdateSessionUseCase,
     // ArchiveSessionUseCase,
     // DestroySessionUseCase,
-    // GetSessionUseCase,
+    GetSessionUseCase,
     // ListSessionsUseCase,
 
     // Domain Services
@@ -54,7 +56,7 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
     // UpdateSessionDomainService,
     // ArchiveSessionDomainService,
     // DestroySessionDomainService,
-    // GetSessionDomainService,
+    GetSessionDomainService,
     // ListSessionsDomainService,
     // Inversion of dependencies, Control principle (IoC) to domain services
     {
@@ -77,6 +79,12 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
         sessionRepository: SessionTypeormRepository,
       ): TransitionStatusSessionDomainService =>
         new TransitionStatusSessionDomainService(sessionRepository),
+      inject: [SESSION_REPOSITORY],
+    },
+    {
+      provide: GetSessionDomainService,
+      useFactory: (sessionRepository: SessionTypeormRepository): GetSessionDomainService =>
+        new GetSessionDomainService(sessionRepository),
       inject: [SESSION_REPOSITORY],
     },
     {
