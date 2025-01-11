@@ -9,9 +9,5 @@ export class TransitionDynamicStatusSessionInputDto {
 
   @IsEnum(SessionStatusEnum)
   @IsNotEmpty()
-  public readonly from: SessionStatusEnum;
-
-  @IsEnum(SessionStatusEnum)
-  @IsNotEmpty()
-  public readonly to: SessionStatusEnum;
+  public readonly transitionStatus: SessionStatusEnum;
 }
