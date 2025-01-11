@@ -4,17 +4,19 @@ import { SessionModel } from '@session/domain/models/session.model';
 export class TransitionDynamicStatusSessionOutputDto {
   public readonly id: number;
   public readonly uuid: string;
-  public readonly sessionClosedType: string;
-  public readonly loggedOutAt: Date;
-  public readonly refreshToken: string;
-  public readonly failedAttempts: number;
+  public readonly status: string;
+  public readonly message: string;
+  public readonly createdAt: Date;
+  public readonly updatedAt: Date;
+  public readonly archivedAt: Date;
 
-  constructor(root: SessionModel) {
+  constructor(root: SessionModel, message: string) {
     this.id = root.id;
     this.uuid = root.uuid;
-    this.sessionClosedType = root.sessionClosedType;
-    this.loggedOutAt = root.loggedOutAt;
-    this.refreshToken = root.refreshToken;
-    this.failedAttempts = root.failedAttempts;
+    this.status = root.status;
+    this.message = message;
+    this.createdAt = root.createdAt;
+    this.updatedAt = root.updatedAt;
+    this.archivedAt = root.archivedAt;
   }
 }
