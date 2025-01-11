@@ -1,5 +1,5 @@
 import { BadRequestException, Controller } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
@@ -12,6 +12,7 @@ import { CloseInactiveSessionCommand } from '@session/application/use-cases/comm
 import { ExpireInactiveSessionCommand } from '@session/application/use-cases/commands/transition-status-session/from-inactive/expire-inactive-session/expire-inactive-session.command';
 import { SuspendInactiveSessionCommand } from '@session/application/use-cases/commands/transition-status-session/from-inactive/suspend-inactive-session/suspend-inactive-session.command';
 import { ActivatePendingSessionCommand } from '@session/application/use-cases/commands/transition-status-session/from-pending/activate-pending-session/activate-pending-session.command';
+import { GetSessionQuery } from '@session/application/use-cases/queries/get-session/get-session.query';
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionModel } from '@session/domain/models/session.model';
 import { TransitionDynamicStatusSessionInputDto } from '@session/infrastructure/controllers/commands/transition-status-session/transition-dynamic-status-session/transition-dynamic-status-session.input.dto';
@@ -19,29 +20,53 @@ import { TransitionDynamicStatusSessionOutputDto } from '@session/infrastructure
 
 @Controller()
 export class TransitionDynamicStatusSessionController {
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @MessagePattern({ cmd: CMDS_HADES.SESSION.TRANSITION_STATUS })
   async activateInvalidSession(
     @Payload() activateInactivateSessionInputDto: TransitionDynamicStatusSessionInputDto,
   ): Promise<TransitionDynamicStatusSessionOutputDto> {
     try {
-      const { uuid, from: fromStatus, to: toStatus } = activateInactivateSessionInputDto;
+      const { uuid, transitionStatus: toStatus } = activateInactivateSessionInputDto;
       const { ACTIVE, INACTIVE, PENDING } = SessionStatusEnum;
 
-      let result: SessionModel;
+      let sessionModel = await this.queryBus.execute<GetSessionQuery, SessionModel>(
+        new GetSessionQuery({
+          uuid,
+          withArchived: false,
+        }),
+      );
 
-      if (fromStatus === ACTIVE) {
-        result = await this.handleActiveStatus(uuid, toStatus);
-      } else if (fromStatus === INACTIVE) {
-        result = await this.handleInactiveStatus(uuid, toStatus);
-      } else if (fromStatus === PENDING && toStatus === ACTIVE) {
-        result = await this.commandBus.execute<ActivatePendingSessionCommand, SessionModel>(
-          new ActivatePendingSessionCommand(uuid),
-        );
-      } else throw new BadRequestException('Invalid transition');
+      const { status: fromStatus } = sessionModel;
 
-      return new TransitionDynamicStatusSessionOutputDto(result);
+      switch (fromStatus) {
+        case ACTIVE:
+          sessionModel = await this.handleActiveStatus(uuid, toStatus);
+          break;
+        case INACTIVE:
+          sessionModel = await this.handleInactiveStatus(uuid, toStatus);
+          break;
+        case PENDING:
+          if (toStatus === ACTIVE) {
+            sessionModel = await this.commandBus.execute<
+              ActivatePendingSessionCommand,
+              SessionModel
+            >(new ActivatePendingSessionCommand(uuid));
+          } else {
+            throw new BadRequestException(`Invalid transition from ${fromStatus} to ${toStatus}`);
+          }
+          break;
+        default:
+          throw new BadRequestException(`Invalid transition from ${fromStatus} to ${toStatus}`);
+      }
+
+      return new TransitionDynamicStatusSessionOutputDto(
+        sessionModel,
+        `Session transitioned from ${fromStatus} to ${toStatus}`,
+      );
     } catch (error: unknown) {
       throw new RpcException(error as Error);
     }
@@ -85,7 +110,7 @@ export class TransitionDynamicStatusSessionController {
       return result;
     }
 
-    throw new BadRequestException('Invalid transition');
+    throw new BadRequestException(`Invalid transition from ACTIVE to ${toStatus.toUpperCase()}`);
   }
 
   private async handleInactiveStatus(
@@ -126,6 +151,6 @@ export class TransitionDynamicStatusSessionController {
       return result;
     }
 
-    throw new BadRequestException('Invalid transition');
+    throw new BadRequestException(`Invalid transition from INACTIVE to ${toStatus.toUpperCase()}`);
   }
 }
