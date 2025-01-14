@@ -145,6 +145,10 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot?.account;
   }
 
+  get totalFailedAttempts(): number | undefined {
+    return this._entityRoot.failedAttempts?._value;
+  }
+
   public hydrate(entity: ISessionSchemaPrimitives): void {
     if (entity.id) this._entityRoot.id = new Id(entity.id);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
@@ -325,6 +329,15 @@ export class SessionModel extends AggregateRoot {
       SessionStatusEnum.PENDING,
     );
 
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  public incrementFailedAttempts(): void {
+    const currentFailedAttempts = this._entityRoot.failedAttempts?._value || 0;
+
+    this._entityRoot.failedAttempts = new SessionFailedAttempts(currentFailedAttempts);
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
 
     this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
