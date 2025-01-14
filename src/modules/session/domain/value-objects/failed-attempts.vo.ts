@@ -5,9 +5,7 @@ export default class SessionFailedAttempts extends NumberValueObject {
     super(value);
   }
 
-  public static createAndIncrementOne(
-    currentSessionFailedAttempts: SessionFailedAttempts,
-  ): SessionFailedAttempts {
-    return new SessionFailedAttempts(currentSessionFailedAttempts._value + 1);
+  public static createAndIncrementOne(qtyFailedAttempts: number): SessionFailedAttempts {
+    return new SessionFailedAttempts(qtyFailedAttempts + 1);
   }
 }
