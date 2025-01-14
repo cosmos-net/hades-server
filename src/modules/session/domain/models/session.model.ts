@@ -278,6 +278,8 @@ export class SessionModel extends AggregateRoot {
     );
 
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
 
     this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
   }
@@ -291,6 +293,8 @@ export class SessionModel extends AggregateRoot {
     );
 
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
 
     this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
   }
@@ -304,6 +308,8 @@ export class SessionModel extends AggregateRoot {
     );
 
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
 
     this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
   }
@@ -337,8 +343,9 @@ export class SessionModel extends AggregateRoot {
   public incrementFailedAttempts(): void {
     const currentFailedAttempts = this._entityRoot.failedAttempts?._value || 0;
 
-    this._entityRoot.failedAttempts = new SessionFailedAttempts(currentFailedAttempts);
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.failedAttempts =
+      SessionFailedAttempts.createAndIncrementOne(currentFailedAttempts);
 
     this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
   }
