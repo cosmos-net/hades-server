@@ -50,9 +50,6 @@ export class SessionModel extends AggregateRoot {
       this._entityRoot.ipAddress = new SessionIpAddress(entityOrBaseSchema.ipAddress);
       this._entityRoot.refreshToken = new SessionRefreshToken(entityOrBaseSchema.refreshToken);
       this._entityRoot.userAgent = new SessionUserAgent(entityOrBaseSchema.userAgent);
-      this._entityRoot.failedAttempts = new SessionFailedAttempts(
-        entityOrBaseSchema.failedAttempts,
-      );
       this._entityRoot.origin = new SessionOrigin(entityOrBaseSchema.origin);
       this._entityRoot.location = new SessionLocation(entityOrBaseSchema.location);
 
