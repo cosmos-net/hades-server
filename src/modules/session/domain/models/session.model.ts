@@ -7,12 +7,14 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
+import { SessionStatusChangedEvent } from '@session/domain/events/events-success-domain/session-status-changed.event';
+import { SessionStatusNotChangedException } from '@session/domain/exceptions/session-status-not-changed.exception';
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
 import {
   ISessionBaseSchema,
   ISessionSchemaPrimitives,
 } from '@session/domain/schemas/session.schema-primitives';
-import ExpiresIn from '@session/domain/value-objects/expires-in.vo';
+import ExpiresInAt from '@session/domain/value-objects/expires-in.vo';
 import SessionFailedAttempts from '@session/domain/value-objects/failed-attempts.vo';
 import SessionIpAddress from '@session/domain/value-objects/ip-address.vo';
 import SessionLocation from '@session/domain/value-objects/location.vo';
@@ -26,6 +28,7 @@ import { SessionStatus } from '@session/domain/value-objects/session-status.vo';
 import SessionType from '@session/domain/value-objects/session-type.vo';
 import SessionToken from '@session/domain/value-objects/token.vo';
 import SessionUserAgent from '@session/domain/value-objects/user-agent.vo';
+import { AccountModel } from '@user/domain/models/account/account.model';
 
 export class SessionModel extends AggregateRoot {
   private readonly _entityRoot: ISessionSchema;
@@ -79,24 +82,24 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.sessionDuration._value;
   }
 
-  get sessionClosedType(): string {
-    return this._entityRoot.sessionClosedType._value;
+  get sessionClosedType(): string | undefined {
+    return this._entityRoot.sessionClosedType?._value;
   }
 
   get token(): string {
     return this._entityRoot.token._value;
   }
 
-  get expiresInAt(): Date {
-    return this._entityRoot.expiresInAt._value;
+  get expiresInAt(): Date | undefined {
+    return this._entityRoot.expiresInAt?._value;
   }
 
-  get loggedInAt(): Date {
-    return this._entityRoot.loggedInAt._value;
+  get loggedInAt(): Date | undefined {
+    return this._entityRoot.loggedInAt?._value;
   }
 
-  get loggedOutAt(): Date {
-    return this._entityRoot.loggedOutAt._value;
+  get loggedOutAt(): Date | undefined {
+    return this._entityRoot.loggedOutAt?._value;
   }
 
   get ipAddress(): string {
@@ -111,8 +114,8 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.userAgent._value;
   }
 
-  get failedAttempts(): number {
-    return this._entityRoot.failedAttempts._value;
+  get failedAttempts(): number | undefined {
+    return this._entityRoot.failedAttempts?._value;
   }
 
   get origin(): string {
@@ -135,30 +138,105 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.updatedAt._value;
   }
 
-  get archivedAt(): Date {
-    return this._entityRoot.archivedAt._value;
+  get archivedAt(): Date | undefined {
+    return this._entityRoot.archivedAt?._value;
+  }
+
+  get account(): AccountModel | undefined {
+    return this._entityRoot?.account;
+  }
+
+  private changeStatus(status: SessionStatusEnum): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this.validateStatusChange(currentStatus, status);
+
+    this._entityRoot.status = new SessionStatus(status);
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  private validateStatusChange(
+    currentStatus: SessionStatusEnum,
+    newStatus: SessionStatusEnum,
+  ): void {
+    if (currentStatus === newStatus) {
+      throw new SessionStatusNotChangedException(
+        `Session with UUID ${this.uuid} has the same status ${currentStatus}`,
+      );
+    }
+
+    if (this.isFinalStatus(currentStatus)) {
+      throw new SessionStatusNotChangedException(
+        `Session with UUID ${this.uuid} is already ${currentStatus.toLowerCase()}, cannot change status`,
+      );
+    }
+
+    if (this.isInvalidStatusChange(currentStatus, newStatus)) {
+      throw new SessionStatusNotChangedException(
+        `Session with UUID ${this.uuid} is ${currentStatus.toLowerCase()}, cannot change status to ${newStatus.toLowerCase()}`,
+      );
+    }
+  }
+
+  private isFinalStatus(status: SessionStatusEnum): boolean {
+    return [
+      SessionStatusEnum.EXPIRED,
+      SessionStatusEnum.CLOSED,
+      SessionStatusEnum.SUSPENDED,
+    ].includes(status);
+  }
+
+  private isInvalidStatusChange(
+    currentStatus: SessionStatusEnum,
+    newStatus: SessionStatusEnum,
+  ): boolean {
+    const invalidTransitions: { [key in SessionStatusEnum]?: SessionStatusEnum[] } = {
+      [SessionStatusEnum.ACTIVE]: [SessionStatusEnum.INVALID, SessionStatusEnum.PENDING],
+      [SessionStatusEnum.INACTIVE]: [SessionStatusEnum.INVALID, SessionStatusEnum.PENDING],
+      [SessionStatusEnum.INVALID]: [
+        SessionStatusEnum.INACTIVE,
+        SessionStatusEnum.EXPIRED,
+        SessionStatusEnum.CLOSED,
+        SessionStatusEnum.SUSPENDED,
+      ],
+      [SessionStatusEnum.PENDING]: [
+        SessionStatusEnum.INACTIVE,
+        SessionStatusEnum.EXPIRED,
+        SessionStatusEnum.CLOSED,
+        SessionStatusEnum.SUSPENDED,
+      ],
+    };
+
+    return invalidTransitions[currentStatus]?.includes(newStatus) ?? false;
   }
 
   public hydrate(entity: ISessionSchemaPrimitives): void {
     if (entity.id) this._entityRoot.id = new Id(entity.id);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
+    if (entity.loggedOutAt) this._entityRoot.loggedOutAt = new LoggedInAt(entity.loggedOutAt);
+    if (entity.loggedInAt) this._entityRoot.loggedInAt = new LoggedInAt(entity.loggedInAt);
+    if (entity.sessionClosedType)
+      this._entityRoot.sessionClosedType = new SessionClosedType(entity.sessionClosedType);
+    if (entity.expiresInAt) this._entityRoot.expiresInAt = new ExpiresInAt(entity.expiresInAt);
+
+    if (entity.failedAttempts)
+      this._entityRoot.failedAttempts = new SessionFailedAttempts(entity.failedAttempts);
 
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.sessionId = new SessionId(entity.sessionId);
     this._entityRoot.sessionType = new SessionType(entity.sessionType);
     this._entityRoot.sessionDuration = new SessionDuration(entity.sessionDuration);
-    this._entityRoot.sessionClosedType = new SessionClosedType(entity.sessionClosedType);
     this._entityRoot.token = new SessionToken(entity.token);
-    this._entityRoot.expiresInAt = new ExpiresIn(entity.expiresInAt);
-    this._entityRoot.loggedInAt = new LoggedInAt(entity.loggedInAt);
     this._entityRoot.ipAddress = new SessionIpAddress(entity.ipAddress);
     this._entityRoot.refreshToken = new SessionRefreshToken(entity.refreshToken);
     this._entityRoot.userAgent = new SessionUserAgent(entity.userAgent);
-    this._entityRoot.failedAttempts = new SessionFailedAttempts(entity.failedAttempts);
     this._entityRoot.origin = new SessionOrigin(entity.origin);
     this._entityRoot.location = new SessionLocation(entity.location);
     this._entityRoot.createdAt = new CreatedAt(entity.createdAt);
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
+    this._entityRoot.status = new SessionStatus(entity.status);
   }
 
   public toPrimitives(): ISessionSchemaPrimitives {
@@ -172,6 +250,7 @@ export class SessionModel extends AggregateRoot {
       token: this.token,
       expiresInAt: this.expiresInAt,
       loggedInAt: this.loggedInAt,
+      loggedOutAt: this.loggedOutAt,
       ipAddress: this.ipAddress,
       refreshToken: this.refreshToken,
       userAgent: this.userAgent,
@@ -197,6 +276,7 @@ export class SessionModel extends AggregateRoot {
       ...(this.token && { token: this.token }),
       ...(this.expiresInAt && { expiresIn: this.expiresInAt }),
       ...(this.loggedInAt && { loggedInAt: this.loggedInAt }),
+      ...(this.loggedOutAt && { loggedOutAt: this.loggedOutAt }),
       ...(this.ipAddress && { ipAddress: this.ipAddress }),
       ...(this.refreshToken && { refreshToken: this.refreshToken }),
       ...(this.userAgent && { userAgent: this.userAgent }),
@@ -207,8 +287,15 @@ export class SessionModel extends AggregateRoot {
       ...(this.createdAt && { createdAt: this.createdAt }),
       ...(this.updatedAt && { updatedAt: this.updatedAt }),
       ...(this.archivedAt && { archivedAt: this.archivedAt }),
-      ...(this.loggedOutAt && { loggedOutAt: this.loggedOutAt }),
     };
+  }
+
+  public static fromPrimitives(entity: ISessionBaseSchema): SessionModel {
+    return new SessionModel(entity);
+  }
+
+  public useAccount(account: AccountModel): void {
+    this._entityRoot.account = account;
   }
 
   public archive(): void {
@@ -219,7 +306,7 @@ export class SessionModel extends AggregateRoot {
     this.apply(new SessionCreatedEvent(this.toPrimitives()));
   }
 
-  public static fromPrimitives(entity: ISessionBaseSchema): SessionModel {
-    return new SessionModel(entity);
+  public active(): void {
+    this.changeStatus(SessionStatusEnum.ACTIVE);
   }
 }

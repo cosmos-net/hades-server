@@ -1,4 +1,4 @@
-interface RegExOptions {
+interface IRegExOptions {
   minLength?: number;
   maxLength?: number;
   allowLetters?: boolean;
@@ -8,7 +8,7 @@ interface RegExOptions {
   specialChars?: string;
 }
 
-const regexCustomBuilderHelper = (options: RegExOptions): RegExp => {
+const regexCustomBuilderHelper = (options: IRegExOptions): RegExp => {
   let characterSet = '';
 
   if (options.allowLetters) {
@@ -25,7 +25,7 @@ const regexCustomBuilderHelper = (options: RegExOptions): RegExp => {
   }
 
   if (options.specialChars) {
-    const escapedSpecialChars = options.specialChars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapedSpecialChars = options.specialChars.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
     characterSet += escapedSpecialChars;
   }
 

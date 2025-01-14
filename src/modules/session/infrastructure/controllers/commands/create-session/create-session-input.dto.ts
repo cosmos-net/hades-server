@@ -5,7 +5,7 @@ import { SESSION } from '@session/domain/constants/general-rules';
 export class CreateSessionInput {
   @IsString()
   @IsNotEmpty()
-  @Length(SESSION.SESSION_ID.MAX_LENGTH, SESSION.SESSION_ID.MIN_LENGTH)
+  @Length(SESSION.SESSION_ID.MIN_LENGTH, SESSION.SESSION_ID.MAX_LENGTH)
   public readonly sessionId: string;
 
   @IsString()
@@ -35,6 +35,7 @@ export class CreateSessionInput {
   @Length(SESSION.USER_AGENT.MIN_LENGTH, SESSION.USER_AGENT.MAX_LENGTH)
   public readonly userAgent: string;
 
+  //TODO: Remove this field, because filedAttempts is calculated in the domain
   @IsNumber()
   @IsNotEmpty()
   public readonly failedAttempts: number;

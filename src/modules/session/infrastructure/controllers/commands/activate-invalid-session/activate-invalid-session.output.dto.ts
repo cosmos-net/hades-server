@@ -1,4 +1,7 @@
-export class UpdateSessionOutputDto {
+import { SessionModel } from '@session/domain/models/session.model';
+
+// TODO: handler other properties to response api
+export class ActivateInvalidSessionOutputDto {
   public readonly id: number;
   public readonly uuid: string;
   public readonly sessionClosedType: string;
@@ -6,7 +9,7 @@ export class UpdateSessionOutputDto {
   public readonly refreshToken: string;
   public readonly failedAttempts: number;
 
-  constructor(root: UpdateSessionOutputDto) {
+  constructor(root: SessionModel) {
     this.id = root.id;
     this.uuid = root.uuid;
     this.sessionClosedType = root.sessionClosedType;

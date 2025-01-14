@@ -33,10 +33,10 @@ export class SessionTypeormRepository
     return entity;
   }
 
-  public async getOneBy(nameOrUUID: string, options?: IOptions): Promise<SessionModel> {
-    const isUUIDPattern = isUUID(nameOrUUID);
+  public async getOneBy(UUID: string, options?: IOptions): Promise<SessionModel | null> {
+    const isUUIDPattern = isUUID(UUID);
 
-    const result = isUUIDPattern ? await this.getOneByUUID(nameOrUUID, options) : null;
+    const result = isUUIDPattern ? await this.getOneByUUID(UUID, options) : null;
 
     if (!result) {
       return null;
@@ -49,7 +49,13 @@ export class SessionTypeormRepository
 
   public async persist(model: SessionModel): Promise<SessionModel> {
     const primitives = model.toPartialPrimitives();
-    const entity = await this.repository.save(primitives);
+    const account = model.account?.toPrimitives();
+
+    const entity = await this.repository.save({
+      ...primitives,
+      ...(account ? { account } : {}),
+    });
+
     const roleModel = new SessionModel(entity);
 
     return roleModel;

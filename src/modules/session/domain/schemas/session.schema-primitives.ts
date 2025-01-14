@@ -24,9 +24,15 @@ export interface ISessionSchemaPrimitives extends ISessionBaseSchema {
   loggedInAt: Date;
   expiresInAt: Date;
   status: SessionStatusEnum;
+  loggedOutAt?: Date;
 }
 
 export interface IListSessionSchemaPrimitives {
   total: number;
   items: ISessionSchemaPrimitives[];
 }
+
+export type ISessionActivateInvalidSchemaPrimitives = Pick<
+  ISessionSchemaPrimitives,
+  'uuid' | 'sessionDuration' | 'token' | 'expiresInAt' | 'loggedInAt' | 'refreshToken'
+>;

@@ -5,7 +5,7 @@ import { SessionModel } from '@session/domain/models/session.model';
 
 export abstract class ISessionRepositoryContract {
   abstract persist(session: SessionModel): Promise<SessionModel>;
-  abstract getOneBy(UUID: string, options?: IOptions): Promise<SessionModel>;
+  abstract getOneBy(UUID: string, options?: IOptions): Promise<SessionModel | null>;
   abstract destroy(UUID: string): Promise<boolean>;
   abstract matching(criteria: Criteria): Promise<ListSessionModel>;
 }
