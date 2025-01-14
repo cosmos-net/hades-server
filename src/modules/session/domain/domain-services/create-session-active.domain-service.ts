@@ -4,7 +4,7 @@ import { SessionModel } from '@session/domain/models/session.model';
 import { ISessionBaseSchema } from '@session/domain/schemas/session.schema-primitives';
 import { IAccountRepositoryContract } from '@user/domain/contracts/account-repository.contract';
 
-export class CreateSessionDomainService {
+export class CreateActiveSessionDomainService {
   constructor(private readonly repositoryAccount: IAccountRepositoryContract) {}
 
   async go(sessionBaseSchema: ISessionBaseSchema, accountUUID: string): Promise<SessionModel> {

@@ -2,7 +2,7 @@ import { IsString, IsNotEmpty, IsNumber, Length, IsUUID } from 'class-validator'
 
 import { SESSION } from '@session/domain/constants/general-rules';
 
-export class CreateSessionInput {
+export class CreateActiveSessionInput {
   @IsString()
   @IsNotEmpty()
   @Length(SESSION.SESSION_ID.MIN_LENGTH, SESSION.SESSION_ID.MAX_LENGTH)
@@ -34,11 +34,6 @@ export class CreateSessionInput {
   @IsNotEmpty()
   @Length(SESSION.USER_AGENT.MIN_LENGTH, SESSION.USER_AGENT.MAX_LENGTH)
   public readonly userAgent: string;
-
-  //TODO: Remove this field, because filedAttempts is calculated in the domain
-  @IsNumber()
-  @IsNotEmpty()
-  public readonly failedAttempts: number;
 
   @IsString()
   @IsNotEmpty()
