@@ -1,3 +1,4 @@
+import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { ISessionRepositoryContract } from '@session/domain/contracts/session-repository.contract';
 import { SessionNotFoundException } from '@session/domain/exceptions/session-not-found.exception';
 import { SessionNotValidException } from '@session/domain/exceptions/session-not-valid.exception';
@@ -12,11 +13,17 @@ export class IncrementFailedAttemptsSessionDomainService {
     });
 
     if (!session) {
-      throw new SessionNotFoundException(`Account with UUID ${uuid} not found`);
+      throw new SessionNotFoundException(`Session with UUID ${uuid} not found`);
+    }
+
+    if (session.status !== SessionStatusEnum.INVALID) {
+      throw new SessionNotValidException(
+        `Session with UUID ${uuid} requires a invalid status but has ${session.status}`,
+      );
     }
 
     if (session.archivedAt) {
-      throw new SessionNotValidException(`Account with UUID ${uuid} is archived`);
+      throw new SessionNotValidException(`Session with UUID ${uuid} is archived`);
     }
 
     session.incrementFailedAttempts();
