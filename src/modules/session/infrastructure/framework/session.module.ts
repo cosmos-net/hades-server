@@ -3,12 +3,12 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ActiveInvalidSessionUseCase } from '@session/application/commands/use-cases/activate-invalid-session/activate-invalid-session.use-case';
-import { CreateSessionUseCase } from '@session/application/commands/use-cases/create-session/create-session.use-case';
+import { CreateActiveSessionUseCase } from '@session/application/commands/use-cases/create-active-session/create-active-session.use-case';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';
-import { CreateSessionDomainService } from '@session/domain/domain-services/create-session.domain-service';
+import { CreateActiveSessionDomainService } from '@session/domain/domain-services/create-session-active.domain-service';
 import { ActivateInvalidSessionController } from '@session/infrastructure/controllers/commands/activate-invalid-session/activate-invalid-session.controller';
-import { CreateSessionController } from '@session/infrastructure/controllers/commands/create-session/create-session.controller';
+import { CreateActiveSessionController } from '@session/infrastructure/controllers/commands/create-session/create-active-session.controller';
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { SessionTypeormRepository } from '@session/infrastructure/persistence/typeorm/repositories/session-typeorm.repository';
 import { ACCOUNT_REPOSITORY } from '@user/domain/constants/injection-tokens';
@@ -19,7 +19,7 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
   imports: [UserModule, TypeOrmModule.forFeature([SessionEntity]), CqrsModule],
   providers: [
     // UseCases
-    CreateSessionUseCase,
+    CreateActiveSessionUseCase,
     ActiveInvalidSessionUseCase,
     // UpdateSessionUseCase,
     // ArchiveSessionUseCase,
@@ -28,7 +28,7 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
     // ListSessionsUseCase,
 
     // Domain Services
-    CreateSessionDomainService,
+    CreateActiveSessionDomainService,
     ActivateInvalidSessionDomainService,
     // UpdateSessionDomainService,
     // ArchiveSessionDomainService,
@@ -37,9 +37,9 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
     // ListSessionsDomainService,
     // Inversion of dependencies, Control principle (IoC) to domain services
     {
-      provide: CreateSessionDomainService,
-      useFactory: (accountRepository: AccountTypeormRepository): CreateSessionDomainService =>
-        new CreateSessionDomainService(accountRepository),
+      provide: CreateActiveSessionDomainService,
+      useFactory: (accountRepository: AccountTypeormRepository): CreateActiveSessionDomainService =>
+        new CreateActiveSessionDomainService(accountRepository),
       inject: [ACCOUNT_REPOSITORY],
     },
     {
@@ -55,6 +55,6 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
       useClass: SessionTypeormRepository,
     },
   ],
-  controllers: [CreateSessionController, ActivateInvalidSessionController],
+  controllers: [CreateActiveSessionController, ActivateInvalidSessionController],
 })
 export class SessionModule {}
