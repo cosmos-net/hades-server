@@ -1,23 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateSessionCommand } from '@session/application/commands/use-cases/create-session/create-session.command';
+import { CreateActiveSessionCommand } from '@session/application/commands/use-cases/create-active-session/create-active-session.command';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ISessionRepositoryContract } from '@session/domain/contracts/session-repository.contract';
-import { CreateSessionDomainService } from '@session/domain/domain-services/create-session.domain-service';
+import { CreateActiveSessionDomainService } from '@session/domain/domain-services/create-session-active.domain-service';
 import { SessionModel } from '@session/domain/models/session.model';
 
 @Injectable()
-@CommandHandler(CreateSessionCommand)
-export class CreateSessionUseCase implements ICommandHandler<CreateSessionCommand> {
+@CommandHandler(CreateActiveSessionCommand)
+export class CreateActiveSessionUseCase implements ICommandHandler<CreateActiveSessionCommand> {
   constructor(
     @Inject(SESSION_REPOSITORY)
     private readonly repository: ISessionRepositoryContract,
     private readonly publisher: EventPublisher,
-    private readonly createSessionDomainService: CreateSessionDomainService,
+    private readonly createSessionDomainService: CreateActiveSessionDomainService,
   ) {}
 
-  async execute(command: CreateSessionCommand): Promise<SessionModel> {
+  async execute(command: CreateActiveSessionCommand): Promise<SessionModel> {
     const sessionModel = await this.createSessionDomainService.go(command, command.accountUUID);
 
     const sessionContext = this.publisher.mergeObjectContext(sessionModel);

@@ -1,7 +1,7 @@
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionModel } from '@session/domain/models/session.model';
 
-export class CreateSessionOutputDto {
+export class CreateActiveSessionOutputDto {
   public readonly id: number;
   public readonly uuid: string;
   public readonly sessionId: string;
