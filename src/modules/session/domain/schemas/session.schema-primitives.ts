@@ -2,14 +2,13 @@ import { SessionStatusEnum } from '@session/domain/constants/session-status.enum
 
 export interface ISessionBaseSchema {
   uuid: string;
-  sessionId: string;
+  sessionId?: string;
   sessionType: string;
-  sessionDuration: number;
-  token: string;
+  sessionDuration?: number | null;
+  token?: string | null;
   ipAddress: string;
-  refreshToken: string;
+  refreshToken?: string | null;
   userAgent: string;
-  failedAttempts: number;
   origin: string;
   location: string;
 }
@@ -21,16 +20,22 @@ export interface ISessionSchemaPrimitives extends ISessionBaseSchema {
   updatedAt: Date;
   archivedAt: Date;
   sessionClosedType: string;
-  loggedInAt: Date;
-  expiresInAt: Date;
+  loggedInAt?: Date | null;
+  expiresInAt?: Date | null;
   status: SessionStatusEnum;
-  loggedOutAt?: Date;
+  loggedOutAt?: Date | null;
+  failedAttempts: number;
 }
 
 export interface IListSessionSchemaPrimitives {
   total: number;
   items: ISessionSchemaPrimitives[];
 }
+
+export type SessionInvalidType = Pick<
+  ISessionSchemaPrimitives,
+  'uuid' | 'sessionType' | 'ipAddress' | 'userAgent' | 'origin' | 'location'
+>;
 
 export type ISessionActivateInvalidSchemaPrimitives = Pick<
   ISessionSchemaPrimitives,

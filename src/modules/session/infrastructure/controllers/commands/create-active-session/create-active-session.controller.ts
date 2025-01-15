@@ -6,8 +6,8 @@ import { v4 as UUIDv4 } from 'uuid';
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { CreateActiveSessionCommand } from '@session/application/commands/use-cases/create-active-session/create-active-session.command';
 import { SessionModel } from '@session/domain/models/session.model';
-import { CreateActiveSessionInput } from '@session/infrastructure/controllers/commands/create-session/create-active-session-input.dto';
-import { CreateActiveSessionOutputDto } from '@session/infrastructure/controllers/commands/create-session/create-active-session-output.dto';
+import { CreateActiveSessionInput } from '@session/infrastructure/controllers/commands/create-active-session/create-active-session-input.dto';
+import { CreateActiveSessionOutputDto } from '@session/infrastructure/controllers/commands/create-active-session/create-active-session-output.dto';
 
 @Controller()
 export class CreateActiveSessionController {

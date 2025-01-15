@@ -1,24 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateActiveSessionCommand } from '@session/application/commands/use-cases/create-active-session/create-active-session.command';
+import { CreateInvalidSessionCommand } from '@session/application/commands/use-cases/create-invalid-session/create-invalid-session.command';
 import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ISessionRepositoryContract } from '@session/domain/contracts/session-repository.contract';
-import { CreateActiveSessionDomainService } from '@session/domain/domain-services/create-session-active.domain-service';
+import { CreateInvalidSessionDomainService } from '@session/domain/domain-services/create-session-invalid.domain-service';
 import { SessionModel } from '@session/domain/models/session.model';
 
 @Injectable()
-@CommandHandler(CreateActiveSessionCommand)
-export class CreateActiveSessionUseCase implements ICommandHandler<CreateActiveSessionCommand> {
+@CommandHandler(CreateInvalidSessionCommand)
+export class CreateInvalidSessionUseCase implements ICommandHandler<CreateInvalidSessionCommand> {
   constructor(
     @Inject(SESSION_REPOSITORY)
     private readonly repository: ISessionRepositoryContract,
     private readonly publisher: EventPublisher,
-    private readonly createActiveSessionDomainService: CreateActiveSessionDomainService,
+    private readonly createInvalidSessionDomainService: CreateInvalidSessionDomainService,
   ) {}
 
-  async execute(command: CreateActiveSessionCommand): Promise<SessionModel> {
-    const sessionModel = await this.createActiveSessionDomainService.go(
+  async execute(command: CreateInvalidSessionCommand): Promise<SessionModel> {
+    const sessionModel = await this.createInvalidSessionDomainService.go(
       command,
       command.accountUUID,
     );
