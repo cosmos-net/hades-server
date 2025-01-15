@@ -15,27 +15,27 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   @Column({ generated: 'uuid', unique: true, name: 'uuid' })
   uuid: string;
 
-  @Column({ type: 'varchar', length: SESSION.SESSION_ID.MAX_LENGTH })
-  sessionId: string;
+  @Column({ type: 'varchar', length: SESSION.SESSION_ID.MAX_LENGTH, nullable: true })
+  sessionId?: string | null;
 
   @Column({ type: 'varchar', length: SESSION.SESSION_TYPE.MAX_LENGTH })
   sessionType: string;
 
-  @Column({ type: 'int' })
-  sessionDuration: number;
+  @Column({ type: 'int', nullable: true })
+  sessionDuration?: number | null;
 
-  @Column({ type: 'varchar', length: SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH, nullable: true })
-  sessionClosedType: string | null;
+  @Column({ type: 'varchar', length: SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH })
+  sessionClosedType: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   @Length(SESSION.TOKEN.MIN_LENGTH, SESSION.TOKEN.MAX_LENGTH)
-  token: string;
+  token?: string | null;
 
   @Column({ type: 'timestamp', nullable: true })
-  expiresInAt: Date | null;
+  expiresInAt?: Date | null;
 
   @Column({ type: 'timestamp', nullable: true })
-  loggedInAt: Date | null;
+  loggedInAt?: Date | null;
 
   @Column({ type: 'timestamp', nullable: true })
   loggedOutAt?: Date;
@@ -43,9 +43,9 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   @Column({ type: 'varchar', length: SESSION.IP_ADDRESS.MAX_LENGTH })
   ipAddress: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   @Length(SESSION.REFRESH_TOKEN.MIN_LENGTH, SESSION.REFRESH_TOKEN.MAX_LENGTH)
-  refreshToken: string;
+  refreshToken?: string | null;
 
   @Column({ type: 'varchar', length: SESSION.USER_AGENT.MAX_LENGTH })
   userAgent: string;
