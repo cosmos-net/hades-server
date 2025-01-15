@@ -4,11 +4,11 @@ import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 
 import { CoreModule } from '@core/infrastructure/framework/core.module';
-import { HttpExceptionFilter } from '@core/infrastructure/framework/exception-filters/http-exception.filter';
-import { MicroserviceExceptionFilter } from '@core/infrastructure/framework/exception-filters/microservice-exception.filter';
-import { TimeOutInterceptor } from '@core/infrastructure/framework/globals/timeout-interceptor';
 import { TransformInterceptor } from '@core/infrastructure/framework/globals/transform-interceptor.global';
 import { ValidationPipeWithExceptionFactory } from '@core/infrastructure/framework/globals/validation-pipe.global';
+import { MicroserviceExceptionFilter } from './exception-filters/microservice-exception.filter';
+import { HttpExceptionFilter } from './exception-filters/http-exception.filter';
+import { TimeOutInterceptor } from './globals/timeout-interceptor';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(CoreModule, {
@@ -18,6 +18,7 @@ async function bootstrap(): Promise<void> {
       queue: 'cats_queue',
     },
   });
+  // const app = await NestFactory.create(CoreModule);
 
   const configService = app.get(ConfigService);
   const natsUrl = configService.get<string>('NATS_URL');
