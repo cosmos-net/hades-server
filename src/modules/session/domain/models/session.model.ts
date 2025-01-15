@@ -11,6 +11,7 @@ import { SessionStatusChangedEvent } from '@session/domain/events/events-success
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
 import {
   ISessionBaseSchema,
+  SessionInvalidType,
   ISessionSchemaPrimitives,
 } from '@session/domain/schemas/session.schema-primitives';
 import ExpiresInAt from '@session/domain/value-objects/expires-in.vo';
@@ -34,23 +35,44 @@ export class SessionModel extends AggregateRoot {
 
   constructor(entity: ISessionSchemaPrimitives);
   constructor(sessionBaseSchema: ISessionBaseSchema);
-  constructor(entityOrBaseSchema: ISessionSchemaPrimitives | ISessionBaseSchema) {
+  constructor(sessionInvalidType: SessionInvalidType);
+  constructor(
+    entityOrBaseSchemaOrInvalidType:
+      | ISessionSchemaPrimitives
+      | ISessionBaseSchema
+      | SessionInvalidType,
+  ) {
     super();
     this._entityRoot = {} as ISessionSchema;
 
-    if ('id' in entityOrBaseSchema) {
-      this.hydrate(entityOrBaseSchema);
+    if ('id' in entityOrBaseSchemaOrInvalidType) {
+      this.hydrate(entityOrBaseSchemaOrInvalidType);
+    } else if ('token' in entityOrBaseSchemaOrInvalidType) {
+      this._entityRoot.uuid = new UUID(entityOrBaseSchemaOrInvalidType.uuid);
+      this._entityRoot.sessionId = new SessionId(entityOrBaseSchemaOrInvalidType.sessionId);
+      this._entityRoot.sessionType = new SessionType(entityOrBaseSchemaOrInvalidType.sessionType);
+      this._entityRoot.sessionDuration = new SessionDuration(
+        entityOrBaseSchemaOrInvalidType.sessionDuration,
+      );
+      this._entityRoot.token = new SessionToken(entityOrBaseSchemaOrInvalidType.token);
+      this._entityRoot.ipAddress = new SessionIpAddress(entityOrBaseSchemaOrInvalidType.ipAddress);
+      this._entityRoot.refreshToken = new SessionRefreshToken(
+        entityOrBaseSchemaOrInvalidType.refreshToken,
+      );
+      this._entityRoot.userAgent = new SessionUserAgent(entityOrBaseSchemaOrInvalidType.userAgent);
+      this._entityRoot.origin = new SessionOrigin(entityOrBaseSchemaOrInvalidType.origin);
+      this._entityRoot.location = new SessionLocation(entityOrBaseSchemaOrInvalidType.location);
+
+      this._entityRoot.status = new SessionStatus(SessionStatusEnum.ACTIVE);
+      this._entityRoot.createdAt = new CreatedAt(new Date());
+      this._entityRoot.updatedAt = new UpdatedAt(new Date());
     } else {
-      this._entityRoot.uuid = new UUID(entityOrBaseSchema.uuid);
-      this._entityRoot.sessionId = new SessionId(entityOrBaseSchema.sessionId);
-      this._entityRoot.sessionType = new SessionType(entityOrBaseSchema.sessionType);
-      this._entityRoot.sessionDuration = new SessionDuration(entityOrBaseSchema.sessionDuration);
-      this._entityRoot.token = new SessionToken(entityOrBaseSchema.token);
-      this._entityRoot.ipAddress = new SessionIpAddress(entityOrBaseSchema.ipAddress);
-      this._entityRoot.refreshToken = new SessionRefreshToken(entityOrBaseSchema.refreshToken);
-      this._entityRoot.userAgent = new SessionUserAgent(entityOrBaseSchema.userAgent);
-      this._entityRoot.origin = new SessionOrigin(entityOrBaseSchema.origin);
-      this._entityRoot.location = new SessionLocation(entityOrBaseSchema.location);
+      this._entityRoot.uuid = new UUID(entityOrBaseSchemaOrInvalidType.uuid);
+      this._entityRoot.sessionType = new SessionType(entityOrBaseSchemaOrInvalidType.sessionType);
+      this._entityRoot.ipAddress = new SessionIpAddress(entityOrBaseSchemaOrInvalidType.ipAddress);
+      this._entityRoot.userAgent = new SessionUserAgent(entityOrBaseSchemaOrInvalidType.userAgent);
+      this._entityRoot.origin = new SessionOrigin(entityOrBaseSchemaOrInvalidType.origin);
+      this._entityRoot.location = new SessionLocation(entityOrBaseSchemaOrInvalidType.location);
 
       this._entityRoot.status = new SessionStatus(SessionStatusEnum.ACTIVE);
       this._entityRoot.createdAt = new CreatedAt(new Date());
@@ -226,6 +248,10 @@ export class SessionModel extends AggregateRoot {
 
   public static fromPrimitives(entity: ISessionBaseSchema): SessionModel {
     return new SessionModel(entity);
+  }
+
+  public static fromInvalidPrimitives(invalidType: SessionInvalidType): SessionModel {
+    return new SessionModel(invalidType);
   }
 
   public useAccount(account: AccountModel): void {
