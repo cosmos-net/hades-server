@@ -8,7 +8,6 @@ import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
 import { SessionStatusChangedEvent } from '@session/domain/events/events-success-domain/session-status-changed.event';
-import { SessionStatusNotChangedException } from '@session/domain/exceptions/session-status-not-changed.exception';
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
 import {
   ISessionBaseSchema,
@@ -143,70 +142,8 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot?.account;
   }
 
-  private changeStatus(status: SessionStatusEnum): void {
-    const currentStatus = this._entityRoot.status._value;
-
-    this.validateStatusChange(currentStatus, status);
-
-    this._entityRoot.status = new SessionStatus(status);
-    this._entityRoot.updatedAt = new UpdatedAt(new Date());
-
-    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
-  }
-
-  private validateStatusChange(
-    currentStatus: SessionStatusEnum,
-    newStatus: SessionStatusEnum,
-  ): void {
-    if (currentStatus === newStatus) {
-      throw new SessionStatusNotChangedException(
-        `Session with UUID ${this.uuid} has the same status ${currentStatus}`,
-      );
-    }
-
-    if (this.isFinalStatus(currentStatus)) {
-      throw new SessionStatusNotChangedException(
-        `Session with UUID ${this.uuid} is already ${currentStatus.toLowerCase()}, cannot change status`,
-      );
-    }
-
-    if (this.isInvalidStatusChange(currentStatus, newStatus)) {
-      throw new SessionStatusNotChangedException(
-        `Session with UUID ${this.uuid} is ${currentStatus.toLowerCase()}, cannot change status to ${newStatus.toLowerCase()}`,
-      );
-    }
-  }
-
-  private isFinalStatus(status: SessionStatusEnum): boolean {
-    return [
-      SessionStatusEnum.EXPIRED,
-      SessionStatusEnum.CLOSED,
-      SessionStatusEnum.SUSPENDED,
-    ].includes(status);
-  }
-
-  private isInvalidStatusChange(
-    currentStatus: SessionStatusEnum,
-    newStatus: SessionStatusEnum,
-  ): boolean {
-    const invalidTransitions: { [key in SessionStatusEnum]?: SessionStatusEnum[] } = {
-      [SessionStatusEnum.ACTIVE]: [SessionStatusEnum.INVALID, SessionStatusEnum.PENDING],
-      [SessionStatusEnum.INACTIVE]: [SessionStatusEnum.INVALID, SessionStatusEnum.PENDING],
-      [SessionStatusEnum.INVALID]: [
-        SessionStatusEnum.INACTIVE,
-        SessionStatusEnum.EXPIRED,
-        SessionStatusEnum.CLOSED,
-        SessionStatusEnum.SUSPENDED,
-      ],
-      [SessionStatusEnum.PENDING]: [
-        SessionStatusEnum.INACTIVE,
-        SessionStatusEnum.EXPIRED,
-        SessionStatusEnum.CLOSED,
-        SessionStatusEnum.SUSPENDED,
-      ],
-    };
-
-    return invalidTransitions[currentStatus]?.includes(newStatus) ?? false;
+  get totalFailedAttempts(): number | undefined {
+    return this._entityRoot.failedAttempts?._value;
   }
 
   public hydrate(entity: ISessionSchemaPrimitives): void {
@@ -304,6 +241,109 @@ export class SessionModel extends AggregateRoot {
   }
 
   public active(): void {
-    this.changeStatus(SessionStatusEnum.ACTIVE);
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.ACTIVE,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  inactive(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.INACTIVE,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  expire(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.EXPIRED,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  close(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.CLOSED,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  suspend(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.SUSPENDED,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  invalid(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.INVALID,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  pending(): void {
+    const currentStatus = this._entityRoot.status._value;
+
+    this._entityRoot.status = SessionStatus.createWithTransition(
+      currentStatus,
+      SessionStatusEnum.PENDING,
+    );
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
+  }
+
+  public incrementFailedAttempts(): void {
+    const currentFailedAttempts = this._entityRoot.failedAttempts?._value || 0;
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    this._entityRoot.failedAttempts =
+      SessionFailedAttempts.createAndIncrementOne(currentFailedAttempts);
+
+    this.apply(new SessionStatusChangedEvent(this.toPrimitives()));
   }
 }

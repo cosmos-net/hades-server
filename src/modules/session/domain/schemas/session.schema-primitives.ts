@@ -9,6 +9,7 @@ export interface ISessionBaseSchema {
   ipAddress: string;
   refreshToken: string;
   userAgent: string;
+  failedAttempts: number;
   origin: string;
   location: string;
 }
@@ -24,7 +25,6 @@ export interface ISessionSchemaPrimitives extends ISessionBaseSchema {
   expiresInAt: Date;
   status: SessionStatusEnum;
   loggedOutAt?: Date;
-  failedAttempts: number;
 }
 
 export interface IListSessionSchemaPrimitives {

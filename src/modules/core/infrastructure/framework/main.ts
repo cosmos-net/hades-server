@@ -1,9 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-import { Logger } from '@nestjs/common';
-import { CoreModule } from './core.module';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+
+import { CoreModule } from '@core/infrastructure/framework/core.module';
 import { TransformInterceptor } from '@core/infrastructure/framework/globals/transform-interceptor.global';
 import { ValidationPipeWithExceptionFactory } from '@core/infrastructure/framework/globals/validation-pipe.global';
 import { MicroserviceExceptionFilter } from './exception-filters/microservice-exception.filter';
@@ -22,10 +22,8 @@ async function bootstrap(): Promise<void> {
 
   const configService = app.get(ConfigService);
   const natsUrl = configService.get<string>('NATS_URL');
-  // const port = configService.get<number>('PORT');
 
   Logger.log(`NATS URL: ${natsUrl}`);
-  // Logger.log(`PORT: ${port}`);
 
   app.useGlobalPipes(
     new ValidationPipeWithExceptionFactory(),
@@ -35,13 +33,9 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new TransformInterceptor(), new TimeOutInterceptor());
   app.useGlobalFilters(new MicroserviceExceptionFilter(), new HttpExceptionFilter());
 
-  // await app.startAllMicroservices();
-  // await app.listen(port);
-
   await app.listen();
 
-  // Graceful shutdown
-  process.on('SIGTERM', async () => {
+  process.on('SIGTERM', async (): Promise<void> => {
     await app.close();
     Logger.log('Application gracefully shut down');
   });

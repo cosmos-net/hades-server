@@ -3,10 +3,10 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { DestroySessionCommand } from '@session/application/commands/use-cases/destroy-session/destroy-session.command';
+import { DestroySessionCommand } from '@session/application/use-cases/commands/destroy-session/destroy-session.command';
+import { SessionModel } from '@session/domain/models/session.model';
 import { DestroySessionInputDto } from '@session/infrastructure/controllers/commands/destroy-session/destroy-session-input.dto';
 import { DestroySessionOutputDto } from '@session/infrastructure/controllers/commands/destroy-session/destroy-session-output.dto';
-import { SessionModel } from '@session/domain/models/session.model';
 
 @Controller()
 export class DestroySessionController {

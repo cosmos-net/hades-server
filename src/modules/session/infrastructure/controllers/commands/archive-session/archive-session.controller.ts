@@ -3,10 +3,10 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { ArchiveSessionCommand } from '@session/application/commands/use-cases/archive-session/archive-session.command';
+import { ArchiveSessionCommand } from '@session/application/use-cases/commands//archive-session/archive-session.command';
+import { SessionModel } from '@session/domain/models/session.model';
 import { ArchiveSessionInputDto } from '@session/infrastructure/controllers/commands/archive-session/archive-session-input.dto';
 import { ArchiveSessionOutputDto } from '@session/infrastructure/controllers/commands/archive-session/archive-session-output.dto';
-import { SessionModel } from '@session/domain/models/session.model';
 
 @Controller()
 export class ArchiveSessionController {
