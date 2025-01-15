@@ -3,18 +3,18 @@ import { PaginationOutputDto } from '@common/infrastructure/dtos/pagination-opti
 interface IListSessionOutputDto {
   id?: number;
   uuid: string;
-  sessionId: string;
+  sessionId?: string;
   sessionType: string;
-  sessionDuration: number;
+  sessionDuration?: number;
   sessionClosedType: string;
-  token: string;
-  expiresInAt: Date;
-  loggedInAt: Date;
+  token?: string;
+  expiresInAt?: Date;
+  loggedInAt?: Date;
   loggedOutAt?: Date;
   ipAddress: string;
-  refreshToken: string;
+  refreshToken?: string;
   userAgent: string;
-  failedAttempts: number;
+  failedAttempts?: number;
   origin: string;
   location: string;
   createdAt: Date;
