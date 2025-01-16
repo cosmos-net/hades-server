@@ -7,7 +7,15 @@ export class ArchiveUserDomainService {
   constructor(private readonly userRepository: IUserRepositoryContract) {}
 
   async go(uuid: string): Promise<UserAggregate> {
-    const userAggregate = await this.userRepository.getOneBy(uuid, { withArchived: true });
+    const userAggregate = await this.userRepository.getOneBy(uuid, {
+      withArchived: true,
+      relations: {
+        accounts: {
+          sessions: true,
+        },
+        profile: true,
+      },
+    });
 
     if (!userAggregate) {
       throw new UserNotFoundException(`User with uuid ${uuid} not found`);
