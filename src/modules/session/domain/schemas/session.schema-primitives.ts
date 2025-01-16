@@ -19,7 +19,7 @@ export interface ISessionSchemaPrimitives extends ISessionBaseSchema {
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date;
-  sessionClosedType: string;
+  sessionClosedType?: string | null;
   loggedInAt?: Date | null;
   expiresInAt?: Date | null;
   status: SessionStatusEnum;
