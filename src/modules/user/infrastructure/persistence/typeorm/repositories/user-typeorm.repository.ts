@@ -5,13 +5,13 @@ import { Repository, EntityManager, DeleteResult, SelectQueryBuilder } from 'typ
 import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
 import { TypeormRepository } from '@common/infrastructure/persistence/typeorm/repositories/typeorm-repository';
+import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { IUserRepositoryContract } from '@user/domain/contracts/user-repository.contract';
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { ProfileModel } from '@user/domain/models/profile/profile.model';
 import { UserModel } from '@user/domain/models/user/user.model';
-import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
@@ -44,16 +44,11 @@ export class UserTypeormRepository
 
         const partialUser = userModel.toPartialPrimitives();
         const partialProfile = profileModel.toPartialPrimitives();
-        const partialAccounts = accountsModel.map(
-          (account): Partial<IAccountSchemaPrimitives> => account.toPartialPrimitives(),
-        );
 
-        // Save or update user entity
         const savedUser = await manager.save(UserEntity, partialUser);
 
         userModel.hydrate(savedUser);
 
-        // Set foreign key for profile entity
         const savedProfile = await manager.save(ProfileEntity, {
           ...partialProfile,
           user: savedUser,
@@ -61,17 +56,31 @@ export class UserTypeormRepository
 
         profileModel.hydrate(savedProfile);
 
-        for (const partialAccount of partialAccounts) {
+        for await (const accountModel of accountsModel) {
+          const partialPrimitivesAccount = accountModel.toPartialPrimitives();
+
           const savedAccount = await manager.save(AccountEntity, {
-            ...partialAccount,
+            ...partialPrimitivesAccount,
             user: savedUser,
           });
 
-          const accountMatch = accountsModel.find(
-            (account): boolean => account.uuid === savedAccount.uuid,
-          );
+          accountModel.hydrate(savedAccount);
 
-          accountMatch.hydrate(savedAccount);
+          const listSessionModel = accountModel.sessions;
+          if (listSessionModel?.getTotal > 0) {
+            const sessionModels = listSessionModel.getItemModels;
+
+            for await (const sessionModel of sessionModels) {
+              const partialPrimitivesSession = sessionModel.toPartialPrimitives();
+
+              const savedSession = await manager.save(SessionEntity, {
+                ...partialPrimitivesSession,
+                account: savedAccount,
+              });
+
+              sessionModel.hydrate(savedSession);
+            }
+          }
         }
 
         // Hydrate the aggregate with the saved entities
@@ -115,10 +124,7 @@ export class UserTypeormRepository
   async getOneBy(uuid: string, options?: IOptions): Promise<UserAggregate | null> {
     const entity = await this.repository.findOne({
       where: { uuid },
-      relations: {
-        accounts: true,
-        profile: true,
-      },
+      ...(options?.relations && { relations: options.relations }),
       ...(options?.withArchived && { withDeleted: true }),
     });
 
