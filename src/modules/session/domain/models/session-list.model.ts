@@ -17,6 +17,10 @@ export class ListSessionModel {
     return this.items.map((session): ISessionSchemaPrimitives => session.toPrimitives());
   }
 
+  public get getItemModels(): SessionModel[] {
+    return this.items;
+  }
+
   public get getTotal(): number {
     return this.total;
   }
