@@ -101,6 +101,7 @@ export class SessionModel extends AggregateRoot {
     return this._entityRoot.sessionDuration._value;
   }
 
+  // TODO: review this property to set the correct value
   get sessionClosedType(): string | undefined {
     return this._entityRoot.sessionClosedType?._value;
   }
