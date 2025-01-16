@@ -52,3 +52,9 @@ Que maneja la carpeta de persistencia
 - Interaccion con base datos
 - Entidades > Mapean la representación de una tabla de base datos
 - Repositorios > Interacciona con las operaciones que puede tener el ORM con la base de datos y se basa bajo una implementacion de una interfaz o una clase abstracta o un contrato
+
+
+docker stop hades-server
+docker rm hades-stack
+docker compose build --no-cache
+docker compose --env-file .env.docker -p hades-stack up -d
