@@ -24,8 +24,8 @@ export class SessionEntity extends TypeormBaseEntity implements ISessionSchemaPr
   @Column({ type: 'int', nullable: true })
   sessionDuration?: number | null;
 
-  @Column({ type: 'varchar', length: SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH })
-  sessionClosedType: string;
+  @Column({ type: 'varchar', length: SESSION.SESSION_CLOSED_TYPE.MAX_LENGTH, nullable: true })
+  sessionClosedType?: string | null;
 
   @Column({ type: 'text', nullable: true })
   @Length(SESSION.TOKEN.MIN_LENGTH, SESSION.TOKEN.MAX_LENGTH)
