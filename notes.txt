@@ -25,8 +25,6 @@ Infra
 - Nuevos Controladores de comandos y consultas
 - Nuevos dtos de entrada y salida
 - Adaptacion de la implementacion de el repository
-
-
 ========================================================================
 Controladores
 - Manejan los endpoints
