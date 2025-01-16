@@ -13,7 +13,7 @@ import { CreateInvalidSessionOutputDto } from '@session/infrastructure/controlle
 export class CreateInvalidSessionController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.SESSION.CREATE_ACTIVE })
+  @MessagePattern({ cmd: CMDS_HADES.SESSION.CREATE_INVALID })
   async create(
     @Payload() createInvalidSessionDto: CreateInvalidSessionInput,
   ): Promise<CreateInvalidSessionOutputDto> {
