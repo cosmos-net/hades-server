@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { CreateActiveSessionCommand } from '@session/application/commands/use-cases/create-active-session/create-active-session.command';
+import { CreateActiveSessionUseCase } from '@session/application/commands/use-cases/create-active-session/create-active-session.use-case';
 import { CreateInvalidSessionUseCase } from '@session/application/commands/use-cases/create-invalid-session/create-invalid-session.use-case';
 import { CreateSessionUseCase } from '@session/application/use-cases/commands/create-session/create-session.use-case';
 import { IncrementFailedAttemptsSessionUseCase } from '@session/application/use-cases/commands/increment-failed-attempts-session/increment-failed-attempts-session.use-case';
@@ -54,7 +54,7 @@ import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeo
     ActivatePendingSessionUseCase,
     IncrementFailedAttemptsSessionUseCase,
     CreateInvalidSessionUseCase,
-    CreateActiveSessionCommand,
+    CreateActiveSessionUseCase,
     // UpdateSessionUseCase,
     // ArchiveSessionUseCase,
     // DestroySessionUseCase,
