@@ -6,7 +6,7 @@ interface IListSessionOutputDto {
   sessionId?: string;
   sessionType: string;
   sessionDuration?: number;
-  sessionClosedType: string;
+  sessionClosedType?: string | null;
   token?: string;
   expiresInAt?: Date;
   loggedInAt?: Date;
