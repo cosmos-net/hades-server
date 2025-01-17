@@ -2,22 +2,22 @@ import { CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 export class TypeormBaseEntity {
   @CreateDateColumn({
+    name: 'created_at',
     type: 'timestamp',
-    name: 'createdAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    default: (): string => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    name: 'updated_at',
     type: 'timestamp',
-    name: 'updatedAt',
-    default: () => 'CURRENT_TIMESTAMP',
+    default: (): string => 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
+    name: 'archived_at',
     type: 'timestamp',
-    name: 'archivedAt',
     nullable: true,
   })
   archivedAt: Date | null;

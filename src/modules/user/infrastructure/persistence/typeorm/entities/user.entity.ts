@@ -21,13 +21,13 @@ export class UserEntity extends TypeormBaseEntity implements IUserSchemaPrimitiv
   })
   status: StatusEnum;
 
-  @OneToOne(() => ProfileEntity, (profile) => profile.user, {
+  @OneToOne((): typeof ProfileEntity => ProfileEntity, (profile): UserEntity => profile.user, {
     cascade: true,
     eager: false,
   })
   profile: ProfileEntity;
 
-  @OneToMany(() => AccountEntity, (account) => account.user, {
+  @OneToMany((): typeof AccountEntity => AccountEntity, (account): UserEntity => account.user, {
     cascade: true,
     eager: false,
   })

@@ -8,16 +8,25 @@ import {
 
 @Entity('roles')
 export class RoleEntity extends TypeormBaseEntity {
-  @PrimaryGeneratedColumn('identity', { type: 'int', name: 'id' })
+  @PrimaryGeneratedColumn('identity', { name: 'id', type: 'int' })
   id: number;
 
-  @Column({ generated: 'uuid', unique: true, name: 'uuid' })
+  @Column({
+    name: 'uuid',
+    generated: 'uuid',
+    unique: true,
+  })
   uuid: string;
 
-  @Column({ unique: true, length: MAX_ROLE_NAME_LENGTH })
+  @Column({
+    name: 'name',
+    unique: true,
+    length: MAX_ROLE_NAME_LENGTH,
+  })
   name: string;
 
   @Column({
+    name: 'description',
     type: 'varchar',
     nullable: true,
     length: MAX_ROLE_DESCRIPTION_LENGTH,
