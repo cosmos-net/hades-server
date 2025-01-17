@@ -16,7 +16,7 @@ export const SESSION = {
     MIN_LENGTH: 1,
   },
   TOKEN: {
-    MAX_LENGTH: 1000,
+    MAX_LENGTH: 255,
     MIN_LENGTH: 1,
   },
   IP_ADDRESS: {
