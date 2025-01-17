@@ -1,3 +1,4 @@
+import { SessionClosedTypeEnum } from '@session/domain/constants/session-closed-type.enum';
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 
 export interface ISessionBaseSchema {
@@ -19,7 +20,7 @@ export interface ISessionSchemaPrimitives extends ISessionBaseSchema {
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date;
-  sessionClosedType?: string | null;
+  sessionClosedType?: SessionClosedTypeEnum | null;
   loggedInAt?: Date | null;
   expiresInAt?: Date | null;
   status: SessionStatusEnum;

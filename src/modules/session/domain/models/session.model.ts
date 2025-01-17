@@ -5,6 +5,7 @@ import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { SessionClosedTypeEnum } from '@session/domain/constants/session-closed-type.enum';
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionArchivedEvent } from '@session/domain/events/events-success-domain/session-archived.event';
 import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
@@ -102,7 +103,7 @@ export class SessionModel extends AggregateRoot {
   }
 
   // TODO: review this property to set the correct value
-  get sessionClosedType(): string | undefined {
+  get sessionClosedType(): SessionClosedTypeEnum | undefined {
     return this._entityRoot.sessionClosedType?._value;
   }
 
@@ -306,6 +307,7 @@ export class SessionModel extends AggregateRoot {
       SessionStatusEnum.EXPIRED,
     );
 
+    this._entityRoot.sessionClosedType = new SessionClosedType(SessionClosedTypeEnum.AUTOMATIC);
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
     this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
@@ -321,6 +323,7 @@ export class SessionModel extends AggregateRoot {
       SessionStatusEnum.CLOSED,
     );
 
+    this._entityRoot.sessionClosedType = new SessionClosedType(SessionClosedTypeEnum.MANUAL);
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
     this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
@@ -336,6 +339,7 @@ export class SessionModel extends AggregateRoot {
       SessionStatusEnum.SUSPENDED,
     );
 
+    this._entityRoot.sessionClosedType = new SessionClosedType(SessionClosedTypeEnum.AUTOMATIC);
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
     this._entityRoot.loggedOutAt = new LoggedInAt(new Date());
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
