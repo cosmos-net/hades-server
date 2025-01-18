@@ -4,7 +4,7 @@ import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { CreateInvalidSessionCommand } from '@session/application/commands/use-cases/create-invalid-session/create-invalid-session.command';
+import { CreateInvalidSessionCommand } from '@session/application/use-cases/commands/create-invalid-session/create-invalid-session.command';
 import { SessionModel } from '@session/domain/models/session.model';
 import { CreateInvalidSessionInput } from '@session/infrastructure/controllers/commands/create-invalid-session/create-invalid-session-input.dto';
 import { CreateInvalidSessionOutputDto } from '@session/infrastructure/controllers/commands/create-invalid-session/create-invalid-session-output.dto';
