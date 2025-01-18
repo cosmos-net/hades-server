@@ -36,6 +36,12 @@
       "@common/*": [
         "src/modules/common/*"
       ],
+      "@shared": [
+        "src/modules/shared/"
+      ],
+      "@shared/*": [
+        "src/modules/shared/*"
+      ],
       "@user": [
         "src/modules/user/"
       ],
