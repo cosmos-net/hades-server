@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { ArchiveRoleCommand } from '@role/application/commands/use-cases/archive-role/archive-role.command';
+import { ArchiveRoleCommand } from '@role/application/use-cases/commands/archive-role/archive-role.command';
 import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
-import { RoleModel } from '@role/domain/models/role.model';
 import { ArchiveRoleDomainService } from '@role/domain/domain-service/archive-role.domain-service';
+import { RoleModel } from '@role/domain/models/role.model';
 
 @Injectable()
 @CommandHandler(ArchiveRoleCommand)

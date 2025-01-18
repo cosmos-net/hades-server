@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ArchiveRoleUseCase } from '@role/application/commands/use-cases/archive-role/archive-role.use-case';
-import { CreateRoleUseCase } from '@role/application/commands/use-cases/create-role/create-role.use-case';
-import { DestroyRoleUseCase } from '@role/application/commands/use-cases/destroy-role/destroy-role.use-case';
-import { UpdateRoleUseCase } from '@role/application/commands/use-cases/update-role/update-role.use-case';
-import { GetRoleUseCase } from '@role/application/queries/get-role/get-role.use-case';
-import { ListRoleUseCase } from '@role/application/queries/list-role/list-role.use-case';
+import { ArchiveRoleUseCase } from '@role/application/use-cases/commands/archive-role/archive-role.use-case';
+import { CreateRoleUseCase } from '@role/application/use-cases/commands/create-role/create-role.use-case';
+import { DestroyRoleUseCase } from '@role/application/use-cases/commands/destroy-role/destroy-role.use-case';
+import { UpdateRoleUseCase } from '@role/application/use-cases/commands/update-role/update-role.use-case';
+import { GetRoleUseCase } from '@role/application/use-cases/queries/get-role/get-role.use-case';
+import { ListRoleUseCase } from '@role/application/use-cases/queries/list-role/list-role.use-case';
 import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
 import { ArchiveRoleDomainService } from '@role/domain/domain-service/archive-role.domain-service';

@@ -3,7 +3,7 @@ import { QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { GetRoleQuery } from '@role/application/queries/get-role/get-role.query';
+import { GetRoleQuery } from '@role/application/use-cases/queries/get-role/get-role.query';
 import { RoleModel } from '@role/domain/models/role.model';
 import { GetRoleInputDto } from '@role/infrastructure/controllers/queries/get-role/get-role-input.dto';
 import { GetRoleOutputDto } from '@role/infrastructure/controllers/queries/get-role/get-role-output.dto';

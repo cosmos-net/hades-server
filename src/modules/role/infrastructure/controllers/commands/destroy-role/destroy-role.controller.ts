@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { DestroyRoleCommand } from '@role/application/commands/use-cases/destroy-role/destroy-role.command';
+import { DestroyRoleCommand } from '@role/application/use-cases/commands/destroy-role/destroy-role.command';
 import { RoleModel } from '@role/domain/models/role.model';
 import { DestroyRoleInputDto } from '@role/infrastructure/controllers/commands/destroy-role/destroy-role-input.dto';
 import { DestroyRoleOutputDto } from '@role/infrastructure/controllers/commands/destroy-role/destroy-role-output.dto';
