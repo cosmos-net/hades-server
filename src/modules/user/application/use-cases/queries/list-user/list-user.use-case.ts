@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { Criteria } from '@common/domain/criteria/criteria';
-import { ListUserQuery } from '@user/application//queries/use-cases/list-user/list-user.query';
+import { ListUserQuery } from '@user/application/use-cases/queries/list-user/list-user.query';
 import { ListUserAggregate } from '@user/domain/aggregates/list-user.aggregate';
 import { ListUserDomainService } from '@user/domain/domain-services/list-user.domain-service';
 

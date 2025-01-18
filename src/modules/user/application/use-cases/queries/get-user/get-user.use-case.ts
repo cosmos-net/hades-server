@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { GetUserQuery } from '@user/application/queries/use-cases/get-user/get-user.query';
+import { GetUserQuery } from '@user/application/use-cases/queries/get-user/get-user.query';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { GetUserDomainService } from '@user/domain/domain-services/get-user.domain-service';
 
