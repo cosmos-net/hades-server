@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { ArchiveUserCommand } from '@user/application/commands/use-cases/archive-user/archive-user.command';
+import { ArchiveUserCommand } from '@user/application/use-cases/commands/archive-user/archive-user.command';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { ArchiveUserInputDto } from '@user/infrastructure/controllers/commands/archive-user/archive-user-input.dto';
 import { ArchiveUserOutputDto } from '@user/infrastructure/controllers/commands/archive-user/archive-user-output.dto';
