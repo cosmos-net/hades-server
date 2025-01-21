@@ -9,6 +9,7 @@ import { SessionClosedTypeEnum } from '@session/domain/constants/session-closed-
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
 import { SessionArchivedEvent } from '@session/domain/events/events-success-domain/session-archived.event';
 import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
+import { SessionDestroyedEvent } from '@session/domain/events/events-success-domain/session-destroyed.event';
 import { SessionStatusChangedEvent } from '@session/domain/events/events-success-domain/session-status-changed.event';
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
 import {
@@ -271,6 +272,10 @@ export class SessionModel extends AggregateRoot {
 
   public create(): void {
     this.apply(new SessionCreatedEvent(this.toPrimitives()));
+  }
+
+  public destroy(uuid: string, sessionId: string): void {
+    this.apply(new SessionDestroyedEvent(uuid, sessionId, new Date()));
   }
 
   public active(): void {
