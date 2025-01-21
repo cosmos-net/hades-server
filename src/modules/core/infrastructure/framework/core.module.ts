@@ -8,10 +8,12 @@ import { PostgresType } from '@core/infrastructure/framework/loaders/postgres.ty
 import { mainConfigOptions } from '@core/infrastructure/framework/options/config.options';
 import { RoleModule } from '@role/infrastructure/framework/role.module';
 import { SessionModule } from '@session/infrastructure/framework/session.module';
+import { SharedModule } from '@shared/infrastructure/framework/shared.module';
 import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
   imports: [
+    SharedModule,
     UserModule,
     RoleModule,
     SessionModule,

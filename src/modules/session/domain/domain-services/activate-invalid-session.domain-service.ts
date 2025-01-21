@@ -6,6 +6,7 @@ import { ISessionActivateInvalidSchemaPrimitives } from '@session/domain/schemas
 
 export class ActivateInvalidSessionDomainService {
   constructor(private readonly repositorySession: ISessionRepositoryContract) {}
+
   async go(schema: ISessionActivateInvalidSchemaPrimitives): Promise<SessionModel> {
     const sessionModel = await this.repositorySession.getOneBy(schema.uuid);
 

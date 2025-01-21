@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { UpdateRoleCommand } from '@role/application/commands/use-cases/update-role/update-role.command';
+import { UpdateRoleCommand } from '@role/application/use-cases/commands/update-role/update-role.command';
 import { UpdateRoleInputDto } from '@role/infrastructure/controllers/commands/update-role/update-role-input.dto';
 import { UpdateRoleOutputDto } from '@role/infrastructure/controllers/commands/update-role/update-role-output.dto';
 import { RoleModel } from '@role/domain/models/role.model';

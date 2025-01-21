@@ -15,7 +15,7 @@ import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-optio
 import {
   USER_OPTIONS_ORDER_BY_VALUE,
   USER_OPTIONS_ORDER_BY_VALUE_TYPE,
-} from '@user/application/queries/use-cases/list-user/list-user.query';
+} from '@user/application/use-cases/queries/list-user/list-user.query';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
 

@@ -4,7 +4,7 @@ import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { CreateUserCommand } from '@user/application/commands/use-cases/create-user/create-user.command';
+import { CreateUserCommand } from '@user/application/use-cases/commands/create-user/create-user.command';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { CreateUserInputDto } from '@user/infrastructure/controllers/commands/create-user/create-user-input.dto';
 import { CreateUserOutputDto } from '@user/infrastructure/controllers/commands/create-user/create-user-output.dto';

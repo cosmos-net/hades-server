@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { DestroyUserCommand } from '@user/application/commands/use-cases/destroy-user/destroy-user.command';
+import { DestroyUserCommand } from '@user/application/use-cases/commands/destroy-user/destroy-user.command';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { DestroyUserInputDto } from '@user/infrastructure/controllers/commands/destroy-user/destroy-user-input.dto';
 import { DestroyUserOutputDto } from '@user/infrastructure/controllers/commands/destroy-user/destroy-user-output.dto';

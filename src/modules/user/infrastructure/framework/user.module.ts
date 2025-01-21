@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ArchiveUserUseCase } from '@user/application/commands/use-cases/archive-user/archive-user.use-case';
-import { CreateUserUseCase } from '@user/application/commands/use-cases/create-user/create-user.use-case';
-import { DestroyUserUseCase } from '@user/application/commands/use-cases/destroy-user/destroy-user.use-case';
-import { UpdateUserUseCase } from '@user/application/commands/use-cases/update-user/update-user.use-case';
-import { GetUserUseCase } from '@user/application/queries/use-cases/get-user/get-user.use-case';
-import { ListUserUseCase } from '@user/application/queries/use-cases/list-user/list-user.use-case';
+import { ArchiveUserUseCase } from '@user/application/use-cases/commands/archive-user/archive-user.use-case';
+import { CreateUserUseCase } from '@user/application/use-cases/commands/create-user/create-user.use-case';
+import { DestroyUserUseCase } from '@user/application/use-cases/commands/destroy-user/destroy-user.use-case';
+import { UpdateUserUseCase } from '@user/application/use-cases/commands/update-user/update-user.use-case';
+import { GetAccountUseCase } from '@user/application/use-cases/queries/get-account/get-account.use-case';
+import { GetUserUseCase } from '@user/application/use-cases/queries/get-user/get-user.use-case';
+import { ListUserUseCase } from '@user/application/use-cases/queries/list-user/list-user.use-case';
 import {
   ACCOUNT_REPOSITORY,
   PROFILE_REPOSITORY,
@@ -16,6 +17,7 @@ import {
 import { ArchiveUserDomainService } from '@user/domain/domain-services/archive-user.domain-service';
 import { CreateUserDomainService } from '@user/domain/domain-services/create-user.domain-service';
 import { DestroyUserDomainService } from '@user/domain/domain-services/destroy-user.domain-service';
+import { GetAccountDomainService } from '@user/domain/domain-services/get-account.domain-service';
 import { GetUserDomainService } from '@user/domain/domain-services/get-user.domain-service';
 import { ListUserDomainService } from '@user/domain/domain-services/list-user.domain-service';
 import { UpdateUserDomainService } from '@user/domain/domain-services/update-user.domain-service';
@@ -42,6 +44,7 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     DestroyUserUseCase,
     GetUserUseCase,
     ListUserUseCase,
+    GetAccountUseCase,
     // Domain Services
     CreateUserDomainService,
     UpdateUserDomainService,
@@ -49,6 +52,7 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     DestroyUserDomainService,
     GetUserDomainService,
     ListUserDomainService,
+    GetAccountDomainService,
     // Inversion of dependencies, Control principle (IoC) to domain services
     {
       provide: CreateUserDomainService,
@@ -99,6 +103,13 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
       },
       inject: [USER_REPOSITORY],
     },
+    {
+      provide: GetAccountDomainService,
+      useFactory: (accountRepository: AccountTypeormRepository): GetAccountDomainService => {
+        return new GetAccountDomainService(accountRepository);
+      },
+      inject: [ACCOUNT_REPOSITORY],
+    },
     // Event Handlers
     // Repositories
     {
@@ -122,6 +133,6 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     GetUserController,
     ListUserController,
   ],
-  exports: [ACCOUNT_REPOSITORY], // Exporta ACCOUNT_REPOSITORY
+  exports: [ACCOUNT_REPOSITORY],
 })
 export class UserModule {}

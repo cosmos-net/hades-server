@@ -3,7 +3,7 @@ import { QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { GetUserQuery } from '@user/application/queries/use-cases/get-user/get-user.query';
+import { GetUserQuery } from '@user/application/use-cases/queries/get-user/get-user.query';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { GetUserInputDto } from '@user/infrastructure/controllers/queries/get-user/get-user-input.dto';
 import { GetUserOutputDto } from '@user/infrastructure/controllers/queries/get-user/get-user-output.dto';

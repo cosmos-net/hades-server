@@ -3,10 +3,10 @@ import { CommandBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { UpdateUserCommand } from '@user/application/commands/use-cases/update-user/update-user.command';
+import { UpdateUserCommand } from '@user/application/use-cases/commands/update-user/update-user.command';
+import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 import { UpdateUserInput } from '@user/infrastructure/controllers/commands/update-user/update-user-input.dto';
 import { UpdateUserOutputDto } from '@user/infrastructure/controllers/commands/update-user/update-user-output.dto';
-import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 
 @Controller()
 export class UpdateUserController {

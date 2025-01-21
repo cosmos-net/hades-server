@@ -4,7 +4,7 @@ import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { v4 as UUIDv4 } from 'uuid';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
-import { CreateRoleCommand } from '@role/application/commands/use-cases/create-role/create-role.command';
+import { CreateRoleCommand } from '@role/application/use-cases/commands/create-role/create-role.command';
 import { RoleModel } from '@role/domain/models/role.model';
 import { CreateRoleInput } from '@role/infrastructure/controllers/commands/create-role/create-role-input.dto';
 import { CreateRoleOutputDto } from '@role/infrastructure/controllers/commands/create-role/create-role-output.dto';
