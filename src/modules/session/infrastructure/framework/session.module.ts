@@ -17,7 +17,7 @@ import { SuspendInactiveSessionUseCase } from '@session/application/use-cases/co
 import { ActiveInvalidSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-invalid/activate-invalid-session/activate-invalid-session.use-case';
 import { ActivatePendingSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-pending/activate-pending-session/activate-pending-session.use-case';
 import { GetSessionUseCase } from '@session/application/use-cases/queries/get-session/get-session.use-case';
-import { ListSessioneUseCase } from '@session/application/use-cases/queries/list-session/list-session.use-case';
+import { ListSessionUseCase } from '@session/application/use-cases/queries/list-session/list-session.use-case';
 import {
   SESSION_ORCHESTRATOR_CONSUMER_SERVICE,
   SESSION_REPOSITORY,
@@ -61,7 +61,7 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     CreateActiveSessionUseCase,
     DestroySessionUseCase,
     GetSessionUseCase,
-    ListSessioneUseCase,
+    ListSessionUseCase,
 
     // Domain Services
     ActivateInvalidSessionDomainService,
