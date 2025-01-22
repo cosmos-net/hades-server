@@ -1,6 +1,6 @@
-import { ICommand } from '@nestjs/cqrs';
+import { IQuery } from '@nestjs/cqrs';
 
-export class GetAccountQuery implements ICommand {
+export class GetAccountQuery implements IQuery {
   public readonly uuid: string;
   public readonly withArchived: boolean;
   public readonly failIfArchived: boolean;
