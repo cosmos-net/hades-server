@@ -11,6 +11,7 @@ import { SessionArchivedEvent } from '@session/domain/events/events-success-doma
 import { SessionCreatedEvent } from '@session/domain/events/events-success-domain/session-create.event';
 import { SessionDestroyedEvent } from '@session/domain/events/events-success-domain/session-destroyed.event';
 import { SessionStatusChangedEvent } from '@session/domain/events/events-success-domain/session-status-changed.event';
+import { SessionMustBeArchivedException } from '@session/domain/exceptions/session-must-be-archived.exception';
 import { ISessionSchema } from '@session/domain/schemas/session.schema';
 import {
   ISessionBaseSchema,
@@ -275,6 +276,9 @@ export class SessionModel extends AggregateRoot {
   }
 
   public destroy(uuid: string, sessionId: string): void {
+    if (!this.archivedAt) {
+      throw new SessionMustBeArchivedException(`Session with uuid ${uuid} must be archived`);
+    }
     this.apply(new SessionDestroyedEvent(uuid, sessionId, new Date()));
   }
 
