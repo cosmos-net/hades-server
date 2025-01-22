@@ -5,6 +5,7 @@
     "common",
     "user-module",
     "helper",
-    "setup"
+    "setup",
+    "session-module"
   ]
 }
