@@ -9,7 +9,9 @@ export class RoleOrchestratorProducerService {
   constructor(private readonly queryBus: QueryBus) {}
 
   async getByUUID(getRoleQuery: GetRoleQuery): Promise<RoleModel> {
-    const result = await this.queryBus.execute<GetRoleQuery, RoleModel>(getRoleQuery);
+    const result = await this.queryBus.execute<GetRoleQuery, RoleModel>(
+      new GetRoleQuery(getRoleQuery),
+    );
 
     return result;
   }

@@ -9,7 +9,9 @@ export class AccountOrchestratorProducerService {
   constructor(private readonly queryBus: QueryBus) {}
 
   async getByUUID(getAccountQuery: GetAccountQuery): Promise<AccountModel> {
-    const result = await this.queryBus.execute<GetAccountQuery, AccountModel>(getAccountQuery);
+    const result = await this.queryBus.execute<GetAccountQuery, AccountModel>(
+      new GetAccountQuery(getAccountQuery),
+    );
 
     return result;
   }
