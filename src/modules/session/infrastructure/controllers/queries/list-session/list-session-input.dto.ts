@@ -46,19 +46,24 @@ export class ListSessionInputDto extends InputPaginationDto {
   public readonly orderBy?: ListOrderByTypes = ORDER_BY_VALUES[0];
 
   @IsString()
-  public readonly sessionId: string;
+  @IsOptional()
+  public readonly sessionId?: string;
 
   @IsString()
-  public readonly sessionType: string;
+  @IsOptional()
+  public readonly sessionType?: string;
 
   @IsNumber()
-  public readonly sessionDuration: number;
+  @IsOptional()
+  public readonly sessionDuration?: number;
 
   @IsString()
-  public readonly sessionClosedType: string;
+  @IsOptional()
+  public readonly sessionClosedType?: string;
 
   @IsString()
-  public readonly token: string;
+  @IsOptional()
+  public readonly token?: string;
 
   @IsOptional()
   @Transform(({ value }) => {
@@ -103,13 +108,16 @@ export class ListSessionInputDto extends InputPaginationDto {
   public readonly userAgent?: string;
 
   @IsNumber()
-  public readonly failedAttempts: number;
+  @IsOptional()
+  public readonly failedAttempts?: number;
 
   @IsString()
-  public readonly origin: string;
+  @IsOptional()
+  public readonly origin?: string;
 
   @IsString()
-  public readonly location: string;
+  @IsOptional()
+  public readonly location?: string;
 
   @ValidateIf((o) => o.createdAtTo !== undefined)
   @IsDefined({ message: 'createdAtFrom is required when createdAtTo is present' })
