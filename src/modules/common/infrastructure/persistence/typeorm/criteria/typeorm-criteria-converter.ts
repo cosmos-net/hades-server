@@ -182,7 +182,7 @@ export class TypeormCriteriaConverter<T extends Document> {
     const field = filter.getField() as keyof T;
     const value = filter.getValue();
 
-    return { [field]: ILike(value) } as FindOptionsWhere<T>;
+    return { [field]: ILike(`%${value}%`) } as FindOptionsWhere<T>;
   }
 
   private notILikeFilter(filter: Filter): FindOptionsWhere<T> {
