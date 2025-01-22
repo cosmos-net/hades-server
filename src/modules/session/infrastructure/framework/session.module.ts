@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CreateActiveSessionUseCase } from '@session/application/use-cases/commands/create-active-session/create-active-session.use-case';
 import { CreateInvalidSessionUseCase } from '@session/application/use-cases/commands/create-invalid-session/create-invalid-session.use-case';
+import { DestroySessionUseCase } from '@session/application/use-cases/commands/destroy-session/destroy-session.use-case';
 import { IncrementFailedAttemptsSessionUseCase } from '@session/application/use-cases/commands/increment-failed-attempts-session/increment-failed-attempts-session.use-case';
 import { CloseActiveSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-active/close-active-session/close-active-session.use-case';
 import { ExpireActiveSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-active/expire-active-session/expire-active-session.use-case';
@@ -23,6 +24,7 @@ import {
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';
 import { CreateActiveSessionDomainService } from '@session/domain/domain-services/create-session-active.domain-service';
 import { CreateInvalidSessionDomainService } from '@session/domain/domain-services/create-session-invalid.domain-service';
+import { DestroySessionDomainService } from '@session/domain/domain-services/destroy-session.domain-service';
 import { GetSessionDomainService } from '@session/domain/domain-services/get-session.domain-service';
 import { IncrementFailedAttemptsSessionDomainService } from '@session/domain/domain-services/increment-failed-attempts-session.domain-service';
 import { TransitionStatusSessionDomainService } from '@session/domain/domain-services/transition-status-session.domain-service';
@@ -54,9 +56,7 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     IncrementFailedAttemptsSessionUseCase,
     CreateInvalidSessionUseCase,
     CreateActiveSessionUseCase,
-    // UpdateSessionUseCase,
-    // ArchiveSessionUseCase,
-    // DestroySessionUseCase,
+    DestroySessionUseCase,
     GetSessionUseCase,
     // ListSessionsUseCase,
 
@@ -68,7 +68,7 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     CreateActiveSessionDomainService,
     // UpdateSessionDomainService,
     // ArchiveSessionDomainService,
-    // DestroySessionDomainService,
+    DestroySessionDomainService,
     GetSessionDomainService,
     // ListSessionsDomainService,
     // Inversion of dependencies, Control principle (IoC) to domain services
@@ -117,6 +117,12 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       ): CreateActiveSessionDomainService =>
         new CreateActiveSessionDomainService(sessionOrchestratorConsumer),
       inject: [SESSION_ORCHESTRATOR_CONSUMER_SERVICE],
+    },
+    {
+      provide: DestroySessionDomainService,
+      useFactory: (sessionRepository: SessionTypeormRepository): DestroySessionDomainService =>
+        new DestroySessionDomainService(sessionRepository),
+      inject: [SESSION_REPOSITORY],
     },
     // Repositories
     {
