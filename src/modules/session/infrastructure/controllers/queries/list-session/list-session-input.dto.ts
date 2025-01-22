@@ -11,9 +11,6 @@ import {
   IsNumber,
 } from 'class-validator';
 
-import { OperatorsEnum } from '@common/domain/criteria/operators-enum';
-import { PrimitivesType } from '@common/domain/value-object/types/value-object';
-import { IKeysFilterMap } from '@common/infrastructure/dtos/filter-map/keys-filter-map';
 import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-options/input-pagination.dto';
 
 export const ORDER_BY_VALUES = [
@@ -66,7 +63,7 @@ export class ListSessionInputDto extends InputPaginationDto {
   public readonly token?: string;
 
   @IsOptional()
-  @Transform(({ value }) => {
+  @Transform(({ value }): boolean => {
     if (typeof value === 'string') {
       return value.toLowerCase() === 'true';
     }
@@ -75,20 +72,20 @@ export class ListSessionInputDto extends InputPaginationDto {
   @IsBoolean()
   public readonly withArchived?: boolean = false;
 
-  @ValidateIf((o) => o.expiresIn !== undefined)
+  @ValidateIf((o): boolean => o.expiresIn !== undefined)
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
-  public readonly expiresIn?: string;
+  public readonly expiresInAt?: string;
 
-  @ValidateIf((o) => o.loggedInAt !== undefined)
+  @ValidateIf((o): boolean => o.loggedInAt !== undefined)
   @IsDefined({ message: 'loggedInAt is required when loggedOutAt is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly loggedInAt?: string;
 
-  @ValidateIf((o) => o.loggedInAt !== undefined)
+  @ValidateIf((o): boolean => o.loggedInAt !== undefined)
   @IsDefined({ message: 'loggedOutAt is required when loggedInAt is present' })
   @IsISO8601()
   @IsOptional()
@@ -119,125 +116,45 @@ export class ListSessionInputDto extends InputPaginationDto {
   @IsOptional()
   public readonly location?: string;
 
-  @ValidateIf((o) => o.createdAtTo !== undefined)
+  @ValidateIf((o): boolean => o.createdAtTo !== undefined)
   @IsDefined({ message: 'createdAtFrom is required when createdAtTo is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly createdAtFrom?: string;
 
-  @ValidateIf((o) => o.createdAtFrom !== undefined)
+  @ValidateIf((o): boolean => o.createdAtFrom !== undefined)
   @IsDefined({ message: 'createdAtTo is required when createdAtFrom is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly createdAtTo?: string;
 
-  @ValidateIf((o) => o.updatedAtTo !== undefined)
+  @ValidateIf((o): boolean => o.updatedAtTo !== undefined)
   @IsDefined({ message: 'updatedAtFrom is required when updatedAtTo is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly updatedAtFrom?: string;
 
-  @ValidateIf((o) => o.updatedAtFrom !== undefined)
+  @ValidateIf((o): boolean => o.updatedAtFrom !== undefined)
   @IsDefined({ message: 'updatedAtTo is required when updatedAtFrom is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly updatedAtTo?: string;
 
-  @ValidateIf((o) => o.archivedAtTo !== undefined)
+  @ValidateIf((o): boolean => o.archivedAtTo !== undefined)
   @IsDefined({ message: 'deletedAtFrom is required when deletedAtTo is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly archivedAtFrom?: string;
 
-  @ValidateIf((o) => o.archivedAtFrom !== undefined)
+  @ValidateIf((o): boolean => o.archivedAtFrom !== undefined)
   @IsDefined({ message: 'archivedAtTo is required when archivedAtFrom is present' })
   @IsISO8601()
   @IsOptional()
   @IsNotEmpty()
   public readonly archivedAtTo?: string;
-
-  public toFilterMap(): Array<Map<string, PrimitivesType>> {
-    const filtersMapper: IKeysFilterMap[] = [];
-
-    if (this.sessionId) {
-      const map: IKeysFilterMap = {
-        field: 'sessionId',
-        value: this.sessionId,
-        operator: OperatorsEnum.LIKE,
-      };
-
-      filtersMapper.push(map);
-    }
-
-    if (this.sessionType) {
-      const map: IKeysFilterMap = {
-        field: 'sessionType',
-        value: this.sessionType,
-        operator: OperatorsEnum.LIKE,
-      };
-
-      filtersMapper.push(map);
-    }
-
-    if (this.createdAtFrom && this.createdAtTo) {
-      const mapCreatedAtFrom: IKeysFilterMap = {
-        field: 'createdAt',
-        value: this.createdAtFrom,
-        operator: OperatorsEnum.GTE,
-      };
-
-      filtersMapper.push(mapCreatedAtFrom);
-
-      const mapCreatedAtTo: IKeysFilterMap = {
-        field: 'createdAt',
-        value: this.createdAtTo,
-        operator: OperatorsEnum.LTE,
-      };
-
-      filtersMapper.push(mapCreatedAtTo);
-    }
-
-    if (this.updatedAtFrom && this.updatedAtTo) {
-      const mapUpdatedAtFrom: IKeysFilterMap = {
-        field: 'updatedAt',
-        value: this.updatedAtFrom,
-        operator: OperatorsEnum.GTE,
-      };
-
-      filtersMapper.push(mapUpdatedAtFrom);
-
-      const mapUpdatedAtTo: IKeysFilterMap = {
-        field: 'updatedAt',
-        value: this.updatedAtTo,
-        operator: OperatorsEnum.LTE,
-      };
-
-      filtersMapper.push(mapUpdatedAtTo);
-    }
-
-    if (this.archivedAtFrom && this.archivedAtTo) {
-      const mapArchivedAtFrom: IKeysFilterMap = {
-        field: 'archivedAt',
-        value: this.archivedAtFrom,
-        operator: OperatorsEnum.GTE,
-      };
-
-      filtersMapper.push(mapArchivedAtFrom);
-
-      const mapArchivedAtTo: IKeysFilterMap = {
-        field: 'archivedAt',
-        value: this.archivedAtTo,
-        operator: OperatorsEnum.LTE,
-      };
-
-      filtersMapper.push(mapArchivedAtTo);
-    }
-
-    return filtersMapper.map((filter) => new Map(Object.entries(filter)));
-  }
 }

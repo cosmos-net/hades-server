@@ -1,4 +1,3 @@
-// filters/user-filters.helper.ts
 import { OperatorsEnum } from '@common/domain/criteria/operators-enum';
 import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 import { IKeysFilterMap } from '@common/infrastructure/dtos/filter-map/keys-filter-map';

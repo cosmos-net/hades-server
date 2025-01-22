@@ -14,7 +14,7 @@ export class GetAccountDomainService {
   ): Promise<AccountModel> {
     const accountModel = await this.accountRepository.getOneBy(uuid, {
       withArchived,
-      include: includeSession ? ['session'] : [],
+      include: includeSession ? ['sessions'] : [],
     });
 
     if (!accountModel) {

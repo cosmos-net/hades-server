@@ -17,7 +17,7 @@ export class CreateActiveSessionDomainService {
 
     const { sessions: sessionList } = account;
 
-    if (sessionList) {
+    if (sessionList.getTotal > 0) {
       const sessions = sessionList.getItems;
       const session = sessions.find(
         (session): boolean => session.status === SessionStatusEnum.ACTIVE,

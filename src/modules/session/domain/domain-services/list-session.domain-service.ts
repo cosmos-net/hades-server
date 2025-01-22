@@ -10,7 +10,7 @@ export class ListSessionDomainService {
     const sessions = await this.sessionRepository.matching(criteria);
 
     if (sessions.getTotal === 0) {
-      throw new SessionNotFoundException('Session not found');
+      throw new SessionNotFoundException('Sessions not found');
     }
 
     return sessions;

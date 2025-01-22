@@ -7,7 +7,7 @@ import { AccountModel } from '@user/domain/models/account/account.model';
 
 @Injectable()
 @QueryHandler(GetAccountQuery)
-export class GetAccountUseCase implements IQueryHandler<GetAccountQuery> {
+export class GetAccountUseCase implements IQueryHandler<GetAccountQuery, AccountModel> {
   constructor(private readonly getAccountDomainService: GetAccountDomainService) {}
 
   async execute(query: GetAccountQuery): Promise<AccountModel> {

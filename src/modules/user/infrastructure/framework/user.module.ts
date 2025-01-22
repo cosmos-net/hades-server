@@ -35,7 +35,7 @@ import { ProfileTypeormRepository } from '@user/infrastructure/persistence/typeo
 import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/user-typeorm.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, AccountEntity, ProfileEntity]), CqrsModule],
+  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, AccountEntity, ProfileEntity])],
   providers: [
     // UseCases
     CreateUserUseCase,
