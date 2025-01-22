@@ -8,7 +8,7 @@ import { ListSessionModel } from '@session/domain/models/session-list.model';
 
 @Injectable()
 @QueryHandler(ListSessionQuery)
-export class ListSessioneUseCase implements IQueryHandler<ListSessionQuery, ListSessionModel> {
+export class ListSessionUseCase implements IQueryHandler<ListSessionQuery, ListSessionModel> {
   constructor(private readonly listSessionDomainService: ListSessionDomainService) {}
 
   async execute(query: ListSessionQuery): Promise<ListSessionModel> {
