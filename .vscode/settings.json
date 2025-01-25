@@ -6,6 +6,7 @@
     "user-module",
     "helper",
     "setup",
-    "session-module"
+    "session-module",
+    "assignments-module"
   ]
 }

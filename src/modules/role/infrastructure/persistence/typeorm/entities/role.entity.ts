@@ -1,13 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
 
+import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import {
   MAX_ROLE_NAME_LENGTH,
   MAX_ROLE_DESCRIPTION_LENGTH,
 } from '@role/domain/constants/general-rules';
+import { IRoleSchemaPrimitive } from '@role/domain/schemas/role.schema-primitive';
 
 @Entity('roles')
-export class RoleEntity extends TypeormBaseEntity {
+export class RoleEntity extends TypeormBaseEntity implements IRoleSchemaPrimitive {
   @PrimaryGeneratedColumn('identity', { name: 'id', type: 'int' })
   id: number;
 
@@ -32,4 +34,14 @@ export class RoleEntity extends TypeormBaseEntity {
     length: MAX_ROLE_DESCRIPTION_LENGTH,
   })
   description: string | null;
+
+  @OneToOne(
+    (): typeof AssignmentEntity => AssignmentEntity,
+    (assignment): RoleEntity => assignment.role,
+    {
+      cascade: true,
+      eager: false,
+    },
+  )
+  assignment: AssignmentEntity;
 }

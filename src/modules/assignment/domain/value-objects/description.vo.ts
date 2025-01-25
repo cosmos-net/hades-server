@@ -1,21 +1,20 @@
+import { ASSIGNMENT_RULES } from '@assignment/domain/constants/assignment-rules.constant';
 import BusinessConflictDomainException from '@common/domain/exceptions/business-conflict.exception';
 import { StringValueObject } from '@common/domain/value-object/types/string-value-object';
 import regexCustomBuilderHelper from '@helpers/regex/regex-custom-builder.helper';
-import { SESSION } from '@session/domain/constants/general-rules';
 
-export default class SessionToken extends StringValueObject {
-  constructor(value: string) {
+export default class Description extends StringValueObject {
+  constructor(value) {
     super(value);
-
     this.validate();
   }
 
   private readonly _regex = regexCustomBuilderHelper({
-    allowSpaces: false,
+    allowSpaces: true,
     allowNumbers: true,
     allowCaseInsensitive: false,
-    minLength: SESSION.TOKEN.MIN_LENGTH,
-    maxLength: SESSION.TOKEN.MAX_LENGTH,
+    minLength: ASSIGNMENT_RULES.DESCRIPTION.MIN_LENGTH,
+    maxLength: ASSIGNMENT_RULES.DESCRIPTION.MAX_LENGTH,
     allowLetters: true,
     specialChars: '',
   });
@@ -24,7 +23,7 @@ export default class SessionToken extends StringValueObject {
     const isValid = this._regex.test(this._value);
 
     if (!isValid) {
-      throw new BusinessConflictDomainException(`Invalid token: ${this._value}`);
+      throw new BusinessConflictDomainException(`Invalid description: ${this._value}`);
     }
   }
 }
