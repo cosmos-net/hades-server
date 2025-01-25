@@ -1,3 +1,4 @@
+import BusinessConflictDomainException from '@common/domain/exceptions/business-conflict.exception';
 import { StringValueObject } from '@common/domain/value-object/types/string-value-object';
 import regexCustomBuilderHelper from '@helpers/regex/regex-custom-builder.helper';
 import { SESSION } from '@session/domain/constants/general-rules';
@@ -19,12 +20,11 @@ export default class SessionToken extends StringValueObject {
     specialChars: '',
   });
 
-  private validate() {
+  private validate(): void {
     const isValid = this._regex.test(this._value);
 
     if (!isValid) {
-      //TODO: Handle domain error
-      throw new Error('Invalid session token');
+      throw new BusinessConflictDomainException(`Invalid token: ${this._value}`);
     }
   }
 }
