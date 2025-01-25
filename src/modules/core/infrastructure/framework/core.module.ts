@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { DefaultNamingStrategy } from 'typeorm';
 
+import { AssignmentModule } from '@assignment/infrastructure/framework/assignment.module';
 import { databasesLoader } from '@core/infrastructure/framework/loaders/database.loader';
 import { PostgresType } from '@core/infrastructure/framework/loaders/postgres.type';
 import { mainConfigOptions } from '@core/infrastructure/framework/options/config.options';
@@ -17,6 +18,7 @@ import { UserModule } from '@user/infrastructure/framework/user.module';
     UserModule,
     RoleModule,
     SessionModule,
+    AssignmentModule,
     ConfigModule.forRoot(mainConfigOptions),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forFeature(databasesLoader.postgres)],
