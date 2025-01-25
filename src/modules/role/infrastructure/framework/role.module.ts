@@ -27,7 +27,7 @@ import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/ro
 import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/repositories/role-typeorm.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoleEntity]), CqrsModule],
+  imports: [CqrsModule, TypeOrmModule.forFeature([RoleEntity])],
   providers: [
     // UseCases
     CreateRoleUseCase,
