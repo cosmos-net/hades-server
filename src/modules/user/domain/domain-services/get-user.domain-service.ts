@@ -5,11 +5,17 @@ import { UserNotFoundException } from '@user/domain/exceptions/user/user-not-fou
 export class GetUserDomainService {
   constructor(private readonly userRepository: IUserRepositoryContract) {}
 
-  async go(uuid: string, withArchived: boolean): Promise<UserAggregate> {
-    const userAggregate = await this.userRepository.getOneBy(uuid, { withArchived });
+  async go(uuid: string, withArchived: boolean, failIfArchived: boolean): Promise<UserAggregate> {
+    const userAggregate = await this.userRepository.getOneBy(uuid, {
+      withArchived,
+    });
 
     if (!userAggregate) {
       throw new UserNotFoundException(`User with uuid ${uuid} not found`);
+    }
+
+    if (failIfArchived && userAggregate.userModel.archivedAt) {
+      throw new UserNotFoundException(`User with uuid ${uuid} is archived`);
     }
 
     return userAggregate;
