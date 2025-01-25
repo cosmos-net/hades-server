@@ -1,4 +1,4 @@
-export const ASSIGNMENT_ROLES = {
+export const ASSIGNMENT_RULES = {
   TITLE: {
     MAX_LENGTH: 100,
     MIN_LENGTH: 5,

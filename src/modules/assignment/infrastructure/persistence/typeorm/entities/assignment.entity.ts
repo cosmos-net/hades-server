@@ -1,7 +1,7 @@
 import { Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 
-import { ASSIGNMENT_ROLES } from '@assignment/domain/constants/assignment-roles.constant';
+import { ASSIGNMENT_RULES } from '@assignment/domain/constants/assignment-rules.constant';
 import { IAssignmentSchemaPrimitives } from '@assignment/domain/schemas/assignment.schema-primitives';
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/role.entity';
@@ -21,18 +21,18 @@ export class AssignmentEntity extends TypeormBaseEntity implements IAssignmentSc
 
   @Column({
     name: 'title',
-    length: ASSIGNMENT_ROLES.TITLE.MAX_LENGTH,
+    length: ASSIGNMENT_RULES.TITLE.MAX_LENGTH,
   })
-  @Length(ASSIGNMENT_ROLES.TITLE.MIN_LENGTH, ASSIGNMENT_ROLES.TITLE.MAX_LENGTH)
+  @Length(ASSIGNMENT_RULES.TITLE.MIN_LENGTH, ASSIGNMENT_RULES.TITLE.MAX_LENGTH)
   title: string;
 
   @Column({
     name: 'description',
     type: 'varchar',
     nullable: true,
-    length: ASSIGNMENT_ROLES.DESCRIPTION.MAX_LENGTH,
+    length: ASSIGNMENT_RULES.DESCRIPTION.MAX_LENGTH,
   })
-  @Length(ASSIGNMENT_ROLES.DESCRIPTION.MIN_LENGTH, ASSIGNMENT_ROLES.DESCRIPTION.MAX_LENGTH)
+  @Length(ASSIGNMENT_RULES.DESCRIPTION.MIN_LENGTH, ASSIGNMENT_RULES.DESCRIPTION.MAX_LENGTH)
   description: string | null;
 
   @OneToOne((): typeof RoleEntity => RoleEntity, (role): AssignmentEntity => role.assignment, {
