@@ -1,5 +1,6 @@
 import { PrimaryGeneratedColumn, Column, OneToOne, OneToMany, Entity } from 'typeorm';
 
+import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
@@ -32,4 +33,14 @@ export class UserEntity extends TypeormBaseEntity implements IUserSchemaPrimitiv
     eager: false,
   })
   accounts: AccountEntity[];
+
+  @OneToOne(
+    (): typeof AssignmentEntity => AssignmentEntity,
+    (assignment): UserEntity => assignment.user,
+    {
+      cascade: true,
+      eager: false,
+    },
+  )
+  assignment: AssignmentEntity;
 }
