@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
-import { GetUserQuery } from '@user/application/use-cases/queries/get-user/get-user.query';
+import { GetUserAggregateQuery } from '@user/application/use-cases/queries/get-user-aggregate/get-user-aggregate.query';
 import { UserAggregate } from '@user/domain/aggregates/user.aggregate';
 
 @Injectable()
 export class UserAggregateOrchestratorProducerService {
   constructor(private readonly queryBus: QueryBus) {}
 
-  async getByUUID(getRoleQuery: GetUserQuery): Promise<UserAggregate> {
-    const result = await this.queryBus.execute<GetUserQuery, UserAggregate>(
-      new GetUserQuery(getRoleQuery),
+  async getByUUID(getRoleQuery: GetUserAggregateQuery): Promise<UserAggregate> {
+    const result = await this.queryBus.execute<GetUserAggregateQuery, UserAggregate>(
+      new GetUserAggregateQuery(getRoleQuery),
     );
 
     return result;
