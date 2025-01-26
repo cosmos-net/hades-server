@@ -1,5 +1,7 @@
 import { IAssignmentOrchestratorConsumerContract } from '@assignment/domain/contracts/assignment-orchestrator-consumer.contract';
 import { IAssignmentRepositoryContract } from '@assignment/domain/contracts/assignment-repository.contract';
+import { AssignmentAlreadyExistException } from '@assignment/domain/exceptions/assignment-already-exist.exception';
+import { UserAlreadyHasAnAssignmentException } from '@assignment/domain/exceptions/user-already-has-an-assignment.exception';
 import { AssignmentModel } from '@assignment/domain/models/assignment.model';
 
 export class UserRoleAssignmentDomainService {
@@ -8,21 +10,53 @@ export class UserRoleAssignmentDomainService {
     private readonly orchestrator: IAssignmentOrchestratorConsumerContract,
   ) {}
 
-  async go(userUUID, roleUUID): Promise<AssignmentModel> {
-    const userAggregate = await this.orchestrator.user.getByUUID({
+  async go(
+    uuid: string,
+    userUUID: string,
+    roleUUID: string,
+    description: string,
+  ): Promise<AssignmentModel> {
+    const userModel = await this.orchestrator.user.getByUUID({
       uuid: userUUID,
       withArchived: true,
-      withProfile: false,
-      withAccounts: false,
       failIfArchived: true,
     });
 
-    const assignmentModel = await this.repository.getOneByUserUUID(userUUID, {
+    const roleModel = await this.orchestrator.role.getByUUID({
+      uuid: roleUUID,
+      withArchived: true,
+      failIfArchived: true,
+    });
+
+    const assignmentModelFound = await this.repository.getOneByUserUUID(userModel.uuid, {
       withArchived: true,
     });
 
-    if (assignmentModel) {
-      throw new Error('User already has a role assigned');
+    const isSameRole = assignmentModelFound?.role.uuid === roleModel.uuid;
+
+    if (isSameRole) {
+      throw new AssignmentAlreadyExistException(
+        `User ${assignmentModelFound.user.uuid} already has an assignment with role ${assignmentModelFound.role.uuid}`,
+      );
     }
+
+    if (assignmentModelFound) {
+      const isArchived = assignmentModelFound.archivedAt !== null;
+
+      throw new UserAlreadyHasAnAssignmentException(
+        `User ${assignmentModelFound.user.uuid} already has an ${isArchived ? 'archived' : 'active'} assignment with role ${assignmentModelFound.role.uuid}`,
+      );
+    }
+
+    const assignmentModel = AssignmentModel.fromPrimitives({
+      uuid,
+      user: userModel,
+      role: roleModel,
+      description,
+    });
+
+    assignmentModel.create();
+
+    return assignmentModel;
   }
 }

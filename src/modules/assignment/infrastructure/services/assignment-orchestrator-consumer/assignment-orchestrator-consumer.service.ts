@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { IAssignmentOrchestratorConsumerContract } from '@assignment/domain/contracts/assignment-orchestrator-consumer.contract';
 import { OrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/orchestrator-producer.service';
 import { RoleOrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/role-orchestrator-producer.service';
-import { UserOrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/user-aggregate-orchestrator-producer.service';
+import { UserOrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/user-orchestrator-producer.service';
 
 @Injectable()
 export class AssignmentOrchestratorConsumerService
