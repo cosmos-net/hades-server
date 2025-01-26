@@ -6,10 +6,10 @@ import {
   MAX_ROLE_NAME_LENGTH,
   MAX_ROLE_DESCRIPTION_LENGTH,
 } from '@role/domain/constants/general-rules';
-import { IRoleSchemaPrimitive } from '@role/domain/schemas/role.schema-primitive';
+import { IRoleSchemaPrimitives } from '@role/domain/schemas/role.schema-primitives';
 
 @Entity('roles')
-export class RoleEntity extends TypeormBaseEntity implements IRoleSchemaPrimitive {
+export class RoleEntity extends TypeormBaseEntity implements IRoleSchemaPrimitives {
   @PrimaryGeneratedColumn('identity', { name: 'id', type: 'int' })
   id: number;
 

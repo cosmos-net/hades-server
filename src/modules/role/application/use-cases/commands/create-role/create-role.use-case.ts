@@ -21,12 +21,12 @@ export class CreateRoleUseCase implements ICommandHandler<CreateRoleCommand> {
     const { uuid, name, description } = command;
 
     const roleModel = await this.createRoleDomainService.go(uuid, name, description);
-    const role = this.publisher.mergeObjectContext(roleModel);
+    const roleContext = this.publisher.mergeObjectContext(roleModel);
 
     await this.repository.persist(roleModel);
 
-    role.commit();
+    roleContext.commit();
 
-    return role;
+    return roleContext;
   }
 }

@@ -1,4 +1,4 @@
-export interface IRoleSchemaPrimitive {
+export interface IRoleSchemaPrimitives {
   id?: number;
   uuid: string;
   name: string;
@@ -10,5 +10,5 @@ export interface IRoleSchemaPrimitive {
 
 export interface IListRoleSchemaPrimitive {
   total: number;
-  items: IRoleSchemaPrimitive[];
+  items: IRoleSchemaPrimitives[];
 }
