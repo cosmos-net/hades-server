@@ -145,6 +145,19 @@ export class UserTypeormRepository
     return userAggregate;
   }
 
+  async getUserByUUID(uuid: string, options?: IOptions): Promise<UserModel | null> {
+    const user = await this.repository.findOne({
+      where: { uuid },
+      ...(options?.withArchived && { withDeleted: true }),
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return new UserModel(user);
+  }
+
   async matching(criteria: Criteria): Promise<ListUserAggregate> {
     const selectQueryBuilder = this.createSelectQueryBuilder();
     const query = this.getQueryBuilderByCriteria(criteria, selectQueryBuilder);

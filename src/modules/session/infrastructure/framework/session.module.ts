@@ -39,7 +39,7 @@ import { TransitionDynamicStatusSessionController } from '@session/infrastructur
 import { ListSessionController } from '@session/infrastructure/controllers/queries/list-session/list-session.controller';
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { SessionTypeormRepository } from '@session/infrastructure/persistence/typeorm/repositories/session-typeorm.repository';
-import { SessionOrchestratorConsumerService } from '@session/infrastructure/services/orchestrator-consumer/orchestrator-consumer.service';
+import { SessionOrchestratorConsumerService } from '@session/infrastructure/services/session-orchestrator-consumer/session-orchestrator-consumer.service';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
 
 @Module({

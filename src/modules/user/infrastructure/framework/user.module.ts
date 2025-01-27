@@ -8,6 +8,7 @@ import { DestroyUserUseCase } from '@user/application/use-cases/commands/destroy
 import { UpdateUserUseCase } from '@user/application/use-cases/commands/update-user/update-user.use-case';
 import { GetAccountUseCase } from '@user/application/use-cases/queries/get-account/get-account.use-case';
 import { GetUserUseCase } from '@user/application/use-cases/queries/get-user/get-user.use-case';
+import { GetUserAggregateUseCase } from '@user/application/use-cases/queries/get-user-aggregate/get-user-aggregate.use-case';
 import { ListUserUseCase } from '@user/application/use-cases/queries/list-user/list-user.use-case';
 import {
   ACCOUNT_REPOSITORY,
@@ -18,6 +19,7 @@ import { ArchiveUserDomainService } from '@user/domain/domain-services/archive-u
 import { CreateUserDomainService } from '@user/domain/domain-services/create-user.domain-service';
 import { DestroyUserDomainService } from '@user/domain/domain-services/destroy-user.domain-service';
 import { GetAccountDomainService } from '@user/domain/domain-services/get-account.domain-service';
+import { GetUserAggregateDomainService } from '@user/domain/domain-services/get-user-aggregate.domain-service';
 import { GetUserDomainService } from '@user/domain/domain-services/get-user.domain-service';
 import { ListUserDomainService } from '@user/domain/domain-services/list-user.domain-service';
 import { UpdateUserDomainService } from '@user/domain/domain-services/update-user.domain-service';
@@ -42,17 +44,19 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     UpdateUserUseCase,
     ArchiveUserUseCase,
     DestroyUserUseCase,
-    GetUserUseCase,
+    GetUserAggregateUseCase,
     ListUserUseCase,
     GetAccountUseCase,
+    GetUserUseCase,
     // Domain Services
     CreateUserDomainService,
     UpdateUserDomainService,
     ArchiveUserDomainService,
     DestroyUserDomainService,
-    GetUserDomainService,
+    GetUserAggregateDomainService,
     ListUserDomainService,
     GetAccountDomainService,
+    GetUserDomainService,
     // Inversion of dependencies, Control principle (IoC) to domain services
     {
       provide: CreateUserDomainService,
@@ -90,9 +94,9 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
       inject: [USER_REPOSITORY],
     },
     {
-      provide: GetUserDomainService,
-      useFactory: (userRepository: UserTypeormRepository): GetUserDomainService => {
-        return new GetUserDomainService(userRepository);
+      provide: GetUserAggregateDomainService,
+      useFactory: (userRepository: UserTypeormRepository): GetUserAggregateDomainService => {
+        return new GetUserAggregateDomainService(userRepository);
       },
       inject: [USER_REPOSITORY],
     },
@@ -109,6 +113,13 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
         return new GetAccountDomainService(accountRepository);
       },
       inject: [ACCOUNT_REPOSITORY],
+    },
+    {
+      provide: GetUserDomainService,
+      useFactory: (userRepository: UserTypeormRepository): GetUserDomainService => {
+        return new GetUserDomainService(userRepository);
+      },
+      inject: [USER_REPOSITORY],
     },
     // Event Handlers
     // Repositories

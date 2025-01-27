@@ -1,7 +1,10 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
 import { IAssignmentSchema } from '@assignment/domain/schemas/assignment.schema';
-import { IAssignmentSchemaPrimitives } from '@assignment/domain/schemas/assignment.schema-primitives';
+import {
+  IAssignmentBaseSchema,
+  IAssignmentSchemaPrimitives,
+} from '@assignment/domain/schemas/assignment.schema-primitives';
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Description from '@common/domain/value-object/vos/description.vo';
@@ -9,13 +12,23 @@ import Id from '@common/domain/value-object/vos/id.vo';
 import Title from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { IRoleSchemaPrimitives } from '@role/domain/schemas/role.schema-primitives';
+import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 
 export class AssignmentModel extends AggregateRoot {
   private readonly _entityRoot: IAssignmentSchema;
 
-  constructor(entity: IAssignmentSchemaPrimitives) {
+  constructor(entity: IAssignmentSchemaPrimitives);
+  constructor(assignmentBaseSchema: IAssignmentBaseSchema);
+  constructor(entityOrAssignmentBaseSchema: IAssignmentSchemaPrimitives | IAssignmentBaseSchema) {
     super();
-    this.hydrate(entity);
+    this._entityRoot = {} as IAssignmentSchema;
+
+    if ('id' in entityOrAssignmentBaseSchema) {
+      this.hydrate(entityOrAssignmentBaseSchema);
+    } else {
+      this.hydrateWithBaseSchema(entityOrAssignmentBaseSchema);
+    }
   }
 
   get id(): number | undefined {
@@ -46,6 +59,14 @@ export class AssignmentModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
+  get user(): IUserSchemaPrimitives {
+    return this._entityRoot.user.toPrimitives();
+  }
+
+  get role(): IRoleSchemaPrimitives {
+    return this._entityRoot.role.toPrimitives();
+  }
+
   public hydrate(entity: IAssignmentSchemaPrimitives): void {
     this._entityRoot.id = new Id(entity.id);
     this._entityRoot.uuid = new UUID(entity.uuid);
@@ -57,6 +78,22 @@ export class AssignmentModel extends AggregateRoot {
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
   }
 
+  public hydrateWithBaseSchema(entity: IAssignmentBaseSchema): void {
+    this._entityRoot.uuid = new UUID(entity.uuid);
+    this._entityRoot.user = entity.user;
+    this._entityRoot.role = entity.role;
+
+    const userTitle = entity.user.id;
+    const roleTitle = entity.role.name;
+    const title = `${userTitle} - ${roleTitle}`;
+
+    this._entityRoot.title = new Title(title);
+    this._entityRoot.createdAt = new CreatedAt(new Date());
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    if (entity.description) this._entityRoot.description = new Description(entity.description);
+  }
+
   public toPrimitives(): IAssignmentSchemaPrimitives {
     return {
       id: this.id,
@@ -66,6 +103,8 @@ export class AssignmentModel extends AggregateRoot {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       archivedAt: this.archivedAt,
+      user: this.user,
+      role: this.role,
     };
   }
 
@@ -80,6 +119,10 @@ export class AssignmentModel extends AggregateRoot {
       ...(this.archivedAt && { archivedAt: this.archivedAt }),
       ...(this.archivedAt && { archivedAt: this.archivedAt }),
     };
+  }
+
+  public static fromPrimitives(entity: IAssignmentBaseSchema): AssignmentModel {
+    return new AssignmentModel(entity);
   }
 
   public create(): void {

@@ -1,8 +1,8 @@
 import { RoleModel } from '@role/domain/models/role.model';
 import {
   IListRoleSchemaPrimitive,
-  IRoleSchemaPrimitive,
-} from '@role/domain/schemas/role.schema-primitive';
+  IRoleSchemaPrimitives,
+} from '@role/domain/schemas/role.schema-primitives';
 
 export class ListRoleModel {
   private readonly items: RoleModel[];
@@ -13,15 +13,15 @@ export class ListRoleModel {
     this.total = listRole.total;
   }
 
-  public get getItems(): IRoleSchemaPrimitive[] {
-    return this.items.map((role): IRoleSchemaPrimitive => role.toPrimitives());
+  public get getItems(): IRoleSchemaPrimitives[] {
+    return this.items.map((role): IRoleSchemaPrimitives => role.toPrimitives());
   }
 
   public get getTotal(): number {
     return this.total;
   }
 
-  public hydrate(roles: IRoleSchemaPrimitive[]): void {
+  public hydrate(roles: IRoleSchemaPrimitives[]): void {
     this.setItems(roles);
   }
 
@@ -29,12 +29,12 @@ export class ListRoleModel {
     this.total = total;
   }
 
-  private setItems(items: IRoleSchemaPrimitive[]): void {
+  private setItems(items: IRoleSchemaPrimitives[]): void {
     items.forEach((item): void => this.addItems(item));
     this.setTotal(items.length);
   }
 
-  private addItems(item: IRoleSchemaPrimitive): void {
+  private addItems(item: IRoleSchemaPrimitives): void {
     this.items.push(new RoleModel(item));
   }
 }

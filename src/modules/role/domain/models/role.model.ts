@@ -15,14 +15,14 @@ import { RoleReDescribedEvent } from '@role/domain/events/events-success-domain/
 import { RoleReNamedEvent } from '@role/domain/events/events-success-domain/role-renamed.event';
 import { RoleNotArchivedException } from '@role/domain/exceptions/role-not-archived-exception';
 import { IRoleSchema } from '@role/domain/schemas/role.schema';
-import { IRoleSchemaPrimitive } from '@role/domain/schemas/role.schema-primitive';
+import { IRoleSchemaPrimitives } from '@role/domain/schemas/role.schema-primitives';
 
 export class RoleModel extends AggregateRoot {
   private readonly _entityRoot: IRoleSchema;
 
-  constructor(entity: IRoleSchemaPrimitive);
+  constructor(entity: IRoleSchemaPrimitives);
   constructor(uuid: string, name: string, description?: string);
-  constructor(uuidOrSchema: string | IRoleSchemaPrimitive, name?: string, description?: string) {
+  constructor(uuidOrSchema: string | IRoleSchemaPrimitives, name?: string, description?: string) {
     super();
     this._entityRoot = {} as IRoleSchema;
 
@@ -65,7 +65,7 @@ export class RoleModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  public hydrate(entity: IRoleSchemaPrimitive): void {
+  public hydrate(entity: IRoleSchemaPrimitives): void {
     this._entityRoot.id = new Id(entity.id);
     this._entityRoot.uuid = new UUID(entity.uuid);
     this._entityRoot.name = new Name(entity.name);
@@ -76,7 +76,7 @@ export class RoleModel extends AggregateRoot {
     if (entity.description) this._entityRoot.description = new Description(entity.description);
   }
 
-  public toPrimitives(): IRoleSchemaPrimitive {
+  public toPrimitives(): IRoleSchemaPrimitives {
     return {
       id: this.id,
       uuid: this.uuid,
@@ -88,7 +88,7 @@ export class RoleModel extends AggregateRoot {
     };
   }
 
-  public toPartialPrimitives(): Partial<IRoleSchemaPrimitive> {
+  public toPartialPrimitives(): Partial<IRoleSchemaPrimitives> {
     return {
       ...(this.id && { id: this.id }),
       ...(this.uuid && { uuid: this.uuid }),
