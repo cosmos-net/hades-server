@@ -11,9 +11,14 @@ export class GetUserUseCase implements IQueryHandler<GetUserQuery> {
   constructor(private readonly getUserDomainService: GetUserDomainService) {}
 
   async execute(query: GetUserQuery): Promise<UserModel> {
-    const { uuid, withArchived, failIfArchived } = query;
+    const { uuid, withArchived, failIfArchived, status } = query;
 
-    const userModel = await this.getUserDomainService.go(uuid, withArchived, failIfArchived);
+    const userModel = await this.getUserDomainService.go(
+      uuid,
+      withArchived,
+      failIfArchived,
+      status,
+    );
 
     return userModel;
   }

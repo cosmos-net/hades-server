@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class UserRoleAssignmentInput {
   @IsUUID()
@@ -9,5 +9,6 @@ export class UserRoleAssignmentInput {
 
   @IsString()
   @IsNotEmpty()
-  public readonly description: string;
+  @IsOptional()
+  public readonly description?: string;
 }

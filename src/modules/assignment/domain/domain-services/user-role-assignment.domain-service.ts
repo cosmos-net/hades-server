@@ -3,6 +3,7 @@ import { IAssignmentRepositoryContract } from '@assignment/domain/contracts/assi
 import { AssignmentAlreadyExistException } from '@assignment/domain/exceptions/assignment-already-exist.exception';
 import { UserAlreadyHasAnAssignmentException } from '@assignment/domain/exceptions/user-already-has-an-assignment.exception';
 import { AssignmentModel } from '@assignment/domain/models/assignment.model';
+import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 
 export class UserRoleAssignmentDomainService {
   constructor(
@@ -20,6 +21,7 @@ export class UserRoleAssignmentDomainService {
       uuid: userUUID,
       withArchived: true,
       failIfArchived: true,
+      status: UserStatusEnum.ACTIVE,
     });
 
     const roleModel = await this.orchestrator.role.getByUUID({
