@@ -26,6 +26,7 @@ export class AssignmentTypeormRepository
     const entity = await this.repository.findOne({
       where: { uuid },
       withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
     });
 
     const model = new AssignmentModel(entity);
@@ -40,6 +41,7 @@ export class AssignmentTypeormRepository
     const entity = await this.repository.findOne({
       where: { user: { uuid: userUUID } },
       withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
     });
 
     if (!entity) {
@@ -58,6 +60,7 @@ export class AssignmentTypeormRepository
     const entity = await this.repository.findOne({
       where: { role: { uuid: roleUUID } },
       withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
     });
 
     const model = new AssignmentModel(entity);
@@ -69,6 +72,7 @@ export class AssignmentTypeormRepository
     const entity = await this.repository.findOne({
       where: { title },
       withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
     });
 
     const model = new AssignmentModel(entity);
@@ -85,6 +89,7 @@ export class AssignmentTypeormRepository
         description: ILike(`%${description}%`),
       },
       withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
     });
 
     const model = new AssignmentModel(entity);
