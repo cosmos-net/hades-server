@@ -8,14 +8,13 @@ export class CreateRoleDomainService {
   async go(uuid: string, name: string, description?: string): Promise<RoleModel> {
     const roleModel = await this.repository.getOneBy(name, { withArchived: true });
 
-    if (!roleModel) {
+    if (roleModel) {
+      if (roleModel.archivedAt) {
+        throw new RoleNameException(
+          `Role name already exists but is archived with date ${roleModel.archivedAt}`,
+        );
+      }
       throw new RoleNameException('Role name already exists');
-    }
-
-    if (roleModel.archivedAt) {
-      throw new RoleNameException(
-        `Role name already exists but is archived with date ${roleModel.archivedAt}`,
-      );
     }
 
     const role = new RoleModel(uuid, name, description);
