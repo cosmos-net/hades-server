@@ -1,7 +1,7 @@
 import { ICommand } from '@nestjs/cqrs';
 
+import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
-import { StatusEnum } from '@user/domain/enums/user-status-enum';
 
 export interface IAddressCommand {
   readonly street: string;
@@ -34,7 +34,7 @@ export interface IAccountCommand {
 
 export interface IUserCommand {
   readonly uuid: string;
-  readonly status: StatusEnum;
+  readonly status: UserStatusEnum;
 }
 
 export class CreateUserCommand implements ICommand {
@@ -51,7 +51,7 @@ export class CreateUserCommand implements ICommand {
     profile: IProfileCommand;
     accounts: IAccountCommand[];
   }) {
-    const status = user?.status ?? StatusEnum.PENDING;
+    const status = user?.status ?? UserStatusEnum.PENDING;
 
     this.user = { uuid: profile.uuid, status };
     this.profile = profile;
