@@ -201,6 +201,12 @@ export class AssignmentModel extends AggregateRoot {
       throw new Error('Role is the same');
     }
 
+    const userTitle = this.user.id;
+    const roleTitle = role.name;
+    const title = `${userTitle} - ${roleTitle}`;
+
+    this._entityRoot.title = new Title(title);
+
     this._entityRoot.role = role;
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
 
