@@ -42,6 +42,10 @@ export class AssignmentTypeormRepository
       withDeleted: options?.withArchived ?? false,
     });
 
+    if (!entity) {
+      return null;
+    }
+
     const model = new AssignmentModel(entity);
 
     return model;
