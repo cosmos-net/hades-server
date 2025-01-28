@@ -10,13 +10,19 @@ export class UpdateAssignmentDomainService {
   ) {}
 
   async go(uuid: string, roleUUID?: string, description?: string): Promise<AssignmentModel> {
-    const assignmentModel = await this.repository.getOneByUUID(uuid, { withArchived: true });
+    const assignmentModel = await this.repository.getOneByUUID(uuid, {
+      withArchived: true,
+      relations: {
+        user: true,
+        role: true,
+      },
+    });
 
     if (!assignmentModel) {
       throw new AssignmentNotFoundException(`Assignment with UUID ${uuid} not found`);
     }
 
-    if (assignmentModel.archive) {
+    if (assignmentModel.archivedAt) {
       throw new AssignmentNotFoundException(`Assignment with UUID ${uuid} is archived`);
     }
 
