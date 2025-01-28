@@ -12,6 +12,7 @@ import Id from '@common/domain/value-object/vos/id.vo';
 import Title from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { RoleModel } from '@role/domain/models/role.model';
 import { IRoleSchemaPrimitives } from '@role/domain/schemas/role.schema-primitives';
 import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 
@@ -132,7 +133,7 @@ export class AssignmentModel extends AggregateRoot {
     // this.apply(new AssignmentCreatedEvent(this.toPrimitives()));
   }
 
-  public redescribe(title?: string, description?: string): void {
+  public redescribe({ title, description }: { title?: string; description?: string }): void {
     if (title) {
       const isTitleChanged = this.title !== title;
 
@@ -193,5 +194,16 @@ export class AssignmentModel extends AggregateRoot {
     }
 
     // this.apply(new AssignmentDeletedEvent(this.toPrimitives()));
+  }
+
+  reAssignRole(role: RoleModel): void {
+    if (this.role.uuid === role.uuid) {
+      throw new Error('Role is the same');
+    }
+
+    this._entityRoot.role = role;
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    // this.apply(new AssignmentRoleReassignedEvent(this.toPrimitives()));
   }
 }
