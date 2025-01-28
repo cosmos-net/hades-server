@@ -74,6 +74,9 @@ export class AssignmentModel extends AggregateRoot {
     this._entityRoot.createdAt = new CreatedAt(entity.createdAt);
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
 
+    this._entityRoot.user = new UserModel(entity.user);
+    this._entityRoot.role = new RoleModel(entity.role);
+
     if (entity.description) this._entityRoot.description = new Description(entity.description);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
   }
@@ -123,6 +126,14 @@ export class AssignmentModel extends AggregateRoot {
 
   public static fromPrimitives(entity: IAssignmentBaseSchema): AssignmentModel {
     return new AssignmentModel(entity);
+  }
+
+  public useUser(user: UserModel): void {
+    this._entityRoot.user = user;
+  }
+
+  public useRole(role: RoleModel): void {
+    this._entityRoot.role = role;
   }
 
   public create(): void {
