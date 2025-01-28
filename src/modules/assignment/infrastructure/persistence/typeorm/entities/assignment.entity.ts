@@ -1,4 +1,4 @@
-import { Length } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 
 import { ASSIGNMENT_RULES } from '@assignment/domain/constants/assignment-rules.constant';
@@ -33,27 +33,31 @@ export class AssignmentEntity extends TypeormBaseEntity implements IAssignmentSc
     length: ASSIGNMENT_RULES.DESCRIPTION.MAX_LENGTH,
   })
   @Length(ASSIGNMENT_RULES.DESCRIPTION.MIN_LENGTH, ASSIGNMENT_RULES.DESCRIPTION.MAX_LENGTH)
-  description: string | null;
+  description?: string | null;
 
   @OneToOne((): typeof RoleEntity => RoleEntity, (role): AssignmentEntity => role.assignment, {
     cascade: false,
     eager: false,
+    nullable: false,
   })
   @JoinColumn({
     name: 'role_id',
     referencedColumnName: 'id',
     foreignKeyConstraintName: 'fk_assignment_role_id',
   })
+  @IsNotEmpty()
   role: RoleEntity;
 
   @OneToOne((): typeof UserEntity => UserEntity, (user): AssignmentEntity => user.assignment, {
     cascade: false,
     eager: false,
+    nullable: false,
   })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',
     foreignKeyConstraintName: 'fk_assignment_user_id',
   })
+  @IsNotEmpty()
   user: UserEntity;
 }
