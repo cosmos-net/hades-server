@@ -1,10 +1,10 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
+import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
-import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IUserSchema } from '@user/domain/schemas/user/user.schema';
 import {
@@ -17,8 +17,8 @@ export class UserModel extends AggregateRoot {
   private readonly _entityRoot: IUserSchema;
 
   constructor(entity: IUserSchemaPrimitives);
-  constructor(uuid: string, status: StatusEnum);
-  constructor(uuidOrSchema: string | IUserSchemaPrimitives, status?: StatusEnum) {
+  constructor(uuid: string, status: UserStatusEnum);
+  constructor(uuidOrSchema: string | IUserSchemaPrimitives, status?: UserStatusEnum) {
     super();
     this._entityRoot = {} as IUserSchema;
 
@@ -38,7 +38,7 @@ export class UserModel extends AggregateRoot {
     return this._entityRoot.uuid._value;
   }
 
-  get status(): StatusEnum {
+  get status(): UserStatusEnum {
     return this._entityRoot.status._value;
   }
 
@@ -101,7 +101,7 @@ export class UserModel extends AggregateRoot {
   public create(): void {
     this._entityRoot.createdAt = new CreatedAt(new Date());
     this._entityRoot.updatedAt = new CreatedAt(new Date());
-    this._entityRoot.status = new UserStatus(StatusEnum.PENDING);
+    this._entityRoot.status = new UserStatus(UserStatusEnum.PENDING);
   }
 
   public static fromPrimitives(entity: IUserBaseSchema): UserModel {

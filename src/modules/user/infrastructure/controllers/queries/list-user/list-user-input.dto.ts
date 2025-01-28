@@ -11,13 +11,13 @@ import {
   IsEnum,
 } from 'class-validator';
 
+import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-options/input-pagination.dto';
 import {
   USER_OPTIONS_ORDER_BY_VALUE,
   USER_OPTIONS_ORDER_BY_VALUE_TYPE,
 } from '@user/application/use-cases/queries/list-user/list-user.query';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
-import { StatusEnum } from '@user/domain/enums/user-status-enum';
 
 export class ListUserInputDto extends InputPaginationDto {
   @IsOptional()
@@ -29,7 +29,7 @@ export class ListUserInputDto extends InputPaginationDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  public readonly status?: StatusEnum;
+  public readonly status?: UserStatusEnum;
 
   @IsOptional()
   @IsString()

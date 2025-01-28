@@ -1,8 +1,8 @@
 import { PrimaryGeneratedColumn, Column, OneToOne, OneToMany, Entity } from 'typeorm';
 
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
+import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
-import { StatusEnum } from '@user/domain/enums/user-status-enum';
 import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
@@ -17,10 +17,10 @@ export class UserEntity extends TypeormBaseEntity implements IUserSchemaPrimitiv
 
   @Column({
     type: 'enum',
-    enum: StatusEnum,
+    enum: UserStatusEnum,
     nullable: false,
   })
-  status: StatusEnum;
+  status: UserStatusEnum;
 
   @OneToOne((): typeof ProfileEntity => ProfileEntity, (profile): UserEntity => profile.user, {
     cascade: true,

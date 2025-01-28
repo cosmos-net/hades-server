@@ -1,14 +1,14 @@
-import { StatusEnum } from '@user/domain/enums/user-status-enum';
+import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 
 export interface IUserBaseSchema {
   uuid: string;
-  status: StatusEnum;
+  status: UserStatusEnum;
 }
 
 export interface IUserSchemaPrimitives {
   id: number;
   uuid: string;
-  status: StatusEnum;
+  status: UserStatusEnum;
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date | null;

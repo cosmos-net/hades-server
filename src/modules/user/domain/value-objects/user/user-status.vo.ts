@@ -1,12 +1,12 @@
+import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 import { EnumValueObject } from '@common/domain/value-object/types/enum-value-object';
-import { StatusEnum } from '@user/domain/enums/user-status-enum';
 
-export class UserStatus extends EnumValueObject<StatusEnum> {
-  constructor(value: StatusEnum) {
-    super(value, Object.values(StatusEnum));
+export class UserStatus extends EnumValueObject<UserStatusEnum> {
+  constructor(value: UserStatusEnum) {
+    super(value, Object.values(UserStatusEnum));
   }
 
-  protected throwErrorForInvalidValue(value: StatusEnum): void {
+  protected throwErrorForInvalidValue(value: UserStatusEnum): void {
     throw new Error(`Invalid status: ${value}`);
   }
 }
