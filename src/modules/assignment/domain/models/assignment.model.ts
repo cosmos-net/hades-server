@@ -13,8 +13,7 @@ import Title from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { RoleModel } from '@role/domain/models/role.model';
-import { IRoleSchemaPrimitives } from '@role/domain/schemas/role.schema-primitives';
-import { IUserSchemaPrimitives } from '@user/domain/schemas/user/user.schema-primitive';
+import { UserModel } from '@user/domain/models/user/user.model';
 
 export class AssignmentModel extends AggregateRoot {
   private readonly _entityRoot: IAssignmentSchema;
@@ -60,12 +59,12 @@ export class AssignmentModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
-  get user(): IUserSchemaPrimitives {
-    return this._entityRoot.user.toPrimitives();
+  get user(): UserModel {
+    return this._entityRoot.user;
   }
 
-  get role(): IRoleSchemaPrimitives {
-    return this._entityRoot.role.toPrimitives();
+  get role(): RoleModel {
+    return this._entityRoot.role;
   }
 
   public hydrate(entity: IAssignmentSchemaPrimitives): void {
