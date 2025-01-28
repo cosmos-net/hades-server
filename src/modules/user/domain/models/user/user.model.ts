@@ -5,6 +5,8 @@ import ArchivedAt from '@common/domain/value-object/vos/archived-at.vo';
 import CreatedAt from '@common/domain/value-object/vos/created-at.vo';
 import Id from '@common/domain/value-object/vos/id.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { UserArchivedEvent } from '@user/domain/events/events-success-domain/user-archived.event';
+import { UserAlreadyArchivedException } from '@user/domain/exceptions/user/user-already-archived.exception';
 import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IUserSchema } from '@user/domain/schemas/user/user.schema';
 import {
@@ -87,7 +89,17 @@ export class UserModel extends AggregateRoot {
   }
 
   public archive(): void {
+    if (this.archivedAt) {
+      throw new UserAlreadyArchivedException(
+        `User with uuid ${this.uuid} cannot be archived because it is already archived`,
+      );
+    }
+
+    this._entityRoot.status = new UserStatus(UserStatusEnum.ARCHIVED);
+    this._entityRoot.updatedAt = new CreatedAt(new Date());
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
+
+    this.apply(new UserArchivedEvent(this));
   }
 
   public destroy(): void {
