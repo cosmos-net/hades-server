@@ -2,12 +2,16 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ArchiveAssignmentByUserUseCase } from '@assignment/application/use-cases/commands/archive-assignment-by-user/archive-assignment-by-user.use-case';
+import { ArchiveAssignmentsByRoleUseCase } from '@assignment/application/use-cases/commands/archive-assignments-by-role/archive-assignments-by-role.use-case';
 import { UpdateAssignmentUseCase } from '@assignment/application/use-cases/commands/update-assignment/update-assignment.use-case';
 import { UserRoleAssignmentUseCase } from '@assignment/application/use-cases/commands/user-role-assignment/user-role-assignment.use-case';
 import {
   ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE,
   ASSIGNMENT_REPOSITORY,
 } from '@assignment/domain/constants/assignment-injection-tokens.constants';
+import { ArchiveAssignmentByUserDomainService } from '@assignment/domain/domain-services/archive-assignment-by-user.domain-service';
+import { ArchiveAssignmentsByRoleDomainService } from '@assignment/domain/domain-services/archive-assignments-by-role.domain-service';
 import { UpdateAssignmentDomainService } from '@assignment/domain/domain-services/update-assignment.domain-service';
 import { UserRoleAssignmentDomainService } from '@assignment/domain/domain-services/user-role-assignment.domain-service';
 import { UpdateAssignmentController } from '@assignment/infrastructure/controllers/commands/update-assignment/update-assignment.controller';
@@ -23,6 +27,8 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     // UseCases
     UserRoleAssignmentUseCase,
     UpdateAssignmentUseCase,
+    ArchiveAssignmentByUserUseCase,
+    ArchiveAssignmentsByRoleUseCase,
     // Domain Services && Inversion of dependencies
     UserRoleAssignmentDomainService,
     {
@@ -51,6 +57,22 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
         );
       },
       inject: [ASSIGNMENT_REPOSITORY, ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE],
+    },
+    ArchiveAssignmentByUserDomainService,
+    {
+      provide: ArchiveAssignmentByUserDomainService,
+      useFactory: (assignmentRepository): ArchiveAssignmentByUserDomainService => {
+        return new ArchiveAssignmentByUserDomainService(assignmentRepository);
+      },
+      inject: [ASSIGNMENT_REPOSITORY],
+    },
+    ArchiveAssignmentsByRoleDomainService,
+    {
+      provide: ArchiveAssignmentsByRoleDomainService,
+      useFactory: (assignmentRepository): ArchiveAssignmentsByRoleDomainService => {
+        return new ArchiveAssignmentsByRoleDomainService(assignmentRepository);
+      },
+      inject: [ASSIGNMENT_REPOSITORY],
     },
     // Repositories
     {
