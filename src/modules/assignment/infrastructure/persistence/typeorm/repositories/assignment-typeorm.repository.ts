@@ -94,7 +94,14 @@ export class AssignmentTypeormRepository
 
   public async persist(model: AssignmentModel): Promise<AssignmentModel> {
     const partialPrimitives = model.toPartialPrimitives();
-    const entity = await this.repository.save(partialPrimitives);
+    const { user, role } = model;
+
+    const entity = await this.repository.save({
+      ...partialPrimitives,
+      user,
+      role,
+    });
+
     model.hydrate(entity);
 
     return model;
