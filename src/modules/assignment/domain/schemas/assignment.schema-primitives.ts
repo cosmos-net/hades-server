@@ -14,7 +14,7 @@ export interface IAssignmentSchemaPrimitives {
   uuid: string;
   id: number;
   title: string;
-  description: string | null;
+  description?: string | null;
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date | null;
