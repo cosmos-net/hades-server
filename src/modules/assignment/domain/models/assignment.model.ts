@@ -1,5 +1,6 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
+import { AssignmentNotFoundException } from '@assignment/domain/exceptions/assignment-not-found.exception';
 import { IAssignmentSchema } from '@assignment/domain/schemas/assignment.schema';
 import {
   IAssignmentBaseSchema,
@@ -74,8 +75,13 @@ export class AssignmentModel extends AggregateRoot {
     this._entityRoot.createdAt = new CreatedAt(entity.createdAt);
     this._entityRoot.updatedAt = new UpdatedAt(entity.updatedAt);
 
-    this._entityRoot.user = new UserModel(entity.user);
-    this._entityRoot.role = new RoleModel(entity.role);
+    if (entity.user) {
+      this._entityRoot.user = new UserModel(entity.user);
+    }
+
+    if (entity.role) {
+      this._entityRoot.role = new RoleModel(entity.role);
+    }
 
     if (entity.description) this._entityRoot.description = new Description(entity.description);
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
@@ -175,8 +181,9 @@ export class AssignmentModel extends AggregateRoot {
 
   public archive(): void {
     if (this.archivedAt) {
-      //TODO: Create a custom exception
-      throw new Error('Already archived');
+      throw new AssignmentNotFoundException(
+        `Assignment with UUID ${this.uuid} is already archived`,
+      );
     }
 
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
