@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
 import { ArchiveRoleUseCase } from '@role/application/use-cases/commands/archive-role/archive-role.use-case';
 import { CreateRoleUseCase } from '@role/application/use-cases/commands/create-role/create-role.use-case';
 import { DestroyRoleUseCase } from '@role/application/use-cases/commands/destroy-role/destroy-role.use-case';
@@ -22,12 +24,13 @@ import { DestroyRoleController } from '@role/infrastructure/controllers/commands
 import { UpdateRoleController } from '@role/infrastructure/controllers/commands/update-role/update-role.controller';
 import { GetRoleController } from '@role/infrastructure/controllers/queries/get-role/get-role.controller';
 import { ListRoleController } from '@role/infrastructure/controllers/queries/list-role/list-role.controller';
+import { RoleArchivedEventHandler } from '@role/infrastructure/events-handler/success/role-archived.event-handler';
 import { RoleReDescribedEventHandler } from '@role/infrastructure/events-handler/success/role-redescribed.event-handler';
 import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/role.entity';
 import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/repositories/role-typeorm.repository';
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([RoleEntity])],
+  imports: [CqrsModule, EventEmitterModule.forRoot(), TypeOrmModule.forFeature([RoleEntity])],
   providers: [
     // UseCases
     CreateRoleUseCase,
@@ -86,8 +89,6 @@ import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/
       },
       inject: [IRoleRepositoryContract],
     },
-    // Event Handlers
-    RoleReDescribedEventHandler,
     // Repositories
     {
       provide: ROLE_REPOSITORY,
@@ -97,6 +98,11 @@ import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/
       provide: IRoleRepositoryContract,
       useClass: RoleTypeormRepository,
     },
+    // Event Handlers
+    RoleReDescribedEventHandler,
+    RoleArchivedEventHandler,
+    // Services
+    MediatorStoreService,
   ],
   controllers: [
     CreateRoleController,
