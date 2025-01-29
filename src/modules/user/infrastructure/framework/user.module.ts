@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { MediatorService } from '@common/domain/events/mediator-service';
+import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
 import { ArchiveUserUseCase } from '@user/application/use-cases/commands/archive-user/archive-user.use-case';
 import { CreateUserUseCase } from '@user/application/use-cases/commands/create-user/create-user.use-case';
 import { DestroyUserUseCase } from '@user/application/use-cases/commands/destroy-user/destroy-user.use-case';
@@ -131,7 +131,7 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     // Event Handlers
     UserArchivedEventHandler,
     // Services
-    MediatorService,
+    MediatorStoreService,
     // Repositories
     {
       provide: USER_REPOSITORY,
