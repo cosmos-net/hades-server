@@ -1,11 +1,11 @@
 import { Logger } from '@nestjs/common';
 import { IEventHandler } from '@nestjs/cqrs';
 
-import { MediatorService } from '@common/domain/events/mediator-service';
+import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
 import { UserArchivedEvent } from '@user/domain/events/events-success-domain/user-archived.event';
 
 export class UserArchivedEventHandler implements IEventHandler<UserArchivedEvent> {
-  constructor(private readonly mediatorService: MediatorService) {}
+  constructor(private readonly mediatorStoreService: MediatorStoreService) {}
 
   private readonly logger = new Logger(UserArchivedEventHandler.name);
 
@@ -15,6 +15,6 @@ export class UserArchivedEventHandler implements IEventHandler<UserArchivedEvent
     // Logic that runs when the event is triggered
     this.logger.log(`User with uuid: ${userModel.uuid} has been archived`);
 
-    await this.mediatorService.emit('user.archived', userModel);
+    await this.mediatorStoreService.publish('user.archived', userModel);
   }
 }
