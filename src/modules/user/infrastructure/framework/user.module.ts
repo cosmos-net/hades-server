@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { MediatorService } from '@common/domain/events/mediator-service';
 import { ArchiveUserUseCase } from '@user/application/use-cases/commands/archive-user/archive-user.use-case';
 import { CreateUserUseCase } from '@user/application/use-cases/commands/create-user/create-user.use-case';
 import { DestroyUserUseCase } from '@user/application/use-cases/commands/destroy-user/destroy-user.use-case';
@@ -29,6 +31,7 @@ import { DestroyUserController } from '@user/infrastructure/controllers/commands
 import { UpdateUserController } from '@user/infrastructure/controllers/commands/update-user/update-user.controller';
 import { GetUserController } from '@user/infrastructure/controllers/queries/get-user/get-user.controller';
 import { ListUserController } from '@user/infrastructure/controllers/queries/list-user/list-user.controller';
+import { UserArchivedEventHandler } from '@user/infrastructure/event-handlers/success/user-archived.event-handler';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
 import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/user.entity';
@@ -37,7 +40,11 @@ import { ProfileTypeormRepository } from '@user/infrastructure/persistence/typeo
 import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/user-typeorm.repository';
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, AccountEntity, ProfileEntity])],
+  imports: [
+    CqrsModule,
+    EventEmitterModule.forRoot(),
+    TypeOrmModule.forFeature([UserEntity, AccountEntity, ProfileEntity]),
+  ],
   providers: [
     // UseCases
     CreateUserUseCase,
@@ -122,6 +129,9 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
       inject: [USER_REPOSITORY],
     },
     // Event Handlers
+    UserArchivedEventHandler,
+    // Services
+    MediatorService,
     // Repositories
     {
       provide: USER_REPOSITORY,
