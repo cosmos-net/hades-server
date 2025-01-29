@@ -53,21 +53,6 @@ export class AssignmentTypeormRepository
     return model;
   }
 
-  public async getOneByRoleUUID(
-    roleUUID: string,
-    options?: IOptions,
-  ): Promise<AssignmentModel | null> {
-    const entity = await this.repository.findOne({
-      where: { role: { uuid: roleUUID } },
-      withDeleted: options?.withArchived ?? false,
-      relations: options?.relations,
-    });
-
-    const model = new AssignmentModel(entity);
-
-    return model;
-  }
-
   public async getOneByTitle(title: string, options?: IOptions): Promise<AssignmentModel | null> {
     const entity = await this.repository.findOne({
       where: { title },
@@ -95,6 +80,21 @@ export class AssignmentTypeormRepository
     const model = new AssignmentModel(entity);
 
     return model;
+  }
+
+  public async listByRoleUUID(roleUUID: string, options?: IOptions): Promise<ListAssignmentModel> {
+    const [items, total] = await this.repository.findAndCount({
+      where: { role: { uuid: roleUUID } },
+      withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
+    });
+
+    const listModel = new ListAssignmentModel({
+      items,
+      total,
+    });
+
+    return listModel;
   }
 
   public async persist(model: AssignmentModel): Promise<AssignmentModel> {

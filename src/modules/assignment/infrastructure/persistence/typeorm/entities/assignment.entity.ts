@@ -1,5 +1,5 @@
 import { IsNotEmpty, Length } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, Index } from 'typeorm';
 
 import { ASSIGNMENT_RULES } from '@assignment/domain/constants/assignment-rules.constant';
 import { IAssignmentSchemaPrimitives } from '@assignment/domain/schemas/assignment.schema-primitives';
@@ -46,6 +46,7 @@ export class AssignmentEntity extends TypeormBaseEntity implements IAssignmentSc
     foreignKeyConstraintName: 'fk_assignment_role_id',
   })
   @IsNotEmpty()
+  @Index()
   role: RoleEntity;
 
   @OneToOne((): typeof UserEntity => UserEntity, (user): AssignmentEntity => user.assignment, {
@@ -59,5 +60,6 @@ export class AssignmentEntity extends TypeormBaseEntity implements IAssignmentSc
     foreignKeyConstraintName: 'fk_assignment_user_id',
   })
   @IsNotEmpty()
+  @Index({ unique: true })
   user: UserEntity;
 }

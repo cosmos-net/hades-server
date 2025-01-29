@@ -8,6 +8,7 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { DeepPartial } from '@helpers/types/partials.helper';
 import { ProfileGenderEnum } from '@user/domain/constants/general-rules';
+import { ProfileArchivedEvent } from '@user/domain/events/events-success-domain/profile-archived.event';
 import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IProfileSchema } from '@user/domain/schemas/profile/profile.schema';
 import {
@@ -222,7 +223,10 @@ export class ProfileModel extends AggregateRoot {
   }
 
   public archive(): void {
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
+
+    this.apply(new ProfileArchivedEvent(this));
   }
 
   public destroy(): void {

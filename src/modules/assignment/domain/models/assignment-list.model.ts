@@ -19,6 +19,10 @@ export class ListAssignmentModel {
     return this.items.map((assignment): IAssignmentSchemaPrimitives => assignment.toPrimitives());
   }
 
+  public get getItemsModel(): AssignmentModel[] {
+    return this.items;
+  }
+
   public get getTotal(): number {
     return this.total;
   }

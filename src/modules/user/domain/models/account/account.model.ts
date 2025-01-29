@@ -8,6 +8,7 @@ import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { ListSessionModel } from '@session/domain/models/session-list.model';
 import { SessionModel } from '@session/domain/models/session.model';
+import { AccountArchivedEvent } from '@user/domain/events/events-success-domain/account-archived.event';
 import { AccountConfirmationPasswordException } from '@user/domain/exceptions/account/account-confirmation-password.exception';
 import { UserNotArchivedException } from '@user/domain/exceptions/user/user-not-archived.exception';
 import { IAccountSchema } from '@user/domain/schemas/account/account.schema';
@@ -147,9 +148,13 @@ export class AccountModel extends AggregateRoot {
 
   public archive(): void {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
     if (this._entityRoot.sessions?.getTotal > 0) {
       this._entityRoot.sessions.archiveSessions();
     }
+
+    this.apply(new AccountArchivedEvent(this));
   }
 
   public destroy(): void {
