@@ -95,6 +95,12 @@ export class UserModel extends AggregateRoot {
       );
     }
 
+    if (this.status === UserStatusEnum.ARCHIVED) {
+      throw new UserAlreadyArchivedException(
+        `User with uuid ${this.uuid} cannot be archived because it is already archived`,
+      );
+    }
+
     this._entityRoot.status = new UserStatus(UserStatusEnum.ARCHIVED);
     this._entityRoot.updatedAt = new CreatedAt(new Date());
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
