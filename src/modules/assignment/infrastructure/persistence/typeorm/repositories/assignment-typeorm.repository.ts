@@ -29,6 +29,10 @@ export class AssignmentTypeormRepository
       relations: options?.relations,
     });
 
+    if (!entity) {
+      return null;
+    }
+
     const model = new AssignmentModel(entity);
 
     return model;
@@ -125,8 +129,8 @@ export class AssignmentTypeormRepository
     return listModel;
   }
 
-  public async destroy(UUID: string): Promise<boolean> {
-    const result = await this.repository.delete({ uuid: UUID });
+  public async destroy(uuid: string): Promise<boolean> {
+    const result = await this.repository.delete({ uuid });
 
     return result.affected === 1;
   }

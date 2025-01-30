@@ -1,5 +1,6 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
+import { AssignmentMustBeArchivedException } from '@assignment/domain/exceptions/assignment-must-be-archived.exception';
 import { AssignmentNotFoundException } from '@assignment/domain/exceptions/assignment-not-found.exception';
 import { IAssignmentSchema } from '@assignment/domain/schemas/assignment.schema';
 import {
@@ -204,13 +205,14 @@ export class AssignmentModel extends AggregateRoot {
     // this.apply(new AssignmentRestoredEvent(this.toPrimitives()));
   }
 
-  public delete(): void {
+  public destroy(): void {
     if (!this.archivedAt) {
-      //TODO: Create a custom exception
-      throw new Error(`To delete, the assignment must be archived`);
+      throw new AssignmentMustBeArchivedException(
+        `This UUID ${this.uuid} assignment must be archived to be destroyed`,
+      );
     }
-
-    // this.apply(new AssignmentDeletedEvent(this.toPrimitives()));
+    // TO DO: Create domain event [Pending]
+    // --> this.apply(new AssignmentDestroyEvent(uuid, name, new Date()));
   }
 
   reAssignRole(role: RoleModel): void {
