@@ -130,9 +130,11 @@ export class RoleModel extends AggregateRoot {
     }
   }
 
-  public archive(uuid: string, name: string): void {
+  public archive(): void {
     this._entityRoot.archivedAt = new ArchivedAt(new Date());
-    this.apply(new RoleArchivedEvent(uuid, name, this.archivedAt));
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new RoleArchivedEvent(this));
   }
 
   public destroy(uuid: string, name: string): void {

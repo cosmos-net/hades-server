@@ -16,7 +16,7 @@ export class ArchiveRoleDomainService {
       throw new RoleNotFoundException(`Role with uuid ${uuid} is already archived`);
     }
 
-    roleModel.archive(roleModel.uuid, roleModel.name);
+    roleModel.archive();
 
     return roleModel;
   }

@@ -21,12 +21,21 @@ export class ArchiveUserUseCase implements ICommandHandler<ArchiveUserCommand> {
     const { uuid } = command;
 
     const userAggregate = await this.archiveUserDomainService.go(uuid);
-    const userContext = this.publisher.mergeObjectContext(userAggregate);
+    const { userModel, accountsModel, profileModel } = userAggregate;
+
+    const aggregateContext = this.publisher.mergeObjectContext(userAggregate);
+
+    this.publisher.mergeObjectContext(userModel);
+    this.publisher.mergeObjectContext(profileModel);
+
+    for (const accountModel of accountsModel) {
+      this.publisher.mergeObjectContext(accountModel);
+    }
 
     await this.repository.persist(userAggregate);
 
-    userContext.commit();
+    aggregateContext.commit();
 
-    return userContext;
+    return aggregateContext;
   }
 }

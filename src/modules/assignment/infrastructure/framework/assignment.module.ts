@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ArchiveAssignmentUseCase } from '@assignment/application/use-cases/commands/archive-assignment/archive-assignment.use-case';
@@ -19,13 +20,20 @@ import { UserRoleAssignmentDomainService } from '@assignment/domain/domain-servi
 import { ArchiveAssignmentController } from '@assignment/infrastructure/controllers/commands/archive-assignment/archive-assignment.controller';
 import { UpdateAssignmentController } from '@assignment/infrastructure/controllers/commands/update-assignment/update-assignment.controller';
 import { UserRoleAssignmentController } from '@assignment/infrastructure/controllers/commands/user-role-assignment/user-role-assignment.controller';
+import { ArchiveAssignmentsHandler } from '@assignment/infrastructure/event-handlers/archive-assignments.handler';
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { AssignmentTypeormRepository } from '@assignment/infrastructure/persistence/typeorm/repositories/assignment-typeorm.repository';
 import { AssignmentOrchestratorConsumerService } from '@assignment/infrastructure/services/assignment-orchestrator-consumer/assignment-orchestrator-consumer.service';
+import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
 
 @Module({
-  imports: [CqrsModule, SharedModule, TypeOrmModule.forFeature([AssignmentEntity])],
+  imports: [
+    CqrsModule,
+    SharedModule,
+    TypeOrmModule.forFeature([AssignmentEntity]),
+    EventEmitterModule.forRoot(),
+  ],
   providers: [
     // UseCases
     UserRoleAssignmentUseCase,
@@ -103,6 +111,9 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       useClass: AssignmentOrchestratorConsumerService,
     },
     // Event Handlers
+    ArchiveAssignmentsHandler,
+    // Services
+    MediatorStoreService,
   ],
   controllers: [
     UserRoleAssignmentController,
