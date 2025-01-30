@@ -6,8 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArchiveAssignmentUseCase } from '@assignment/application/use-cases/commands/archive-assignment/archive-assignment.use-case';
 import { ArchiveAssignmentByUserUseCase } from '@assignment/application/use-cases/commands/archive-assignment-by-user/archive-assignment-by-user.use-case';
 import { ArchiveAssignmentsByRoleUseCase } from '@assignment/application/use-cases/commands/archive-assignments-by-role/archive-assignments-by-role.use-case';
+import { DestroyAssignmentUseCase } from '@assignment/application/use-cases/commands/destroy-assignment/destroy-assignment.use-case';
 import { UpdateAssignmentUseCase } from '@assignment/application/use-cases/commands/update-assignment/update-assignment.use-case';
 import { UserRoleAssignmentUseCase } from '@assignment/application/use-cases/commands/user-role-assignment/user-role-assignment.use-case';
+import { GetAssignmentUseCase } from '@assignment/application/use-cases/queries/get-assignment/get-assignment.use-case';
 import {
   ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE,
   ASSIGNMENT_REPOSITORY,
@@ -15,11 +17,15 @@ import {
 import { ArchiveAssignmentByUserDomainService } from '@assignment/domain/domain-services/archive-assignment-by-user.domain-service';
 import { ArchiveAssignmentDomainService } from '@assignment/domain/domain-services/archive-assignment.domain-service';
 import { ArchiveAssignmentsByRoleDomainService } from '@assignment/domain/domain-services/archive-assignments-by-role.domain-service';
+import { DestroyAssignmentDomainService } from '@assignment/domain/domain-services/destroy-assignment.domain-service';
+import { GetAssignmentDomainService } from '@assignment/domain/domain-services/get-assignment.domain-service';
 import { UpdateAssignmentDomainService } from '@assignment/domain/domain-services/update-assignment.domain-service';
 import { UserRoleAssignmentDomainService } from '@assignment/domain/domain-services/user-role-assignment.domain-service';
 import { ArchiveAssignmentController } from '@assignment/infrastructure/controllers/commands/archive-assignment/archive-assignment.controller';
+import { DestroyAssignmentController } from '@assignment/infrastructure/controllers/commands/destroy-assignment/destroy-assignment.controller';
 import { UpdateAssignmentController } from '@assignment/infrastructure/controllers/commands/update-assignment/update-assignment.controller';
 import { UserRoleAssignmentController } from '@assignment/infrastructure/controllers/commands/user-role-assignment/user-role-assignment.controller';
+import { GetAssignmentController } from '@assignment/infrastructure/controllers/queries/get-assignment/get-assignment.controller';
 import { ArchiveAssignmentsHandler } from '@assignment/infrastructure/event-handlers/archive-assignments.handler';
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { AssignmentTypeormRepository } from '@assignment/infrastructure/persistence/typeorm/repositories/assignment-typeorm.repository';
@@ -41,6 +47,10 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     ArchiveAssignmentByUserUseCase,
     ArchiveAssignmentsByRoleUseCase,
     ArchiveAssignmentUseCase,
+    DestroyAssignmentUseCase,
+
+    GetAssignmentUseCase,
+
     // Domain Services && Inversion of dependencies
     UserRoleAssignmentDomainService,
     {
@@ -94,10 +104,19 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       },
       inject: [ASSIGNMENT_REPOSITORY],
     },
+    DestroyAssignmentDomainService,
     {
-      provide: ArchiveAssignmentsByRoleDomainService,
-      useFactory: (assignmentRepository): ArchiveAssignmentsByRoleDomainService => {
-        return new ArchiveAssignmentsByRoleDomainService(assignmentRepository);
+      provide: DestroyAssignmentDomainService,
+      useFactory: (assignmentRepository): DestroyAssignmentDomainService => {
+        return new DestroyAssignmentDomainService(assignmentRepository);
+      },
+      inject: [ASSIGNMENT_REPOSITORY],
+    },
+    GetAssignmentDomainService,
+    {
+      provide: GetAssignmentDomainService,
+      useFactory: (assignmentRepository): GetAssignmentDomainService => {
+        return new GetAssignmentDomainService(assignmentRepository);
       },
       inject: [ASSIGNMENT_REPOSITORY],
     },
@@ -119,6 +138,8 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     UserRoleAssignmentController,
     UpdateAssignmentController,
     ArchiveAssignmentController,
+    DestroyAssignmentController,
+    GetAssignmentController,
   ],
   exports: [],
 })
