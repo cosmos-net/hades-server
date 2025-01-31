@@ -1,10 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
 import { UserArchivedEvent } from '@user/domain/events/events-success-domain/user-archived.event';
 
-@Injectable()
 @EventsHandler(UserArchivedEvent)
 export class UserArchivedEventHandler implements IEventHandler<UserArchivedEvent> {
   constructor(private readonly mediatorStoreService: MediatorStoreService) {}

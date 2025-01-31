@@ -7,6 +7,7 @@ import { ListRoleQuery } from '@role/application/use-cases/queries/list-role/lis
 import { ListRoleModel } from '@role/domain/models/role-list.model';
 import { ListRoleInputDto } from '@role/infrastructure/controllers/queries/list-role/list-role-input.dto';
 import { ListRoleOutputDto } from '@role/infrastructure/controllers/queries/list-role/list-role-output.dto';
+import { ListRoleFilter } from '@role/infrastructure/controllers/queries/list-role/list-role.filter-dto';
 
 @Controller()
 export class ListRoleController {
@@ -16,7 +17,7 @@ export class ListRoleController {
   async list(@Payload() listRoleDto: ListRoleInputDto): Promise<ListRoleOutputDto> {
     try {
       const { orderType, orderBy, page, limit, offset, withArchived } = listRoleDto;
-      const filtersMap = listRoleDto.toFilterMap();
+      const filtersMap = ListRoleFilter.toFilterMap(listRoleDto);
 
       const result = await this.queryBus.execute<ListRoleQuery, ListRoleModel>(
         new ListRoleQuery({
