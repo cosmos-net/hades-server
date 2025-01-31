@@ -10,6 +10,7 @@ import { DestroyAssignmentUseCase } from '@assignment/application/use-cases/comm
 import { UpdateAssignmentUseCase } from '@assignment/application/use-cases/commands/update-assignment/update-assignment.use-case';
 import { UserRoleAssignmentUseCase } from '@assignment/application/use-cases/commands/user-role-assignment/user-role-assignment.use-case';
 import { GetAssignmentUseCase } from '@assignment/application/use-cases/queries/get-assignment/get-assignment.use-case';
+import { ListAssignmentUseCase } from '@assignment/application/use-cases/queries/list-assignment/list-assignment.use-case';
 import {
   ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE,
   ASSIGNMENT_REPOSITORY,
@@ -19,6 +20,7 @@ import { ArchiveAssignmentDomainService } from '@assignment/domain/domain-servic
 import { ArchiveAssignmentsByRoleDomainService } from '@assignment/domain/domain-services/archive-assignments-by-role.domain-service';
 import { DestroyAssignmentDomainService } from '@assignment/domain/domain-services/destroy-assignment.domain-service';
 import { GetAssignmentDomainService } from '@assignment/domain/domain-services/get-assignment.domain-service';
+import { ListAssignmentDomainService } from '@assignment/domain/domain-services/list-assignment.domain-service';
 import { UpdateAssignmentDomainService } from '@assignment/domain/domain-services/update-assignment.domain-service';
 import { UserRoleAssignmentDomainService } from '@assignment/domain/domain-services/user-role-assignment.domain-service';
 import { ArchiveAssignmentController } from '@assignment/infrastructure/controllers/commands/archive-assignment/archive-assignment.controller';
@@ -26,6 +28,7 @@ import { DestroyAssignmentController } from '@assignment/infrastructure/controll
 import { UpdateAssignmentController } from '@assignment/infrastructure/controllers/commands/update-assignment/update-assignment.controller';
 import { UserRoleAssignmentController } from '@assignment/infrastructure/controllers/commands/user-role-assignment/user-role-assignment.controller';
 import { GetAssignmentController } from '@assignment/infrastructure/controllers/queries/get-assignment/get-assignment.controller';
+import { ListAssignmentController } from '@assignment/infrastructure/controllers/queries/list-assignment/list-assignment.controller';
 import { ArchiveAssignmentsHandler } from '@assignment/infrastructure/event-handlers/archive-assignments.handler';
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { AssignmentTypeormRepository } from '@assignment/infrastructure/persistence/typeorm/repositories/assignment-typeorm.repository';
@@ -48,8 +51,8 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     ArchiveAssignmentsByRoleUseCase,
     ArchiveAssignmentUseCase,
     DestroyAssignmentUseCase,
-
     GetAssignmentUseCase,
+    ListAssignmentUseCase,
 
     // Domain Services && Inversion of dependencies
     UserRoleAssignmentDomainService,
@@ -120,6 +123,14 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       },
       inject: [ASSIGNMENT_REPOSITORY],
     },
+    ListAssignmentDomainService,
+    {
+      provide: ListAssignmentDomainService,
+      useFactory: (assignmentRepository): ListAssignmentDomainService => {
+        return new ListAssignmentDomainService(assignmentRepository);
+      },
+      inject: [ASSIGNMENT_REPOSITORY],
+    },
     // Repositories
     {
       provide: ASSIGNMENT_REPOSITORY,
@@ -140,6 +151,7 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     ArchiveAssignmentController,
     DestroyAssignmentController,
     GetAssignmentController,
+    ListAssignmentController,
   ],
   exports: [],
 })
