@@ -13,7 +13,7 @@ export class MediatorStoreService implements IMediatorStoreService {
     return response;
   }
 
-  subscribe<T>(eventName: string, handler: (payload: T) => void): void {
-    this.eventEmitter.on(eventName, handler);
+  subscribe<T>(eventName: string, event: (payload: T) => void): void {
+    this.eventEmitter.on(eventName, event);
   }
 }
