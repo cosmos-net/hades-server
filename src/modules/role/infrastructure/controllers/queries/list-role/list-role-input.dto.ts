@@ -10,9 +10,6 @@ import {
   ValidateIf,
 } from 'class-validator';
 
-import { OperatorsEnum } from '@common/domain/criteria/operators-enum';
-import { PrimitivesType } from '@common/domain/value-object/types/value-object';
-import { IKeysFilterMap } from '@common/infrastructure/dtos/filter-map/keys-filter-map';
 import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-options/input-pagination.dto';
 
 export const ORDER_BY_VALUES = [
@@ -91,86 +88,4 @@ export class ListRoleInputDto extends InputPaginationDto {
   @IsOptional()
   @IsNotEmpty()
   public readonly archivedAtTo?: string;
-
-  public toFilterMap(): Array<Map<string, PrimitivesType>> {
-    const filtersMapper: IKeysFilterMap[] = [];
-
-    if (this.name) {
-      const map: IKeysFilterMap = {
-        field: 'name',
-        value: this.name,
-        operator: OperatorsEnum.LIKE,
-      };
-
-      filtersMapper.push(map);
-    }
-
-    if (this.description) {
-      const map: IKeysFilterMap = {
-        field: 'description',
-        value: this.description,
-        operator: OperatorsEnum.LIKE,
-      };
-
-      filtersMapper.push(map);
-    }
-
-    if (this.createdAtFrom && this.createdAtTo) {
-      const mapCreatedAtFrom: IKeysFilterMap = {
-        field: 'createdAt',
-        value: this.createdAtFrom,
-        operator: OperatorsEnum.GTE,
-      };
-
-      filtersMapper.push(mapCreatedAtFrom);
-
-      const mapCreatedAtTo: IKeysFilterMap = {
-        field: 'createdAt',
-        value: this.createdAtTo,
-        operator: OperatorsEnum.LTE,
-      };
-
-      filtersMapper.push(mapCreatedAtTo);
-    }
-
-    if (this.updatedAtFrom && this.updatedAtTo) {
-      const mapUpdatedAtFrom: IKeysFilterMap = {
-        field: 'updatedAt',
-        value: this.updatedAtFrom,
-        operator: OperatorsEnum.GTE,
-      };
-
-      filtersMapper.push(mapUpdatedAtFrom);
-
-      const mapUpdatedAtTo: IKeysFilterMap = {
-        field: 'updatedAt',
-        value: this.updatedAtTo,
-        operator: OperatorsEnum.LTE,
-      };
-
-      filtersMapper.push(mapUpdatedAtTo);
-    }
-
-    if (this.archivedAtFrom && this.archivedAtTo) {
-      const mapArchivedAtFrom: IKeysFilterMap = {
-        field: 'archivedAt',
-        value: this.archivedAtFrom,
-        operator: OperatorsEnum.GTE,
-      };
-
-      filtersMapper.push(mapArchivedAtFrom);
-
-      const mapArchivedAtTo: IKeysFilterMap = {
-        field: 'archivedAt',
-        value: this.archivedAtTo,
-        operator: OperatorsEnum.LTE,
-      };
-
-      filtersMapper.push(mapArchivedAtTo);
-    }
-
-    return filtersMapper.map(
-      (filter): Map<string, PrimitivesType> => new Map(Object.entries(filter)),
-    );
-  }
 }
