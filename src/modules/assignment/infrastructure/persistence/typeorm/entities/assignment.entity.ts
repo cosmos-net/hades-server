@@ -35,6 +35,12 @@ export class AssignmentEntity extends TypeormBaseEntity implements IAssignmentSc
   @Length(ASSIGNMENT_RULES.DESCRIPTION.MIN_LENGTH, ASSIGNMENT_RULES.DESCRIPTION.MAX_LENGTH)
   description?: string | null;
 
+  @Column({
+    name: 'role_id',
+    type: 'int',
+  })
+  roleId: number;
+
   @OneToOne((): typeof RoleEntity => RoleEntity, (role): AssignmentEntity => role.assignment, {
     cascade: false,
     eager: false,
@@ -48,6 +54,12 @@ export class AssignmentEntity extends TypeormBaseEntity implements IAssignmentSc
   @IsNotEmpty()
   @Index()
   role: RoleEntity;
+
+  @Column({
+    name: 'user_id',
+    type: 'int',
+  })
+  userId: number;
 
   @OneToOne((): typeof UserEntity => UserEntity, (user): AssignmentEntity => user.assignment, {
     cascade: false,
