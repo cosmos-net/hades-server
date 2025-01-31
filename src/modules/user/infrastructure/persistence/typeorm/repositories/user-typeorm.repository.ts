@@ -31,6 +31,7 @@ export class UserTypeormRepository
 
   createSelectQueryBuilder(): SelectQueryBuilder<UserEntity> {
     const selectQueryBuilder = this.repository.createQueryBuilder('user');
+
     selectQueryBuilder.leftJoinAndSelect('user.profile', 'profile');
     selectQueryBuilder.leftJoinAndSelect('user.accounts', 'accounts');
 
