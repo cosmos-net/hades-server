@@ -3,12 +3,13 @@ import { AssignmentNotFoundException } from '@assignment/domain/exceptions/assig
 import { AssignmentModel } from '@assignment/domain/models/assignment.model';
 
 export class ArchiveAssignmentsByRoleDomainService {
+  private success: AssignmentModel[] | null = null;
+  private failed: AssignmentModel[] | null = null;
   constructor(private readonly repository: IAssignmentRepositoryContract) {}
 
-  async go(roleUUID: string): Promise<{ success: AssignmentModel[]; failed: AssignmentModel[] }> {
-    const success: AssignmentModel[] | null = null;
-    const failed: AssignmentModel[] | null = null;
-
+  async go(
+    roleUUID: string,
+  ): Promise<{ success: AssignmentModel[] | null; failed: AssignmentModel[] | null }> {
     const listAssignmentModels = await this.repository.listByRoleUUID(roleUUID, {
       withArchived: true,
       relations: {
@@ -25,17 +26,20 @@ export class ArchiveAssignmentsByRoleDomainService {
     }
 
     items.forEach((assignmentModel): void => {
+      this.success = [];
+      this.failed = [];
+
       if (assignmentModel.archivedAt) {
-        failed.push(assignmentModel);
+        this.failed.push(assignmentModel);
       } else {
-        success.push(assignmentModel);
+        this.success.push(assignmentModel);
         assignmentModel.archive();
       }
     });
 
     return {
-      success,
-      failed,
+      success: this.success,
+      failed: this.failed,
     };
   }
 }

@@ -3,6 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 
 import { ArchiveAssignmentByUserCommand } from '@assignment/application/use-cases/commands/archive-assignment-by-user/archive-assignment-by-user.command';
 import { ArchiveAssignmentsByRoleCommand } from '@assignment/application/use-cases/commands/archive-assignments-by-role/archive-assignments-by-role.command';
+import { AssignmentModel } from '@assignment/domain/models/assignment.model';
 import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
 import { RoleModel } from '@role/domain/models/role.model';
 import { UserModel } from '@user/domain/models/user/user.model';
@@ -37,13 +38,22 @@ export class ArchiveAssignmentsHandler implements OnModuleInit {
       async (roleModel): Promise<void> => {
         this.logger.log(`Archiving assignments for role: ${roleModel.uuid}`);
 
-        const result = await this.commandBus.execute(
+        const result = await this.commandBus.execute<
+          ArchiveAssignmentsByRoleCommand,
+          { success: AssignmentModel[] | null; failed: AssignmentModel[] | null }
+        >(
           new ArchiveAssignmentsByRoleCommand({
             roleUUID: roleModel.uuid,
           }),
         );
 
-        this.logger.log(`Archived ${result.length} assignments for role: ${roleModel.uuid}`);
+        this.logger.log(
+          `Successfully archived ${result.success.length} assignments for role: ${roleModel.uuid}`,
+        );
+
+        this.logger.log(
+          `Failed to archive ${result.failed.length} assignments for role: ${roleModel.uuid}`,
+        );
       },
     );
   }
