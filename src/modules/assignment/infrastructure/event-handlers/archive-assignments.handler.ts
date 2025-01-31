@@ -23,13 +23,18 @@ export class ArchiveAssignmentsHandler implements OnModuleInit {
       async (userModel): Promise<void> => {
         this.logger.log(`Archiving assignments for user: ${userModel.uuid}`);
 
-        const result = await this.commandBus.execute(
+        const result = await this.commandBus.execute<
+          ArchiveAssignmentByUserCommand,
+          AssignmentModel
+        >(
           new ArchiveAssignmentByUserCommand({
             userUUID: userModel.uuid,
           }),
         );
 
-        this.logger.log(`Archived ${result.length} assignments for user: ${userModel.uuid}`);
+        this.logger.log(
+          `Successfully archived assignment ${result.uuid} for user: ${userModel.uuid}`,
+        );
       },
     );
 

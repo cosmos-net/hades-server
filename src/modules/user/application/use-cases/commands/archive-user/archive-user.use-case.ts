@@ -35,6 +35,9 @@ export class ArchiveUserUseCase implements ICommandHandler<ArchiveUserCommand> {
     await this.repository.persist(userAggregate);
 
     aggregateContext.commit();
+    userModel.commit();
+    profileModel.commit();
+    accountsModel.forEach((accountModel): void => accountModel.commit());
 
     return aggregateContext;
   }
