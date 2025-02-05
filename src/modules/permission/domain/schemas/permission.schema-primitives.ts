@@ -1,6 +1,6 @@
 export interface IPermissionBaseSchema {
   uuid: string;
-  description: string | null;
+  description?: string | null;
   action: {
     id: string;
     name: string;
@@ -19,7 +19,6 @@ export interface IPermissionSchemaPrimitives {
   uuid: string;
   id: number;
   title: string;
-  description?: string | null;
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date | null;
@@ -35,6 +34,13 @@ export interface IPermissionSchemaPrimitives {
     id: string;
     name: string;
   };
+}
+
+export interface IPermissionSchemaPrimitivesWithoutChildren
+  extends Omit<IPermissionSchemaPrimitives, 'action' | 'module' | 'submodule'> {
+  actionId: string;
+  moduleId: string;
+  submoduleId?: string | null;
 }
 
 export interface IListPermissionSchemaPrimitives {
