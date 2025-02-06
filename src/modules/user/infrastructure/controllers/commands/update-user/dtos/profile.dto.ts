@@ -56,6 +56,6 @@ export class ProfileDTO {
   @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => AddressDTO)
+  @Type((): typeof AddressDTO => AddressDTO)
   public readonly address?: AddressDTO;
 }
