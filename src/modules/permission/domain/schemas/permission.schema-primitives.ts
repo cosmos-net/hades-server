@@ -9,7 +9,7 @@ export interface IPermissionBaseSchema {
     id: string;
     name: string;
   };
-  submodule: {
+  submodule?: {
     id: string;
     name: string;
   };
