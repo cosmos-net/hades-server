@@ -44,7 +44,46 @@ export class PermissionTypeormRepository
       ...entity,
       action,
       module,
-      submodule,
+      ...(submodule.id ? { submodule } : {}),
+    });
+
+    return model;
+  }
+
+  public async getOneByCombination(
+    actionId: string,
+    moduleId: string,
+    submoduleId: string,
+    options?: IOptions,
+  ): Promise<PermissionModel> {
+    const entity = await this.repository.findOne({
+      where: { actionId, moduleId, submoduleId },
+      withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
+    });
+
+    if (!entity) {
+      return null;
+    }
+
+    const {
+      title,
+      actionId: actionIdEntity,
+      moduleId: modelIdEntity,
+      submoduleId: subModelIdEntity,
+    } = entity;
+
+    const [actionName, moduleName, submoduleName] = title.split('-');
+
+    const action = { id: actionIdEntity, name: actionName };
+    const module = { id: modelIdEntity, name: moduleName };
+    const submodule = { id: subModelIdEntity, name: submoduleName };
+
+    const model = new PermissionModel({
+      ...entity,
+      action,
+      module,
+      ...(submodule.id ? { submodule } : {}),
     });
 
     return model;
@@ -73,7 +112,7 @@ export class PermissionTypeormRepository
       ...entity,
       action,
       module,
-      submodule,
+      ...(submodule.id ? { submodule } : {}),
     });
 
     return model;

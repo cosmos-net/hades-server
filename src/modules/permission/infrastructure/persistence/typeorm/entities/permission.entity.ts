@@ -51,7 +51,7 @@ export class PermissionEntity
   moduleId: string;
 
   @Column({
-    name: 'module_id',
+    name: 'submodule_id',
     type: 'varchar',
     nullable: true,
   })
