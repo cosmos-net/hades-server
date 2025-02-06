@@ -15,25 +15,12 @@ export interface IPermissionBaseSchema {
   };
 }
 
-export interface IPermissionSchemaPrimitives {
-  uuid: string;
+export interface IPermissionSchemaPrimitives extends IPermissionBaseSchema {
   id: number;
   title: string;
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date | null;
-  action: {
-    id: string;
-    name: string;
-  };
-  module: {
-    id: string;
-    name: string;
-  };
-  submodule: {
-    id: string;
-    name: string;
-  };
 }
 
 export interface IPermissionSchemaPrimitivesWithoutChildren

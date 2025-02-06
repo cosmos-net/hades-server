@@ -6,6 +6,12 @@ import { PermissionModel } from '@permission/domain/models/permission.model';
 export abstract class IPermissionRepositoryContract {
   abstract persist(permission: PermissionModel): Promise<PermissionModel>;
   abstract getOneBy(UUID: string, options?: IOptions): Promise<PermissionModel>;
+  abstract getOneByCombination(
+    actionId: string,
+    moduleId: string,
+    submoduleId: string,
+    options?: IOptions,
+  ): Promise<PermissionModel>;
   abstract destroy(UUID: string): Promise<boolean>;
   abstract matching(criteria: Criteria): Promise<ListPermissionModel>;
 }
