@@ -40,6 +40,7 @@ export class PermissionEntity
     name: 'action_id',
     type: 'varchar',
     nullable: false,
+    unique: true,
   })
   actionId: string;
 

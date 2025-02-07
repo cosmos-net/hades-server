@@ -7,6 +7,15 @@ import Id from '@common/domain/value-object/vos/id.vo';
 import Title from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { PermissionArchivedEvent } from '@permission/domain/events/permission-archived.event';
+import { PermissionCreatedEvent } from '@permission/domain/events/permission-created.event';
+import { PermissionDescriptionRedescribedEvent } from '@permission/domain/events/permission-description-redescribed.event';
+import { PermissionModuleReplacedEvent } from '@permission/domain/events/permission-module-replaced.event';
+import { PermissionRestoredEvent } from '@permission/domain/events/permission-restored.event';
+import { PermissionSubmoduleReplacedEvent } from '@permission/domain/events/permission-submodule-replaced.event';
+import { PermissionAlreadyIsArchived } from '@permission/domain/exceptions/permission-already-is-archived';
+import { PermissionAlreadyNotArchived } from '@permission/domain/exceptions/permission-already-not-archived';
+import { PermissionValueIsSameException } from '@permission/domain/exceptions/permission-value-is-same.exception';
 import { IPermissionSchema } from '@permission/domain/schemas/permission.schema';
 import {
   IPermissionBaseSchema,
@@ -143,13 +152,79 @@ export class PermissionModel extends AggregateRoot {
     return new PermissionModel(entity);
   }
 
-  public create(): void {}
+  public create(): void {
+    this._entityRoot.createdAt = new CreatedAt(new Date());
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
 
-  public redescribe(): void {}
+    this.apply(new PermissionCreatedEvent(this));
+  }
 
-  public archive(): void {}
+  public redescribe({ description }: { description?: string }): void {
+    if (description) {
+      const isDescriptionChanged = this.description !== description;
 
-  public restore(): void {}
+      if (!isDescriptionChanged) {
+        throw new PermissionValueIsSameException('Description is the same');
+      }
 
-  public destroy(): void {}
+      this._entityRoot.description = new Description(description);
+      this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+      this.apply(new PermissionDescriptionRedescribedEvent(this));
+    }
+  }
+
+  public archive(): void {
+    if (this.archivedAt) {
+      throw new PermissionAlreadyIsArchived('Permission is already archived');
+    }
+
+    this._entityRoot.archivedAt = new ArchivedAt(new Date());
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new PermissionArchivedEvent(this));
+  }
+
+  public restore(): void {
+    if (!this.archivedAt) {
+      throw new PermissionAlreadyNotArchived('Permission is not archived');
+    }
+
+    this._entityRoot.archivedAt = undefined;
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new PermissionRestoredEvent(this));
+  }
+
+  public destroy(): void {
+    this.apply(new PermissionArchivedEvent(this));
+  }
+
+  public replaceModule(module: Module, submodule?: Submodule): void {
+    const isSubmoduleChanged = this.submodule?.id !== submodule?.id;
+    const isSameModule = this.module.id === module.id;
+    const isNothingChanged = !isSubmoduleChanged && isSameModule;
+
+    if (isNothingChanged) {
+      throw new PermissionValueIsSameException('Module is the same');
+    }
+
+    this._entityRoot.module = module;
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new PermissionModuleReplacedEvent(this));
+  }
+
+  public replaceSubmodule(submodule: Submodule): void {
+    const isSubmoduleChanged = this.submodule?.id !== submodule.id;
+
+    if (!isSubmoduleChanged) {
+      throw new PermissionValueIsSameException(`Submodule is the same`);
+    }
+
+    this._entityRoot.submodule = submodule;
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    this.apply(new PermissionSubmoduleReplacedEvent(this));
+  }
 }
