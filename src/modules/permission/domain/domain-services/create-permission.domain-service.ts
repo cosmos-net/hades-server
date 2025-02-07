@@ -11,14 +11,9 @@ export class CreatePermissionDomainService {
   async createPermission(permissionBaseSchema: IPermissionBaseSchema): Promise<PermissionModel> {
     const { action, module, submodule } = permissionBaseSchema;
 
-    const permissionModelExists = await this.permissionRepository.getOneByCombination(
-      action.id,
-      undefined,
-      undefined,
-      {
-        withArchived: true,
-      },
-    );
+    const permissionModelExists = await this.permissionRepository.getOneBy(action.id, {
+      withArchived: true,
+    });
 
     if (permissionModelExists) {
       if (permissionModelExists.archive) {
