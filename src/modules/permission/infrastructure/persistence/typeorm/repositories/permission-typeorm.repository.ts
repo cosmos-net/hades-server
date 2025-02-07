@@ -52,12 +52,16 @@ export class PermissionTypeormRepository
 
   public async getOneByCombination(
     actionId: string,
-    moduleId: string,
-    submoduleId: string,
+    moduleId?: string,
+    submoduleId?: string,
     options?: IOptions,
   ): Promise<PermissionModel> {
     const entity = await this.repository.findOne({
-      where: { actionId, moduleId, submoduleId },
+      where: {
+        actionId: actionId,
+        ...(moduleId && { moduleId }),
+        ...(submoduleId && { submoduleId }),
+      },
       withDeleted: options?.withArchived ?? false,
       relations: options?.relations,
     });
