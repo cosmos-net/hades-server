@@ -145,11 +145,53 @@ export class PermissionModel extends AggregateRoot {
 
   public create(): void {}
 
-  public redescribe(): void {}
+  public redescribe({ description }: { description?: string }): void {
+    if (description) {
+      const isDescriptionChanged = this.description !== description;
+
+      if (!isDescriptionChanged) {
+        //TODO: Create a custom exception
+        throw new Error('Description is the same');
+      }
+
+      this._entityRoot.description = new Description(description);
+      this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+      // this.apply(new AssignmentDescriptionRedescribedEvent(this.toPrimitives()));
+    }
+  }
 
   public archive(): void {}
 
   public restore(): void {}
 
   public destroy(): void {}
+
+  public replaceModule(module: Module, submodule?: Submodule): void {
+    const isSubmoduleChanged = this.submodule?.id !== submodule?.id;
+    const isSameModule = this.module.id === module.id;
+    const isNothingChanged = !isSubmoduleChanged && isSameModule;
+
+    if (isNothingChanged) {
+      throw new Error('Module is the same');
+    }
+
+    this._entityRoot.module = module;
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    // this.apply(new PermissionModuleReplacedEvent(this.toPrimitives()));
+  }
+
+  public replaceSubmodule(submodule: Submodule): void {
+    const isSubmoduleChanged = this.submodule?.id !== submodule.id;
+
+    if (!isSubmoduleChanged) {
+      throw new Error('Submodule is the same');
+    }
+
+    this._entityRoot.submodule = submodule;
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+
+    // this.apply(new PermissionSubmoduleReplacedEvent(this.toPrimitives()));
+  }
 }

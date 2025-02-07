@@ -1,7 +1,7 @@
 export class Submodule {
   constructor(
-    private readonly _id: string,
-    private readonly _name: string,
+    readonly _id: string,
+    readonly _name: string,
   ) {
     this.ensureIsValidSubmodule();
   }
