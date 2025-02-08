@@ -6,6 +6,7 @@ import { CreatePermissionUseCase } from '@permission/application/use-cases/comma
 import { PERMISSION_REPOSITORY } from '@permission/domain/constants/permission-injection-tokens.constants';
 import { CreatePermissionDomainService } from '@permission/domain/domain-services/create-permission.domain-service';
 import { UpdatePermissionDomainService } from '@permission/domain/domain-services/update-permission.domain-service';
+import { CreatePermissionController } from '@permission/infrastructure/controllers/commands/create-permission/create-permission-controller';
 import { UpdatePermissionController } from '@permission/infrastructure/controllers/commands/update-permission/update-permission.controller';
 import { PermissionEntity } from '@permission/infrastructure/persistence/typeorm/entities/permission.entity';
 import { PermissionTypeormRepository } from '@permission/infrastructure/persistence/typeorm/repositories/permission-typeorm.repository';
@@ -44,7 +45,7 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
       useClass: PermissionTypeormRepository,
     },
   ],
-  controllers: [CreatePermissionUseCase, UpdatePermissionController],
+  controllers: [CreatePermissionController, UpdatePermissionController],
   exports: [],
 })
 export class PermissionModule {}
