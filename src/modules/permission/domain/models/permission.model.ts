@@ -11,8 +11,8 @@ import { PermissionArchivedEvent } from '@permission/domain/events/permission-ar
 import { PermissionCreatedEvent } from '@permission/domain/events/permission-created.event';
 import { PermissionDescriptionRedescribedEvent } from '@permission/domain/events/permission-description-redescribed.event';
 import { PermissionModuleReplacedEvent } from '@permission/domain/events/permission-module-replaced.event';
-import { PermissionRestoredEvent } from '@permission/domain/events/permission-restored.event';
 import { PermissionSubmoduleReplacedEvent } from '@permission/domain/events/permission-submodule-replaced.event';
+import { PermissionUnarchivedEvent } from '@permission/domain/events/permission-unarchived.event';
 import { PermissionAlreadyIsArchived } from '@permission/domain/exceptions/permission-already-is-archived';
 import { PermissionAlreadyNotArchived } from '@permission/domain/exceptions/permission-already-not-archived';
 import { PermissionValueIsSameException } from '@permission/domain/exceptions/permission-value-is-same.exception';
@@ -185,15 +185,17 @@ export class PermissionModel extends AggregateRoot {
     this.apply(new PermissionArchivedEvent(this));
   }
 
-  public restore(): void {
+  public unarchive(): void {
     if (!this.archivedAt) {
-      throw new PermissionAlreadyNotArchived('Permission is not archived');
+      throw new PermissionAlreadyNotArchived(
+        `The permission ${this.uuid} requires to be archived first to be unarchived`,
+      );
     }
 
-    this._entityRoot.archivedAt = undefined;
+    this._entityRoot.archivedAt = null;
     this._entityRoot.updatedAt = new UpdatedAt(new Date());
 
-    this.apply(new PermissionRestoredEvent(this));
+    this.apply(new PermissionUnarchivedEvent(this));
   }
 
   public destroy(): void {
