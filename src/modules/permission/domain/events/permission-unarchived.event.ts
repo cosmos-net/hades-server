@@ -1,5 +1,5 @@
 import { PermissionModel } from '@permission/domain/models/permission.model';
 
-export class PermissionRestoredEvent {
+export class PermissionUnarchivedEvent {
   constructor(public readonly permission: PermissionModel) {}
 }

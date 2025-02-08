@@ -1,6 +1,6 @@
 import { PermissionModel } from '@permission/domain/models/permission.model';
 
-export class UpdatePermissionOutputDto {
+export class UnarchivePermissionOutputDto {
   private readonly id: number;
   private readonly uuid: string;
   private readonly title: string;
