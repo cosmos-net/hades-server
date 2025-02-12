@@ -86,18 +86,24 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
       useClass: PermissionTypeormRepository,
     },
     ArchivePermissionDomainService,
-    // Services
-    // Repositories
     {
-      provide: PERMISSION_REPOSITORY,
-      useClass: PermissionTypeormRepository,
+      provide: ArchivePermissionDomainService,
+      useFactory: (
+        permissionRepository: PermissionTypeormRepository,
+      ): ArchivePermissionDomainService => {
+        return new ArchivePermissionDomainService(permissionRepository);
+      },
+      inject: [PERMISSION_REPOSITORY],
     },
     DestroyPermissionDomainService,
-    // Services
-    // Repositories
     {
-      provide: PERMISSION_REPOSITORY,
-      useClass: PermissionTypeormRepository,
+      provide: DestroyPermissionDomainService,
+      useFactory: (
+        permissionRepository: PermissionTypeormRepository,
+      ): DestroyPermissionDomainService => {
+        return new DestroyPermissionDomainService(permissionRepository);
+      },
+      inject: [PERMISSION_REPOSITORY],
     },
     GetPermissionDomainService,
     {
