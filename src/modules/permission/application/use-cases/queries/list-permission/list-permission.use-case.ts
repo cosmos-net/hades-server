@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { ListAssignmentQuery } from '@assignment/application/use-cases/queries/list-assignment/list-assignment.query';
-import { ListAssignmentDomainService } from '@assignment/domain/domain-services/list-assignment.domain-service';
-import { ListAssignmentModel } from '@assignment/domain/models/assignment-list.model';
 import { Criteria } from '@common/domain/criteria/criteria';
+import { ListPermissionQuery } from '@permission/application/use-cases/queries/list-permission/list-permission.query';
+import { ListPermissionDomainService } from '@permission/domain/domain-services/list-permission.domain-service';
+import { ListPermissionModel } from '@permission/domain/models/permission-list.model';
 
 @Injectable()
-@QueryHandler(ListAssignmentQuery)
-export class ListAssignmentUseCase
-  implements IQueryHandler<ListAssignmentQuery, ListAssignmentModel>
+@QueryHandler(ListPermissionQuery)
+export class ListPermissionUseCase
+  implements IQueryHandler<ListPermissionQuery, ListPermissionModel>
 {
-  constructor(private readonly listAssignmentDomainService: ListAssignmentDomainService) {}
+  constructor(private readonly listPermissionDomainService: ListPermissionDomainService) {}
 
-  async execute(query: ListAssignmentQuery): Promise<ListAssignmentModel> {
+  async execute(query: ListPermissionQuery): Promise<ListPermissionModel> {
     const { orderType, orderBy, limit, offset, withArchived, filtersMap } = query;
 
     const criteria = new Criteria(filtersMap, orderBy, orderType, limit, offset, withArchived);
 
-    const assignments = await this.listAssignmentDomainService.go(criteria);
+    const permissions = await this.listPermissionDomainService.go(criteria);
 
-    return assignments;
+    return permissions;
   }
 }
