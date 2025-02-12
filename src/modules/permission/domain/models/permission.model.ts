@@ -10,6 +10,7 @@ import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { PermissionArchivedEvent } from '@permission/domain/events/permission-archived.event';
 import { PermissionCreatedEvent } from '@permission/domain/events/permission-created.event';
 import { PermissionDescriptionRedescribedEvent } from '@permission/domain/events/permission-description-redescribed.event';
+import { PermissionDestroyedEvent } from '@permission/domain/events/permission-destroyed.event';
 import { PermissionModuleReplacedEvent } from '@permission/domain/events/permission-module-replaced.event';
 import { PermissionSubmoduleReplacedEvent } from '@permission/domain/events/permission-submodule-replaced.event';
 import { PermissionUnarchivedEvent } from '@permission/domain/events/permission-unarchived.event';
@@ -198,8 +199,13 @@ export class PermissionModel extends AggregateRoot {
     this.apply(new PermissionUnarchivedEvent(this));
   }
 
-  public destroy(): void {
-    this.apply(new PermissionArchivedEvent(this));
+  public destroy(uuid: string): void {
+    if (!this.archivedAt) {
+      throw new PermissionAlreadyNotArchivedException(
+        `Permission with uuid ${uuid} requires to be archived before destroyed`,
+      );
+    }
+    this.apply(new PermissionDestroyedEvent(this));
   }
 
   public replaceModule(module: Module, submodule?: Submodule): void {
