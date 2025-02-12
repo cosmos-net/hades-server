@@ -12,7 +12,7 @@ import { UnarchivePermissionOutputDto } from '@permission/infrastructure/control
 export class UnarchivePermissionController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.PERMISSION.UPDATE })
+  @MessagePattern({ cmd: CMDS_HADES.PERMISSION.UNARCHIVE })
   async unarchivePermission(
     @Payload() unarchivePermissionDto: UnarchivePermissionInputDto,
   ): Promise<UnarchivePermissionOutputDto> {

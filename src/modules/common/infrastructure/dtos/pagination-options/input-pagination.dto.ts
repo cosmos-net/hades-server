@@ -4,7 +4,7 @@ import { IsEnum, IsInt, IsOptional, Min, Max } from 'class-validator';
 import { OrderTypeEnum } from '@common/domain/criteria/orders/order-type-enum';
 
 export class InputPaginationDto {
-  @Transform(({ value }) => value.toUpperCase())
+  @Transform(({ value }): void => value.toUpperCase())
   @IsOptional()
   @IsEnum(OrderTypeEnum, {
     message: 'Order type options are not supported, only ASC or DESC',
