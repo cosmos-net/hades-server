@@ -2,15 +2,18 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ArchivePermissionUseCase } from '@permission/application/use-cases/commands/archive-permission/archive-permission.use-case';
 import { CreatePermissionUseCase } from '@permission/application/use-cases/commands/create-permission/create-permission.use-case';
 import { UnarchivePermissionUseCase } from '@permission/application/use-cases/commands/unarchive-permission/unarchive-permission.use-case';
 import { UpdatePermissionUseCase } from '@permission/application/use-cases/commands/update-permission/update-permission.use-case';
 import { GetPermissionUseCase } from '@permission/application/use-cases/queries/get-permission/get-permission.use-case';
 import { PERMISSION_REPOSITORY } from '@permission/domain/constants/permission-injection-tokens.constants';
+import { ArchivePermissionDomainService } from '@permission/domain/domain-services/archive-permission.domain-service';
 import { CreatePermissionDomainService } from '@permission/domain/domain-services/create-permission.domain-service';
 import { GetPermissionDomainService } from '@permission/domain/domain-services/get-permission.domain-service';
 import { UnarchivePermissionDomainService } from '@permission/domain/domain-services/unarchive-permission.domain-service';
 import { UpdatePermissionDomainService } from '@permission/domain/domain-services/update-permission.domain-service';
+import { ArchivePermissionController } from '@permission/infrastructure/controllers/commands/archive-permission/archive-permission.controller';
 import { CreatePermissionController } from '@permission/infrastructure/controllers/commands/create-permission/create-permission-controller';
 import { UnarchivePermissionController } from '@permission/infrastructure/controllers/commands/unarchive-permission/unarchive-permission.controller';
 import { UpdatePermissionController } from '@permission/infrastructure/controllers/commands/update-permission/update-permission.controller';
@@ -24,6 +27,7 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
     // UseCases
     CreatePermissionUseCase,
     UpdatePermissionUseCase,
+    ArchivePermissionUseCase,
     UnarchivePermissionUseCase,
     GetPermissionUseCase,
     // Domain Services && Inversion of dependencies
@@ -54,6 +58,13 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
       provide: PERMISSION_REPOSITORY,
       useClass: PermissionTypeormRepository,
     },
+    ArchivePermissionDomainService,
+    // Services
+    // Repositories
+    {
+      provide: PERMISSION_REPOSITORY,
+      useClass: PermissionTypeormRepository,
+    },
     GetPermissionDomainService,
     {
       provide: GetPermissionDomainService,
@@ -68,6 +79,7 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
   controllers: [
     CreatePermissionController,
     UpdatePermissionController,
+    ArchivePermissionController,
     UnarchivePermissionController,
     GetPermissionController,
   ],
