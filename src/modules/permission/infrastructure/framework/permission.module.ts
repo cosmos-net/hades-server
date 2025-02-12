@@ -6,15 +6,18 @@ import { CreatePermissionUseCase } from '@permission/application/use-cases/comma
 import { UnarchivePermissionUseCase } from '@permission/application/use-cases/commands/unarchive-permission/unarchive-permission.use-case';
 import { UpdatePermissionUseCase } from '@permission/application/use-cases/commands/update-permission/update-permission.use-case';
 import { GetPermissionUseCase } from '@permission/application/use-cases/queries/get-permission/get-permission.use-case';
+import { ListPermissionUseCase } from '@permission/application/use-cases/queries/list-permission/list-permission.use-case';
 import { PERMISSION_REPOSITORY } from '@permission/domain/constants/permission-injection-tokens.constants';
 import { CreatePermissionDomainService } from '@permission/domain/domain-services/create-permission.domain-service';
 import { GetPermissionDomainService } from '@permission/domain/domain-services/get-permission.domain-service';
+import { ListPermissionDomainService } from '@permission/domain/domain-services/list-permission.domain-service';
 import { UnarchivePermissionDomainService } from '@permission/domain/domain-services/unarchive-permission.domain-service';
 import { UpdatePermissionDomainService } from '@permission/domain/domain-services/update-permission.domain-service';
 import { CreatePermissionController } from '@permission/infrastructure/controllers/commands/create-permission/create-permission-controller';
 import { UnarchivePermissionController } from '@permission/infrastructure/controllers/commands/unarchive-permission/unarchive-permission.controller';
 import { UpdatePermissionController } from '@permission/infrastructure/controllers/commands/update-permission/update-permission.controller';
 import { GetPermissionController } from '@permission/infrastructure/controllers/queries/get-permission/get-permission.controller';
+import { ListPermissionController } from '@permission/infrastructure/controllers/queries/list-permission/list-permission.controller';
 import { PermissionEntity } from '@permission/infrastructure/persistence/typeorm/entities/permission.entity';
 import { PermissionTypeormRepository } from '@permission/infrastructure/persistence/typeorm/repositories/permission-typeorm.repository';
 
@@ -26,6 +29,7 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
     UpdatePermissionUseCase,
     UnarchivePermissionUseCase,
     GetPermissionUseCase,
+    ListPermissionUseCase,
     // Domain Services && Inversion of dependencies
     CreatePermissionDomainService,
     {
@@ -48,6 +52,25 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
       inject: [PERMISSION_REPOSITORY],
     },
     UnarchivePermissionDomainService,
+    {
+      provide: UnarchivePermissionDomainService,
+      useFactory: (
+        permissionRepository: PermissionTypeormRepository,
+      ): UnarchivePermissionDomainService => {
+        return new UnarchivePermissionDomainService(permissionRepository);
+      },
+      inject: [PERMISSION_REPOSITORY],
+    },
+    ListPermissionDomainService,
+    {
+      provide: ListPermissionDomainService,
+      useFactory: (
+        permissionRepository: PermissionTypeormRepository,
+      ): ListPermissionDomainService => {
+        return new ListPermissionDomainService(permissionRepository);
+      },
+      inject: [PERMISSION_REPOSITORY],
+    },
     // Services
     // Repositories
     {
@@ -70,6 +93,7 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
     UpdatePermissionController,
     UnarchivePermissionController,
     GetPermissionController,
+    ListPermissionController,
   ],
   exports: [],
 })
