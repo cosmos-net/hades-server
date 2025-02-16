@@ -12,7 +12,7 @@ import { UserRoleAssignmentUseCase } from '@assignment/application/use-cases/com
 import { GetAssignmentUseCase } from '@assignment/application/use-cases/queries/get-assignment/get-assignment.use-case';
 import { ListAssignmentUseCase } from '@assignment/application/use-cases/queries/list-assignment/list-assignment.use-case';
 import {
-  ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE,
+  ASSIGNMENT_DATA_MEDIATOR_SERVICE,
   ASSIGNMENT_REPOSITORY,
 } from '@assignment/domain/constants/assignment-injection-tokens.constants';
 import { ArchiveAssignmentByUserDomainService } from '@assignment/domain/domain-services/archive-assignment-by-user.domain-service';
@@ -32,7 +32,7 @@ import { ListAssignmentController } from '@assignment/infrastructure/controllers
 import { ArchiveAssignmentsHandler } from '@assignment/infrastructure/event-handlers/archive-assignments.handler';
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { AssignmentTypeormRepository } from '@assignment/infrastructure/persistence/typeorm/repositories/assignment-typeorm.repository';
-import { AssignmentOrchestratorConsumerService } from '@assignment/infrastructure/services/assignment-orchestrator-consumer/assignment-orchestrator-consumer.service';
+import { AssignmentDataMediatorService } from '@assignment/infrastructure/services/data-mediator-service/assignment-data-mediator.service';
 import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
 
@@ -60,28 +60,28 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       provide: UserRoleAssignmentDomainService,
       useFactory: (
         assignmentRepository,
-        assignmentOrchestratorConsumerService,
+        assignmentDataMediatorService,
       ): UserRoleAssignmentDomainService => {
         return new UserRoleAssignmentDomainService(
           assignmentRepository,
-          assignmentOrchestratorConsumerService,
+          assignmentDataMediatorService,
         );
       },
-      inject: [ASSIGNMENT_REPOSITORY, ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE],
+      inject: [ASSIGNMENT_REPOSITORY, ASSIGNMENT_DATA_MEDIATOR_SERVICE],
     },
     UpdateAssignmentDomainService,
     {
       provide: UpdateAssignmentDomainService,
       useFactory: (
         assignmentRepository,
-        assignmentOrchestratorConsumerService,
+        assignmentDataMediatorService,
       ): UpdateAssignmentDomainService => {
         return new UpdateAssignmentDomainService(
           assignmentRepository,
-          assignmentOrchestratorConsumerService,
+          assignmentDataMediatorService,
         );
       },
-      inject: [ASSIGNMENT_REPOSITORY, ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE],
+      inject: [ASSIGNMENT_REPOSITORY, ASSIGNMENT_DATA_MEDIATOR_SERVICE],
     },
     ArchiveAssignmentByUserDomainService,
     {
@@ -137,8 +137,8 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       useClass: AssignmentTypeormRepository,
     },
     {
-      provide: ASSIGNMENT_ORCHESTRATOR_CONSUMER_SERVICE,
-      useClass: AssignmentOrchestratorConsumerService,
+      provide: ASSIGNMENT_DATA_MEDIATOR_SERVICE,
+      useClass: AssignmentDataMediatorService,
     },
     // Event Handlers
     ArchiveAssignmentsHandler,

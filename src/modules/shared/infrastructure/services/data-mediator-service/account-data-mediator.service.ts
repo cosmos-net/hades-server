@@ -5,7 +5,7 @@ import { GetAccountQuery } from '@user/application/use-cases/queries/get-account
 import { AccountModel } from '@user/domain/models/account/account.model';
 
 @Injectable()
-export class AccountOrchestratorProducerService {
+export class AccountDataMediatorService {
   constructor(private readonly queryBus: QueryBus) {}
 
   async getByUUID(getAccountQuery: GetAccountQuery): Promise<AccountModel> {

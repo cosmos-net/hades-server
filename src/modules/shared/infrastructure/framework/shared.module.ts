@@ -2,23 +2,23 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
 import { RoleModule } from '@role/infrastructure/framework/role.module';
-import { AccountOrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/account-orchestrator-producer.service';
-import { OrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/orchestrator-producer.service';
-import { RoleOrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/role-orchestrator-producer.service';
-import { UserAggregateOrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/user-aggregate-orchestrator-producer.service';
-import { UserOrchestratorProducerService } from '@shared/infrastructure/services/orchestrator-producer/user-orchestrator-producer.service';
+import { AccountDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/account-data-mediator.service';
+import { DataMediatorService } from '@shared/infrastructure/services/data-mediator-service/data-mediator.service';
+import { RoleDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/role-data-mediator.service';
+import { UserAggregateDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-aggregate-data-mediator.service';
+import { UserDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-data-mediator.service';
 import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
   imports: [CqrsModule, RoleModule, UserModule],
   providers: [
-    OrchestratorProducerService,
-    RoleOrchestratorProducerService,
-    UserAggregateOrchestratorProducerService,
-    UserOrchestratorProducerService,
-    AccountOrchestratorProducerService,
+    DataMediatorService,
+    RoleDataMediatorService,
+    UserAggregateDataMediatorService,
+    UserDataMediatorService,
+    AccountDataMediatorService,
   ],
   controllers: [],
-  exports: [OrchestratorProducerService],
+  exports: [DataMediatorService],
 })
 export class SharedModule {}

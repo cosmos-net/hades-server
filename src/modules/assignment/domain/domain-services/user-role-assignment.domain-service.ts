@@ -1,4 +1,4 @@
-import { IAssignmentOrchestratorConsumerContract } from '@assignment/domain/contracts/assignment-orchestrator-consumer.contract';
+import { IAssignmentDataMediatorContract } from '@assignment/domain/contracts/assignment-data-mediator.contract';
 import { IAssignmentRepositoryContract } from '@assignment/domain/contracts/assignment-repository.contract';
 import { AssignmentAlreadyExistException } from '@assignment/domain/exceptions/assignment-already-exist.exception';
 import { UserAlreadyHasAnAssignmentException } from '@assignment/domain/exceptions/user-already-has-an-assignment.exception';
@@ -8,7 +8,7 @@ import { UserStatusEnum } from '@common/domain/enums/user-status-enum';
 export class UserRoleAssignmentDomainService {
   constructor(
     private readonly repository: IAssignmentRepositoryContract,
-    private readonly orchestrator: IAssignmentOrchestratorConsumerContract,
+    private readonly dataMediatorService: IAssignmentDataMediatorContract,
   ) {}
 
   async go(
@@ -17,14 +17,14 @@ export class UserRoleAssignmentDomainService {
     roleUUID: string,
     description: string,
   ): Promise<AssignmentModel> {
-    const userModel = await this.orchestrator.user.getByUUID({
+    const userModel = await this.dataMediatorService.user.getByUUID({
       uuid: userUUID,
       withArchived: true,
       failIfArchived: true,
       status: UserStatusEnum.ACTIVE,
     });
 
-    const roleModel = await this.orchestrator.role.getByUUID({
+    const roleModel = await this.dataMediatorService.role.getByUUID({
       uuid: roleUUID,
       withArchived: true,
       failIfArchived: true,

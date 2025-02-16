@@ -19,7 +19,7 @@ import { ActivatePendingSessionUseCase } from '@session/application/use-cases/co
 import { GetSessionUseCase } from '@session/application/use-cases/queries/get-session/get-session.use-case';
 import { ListSessionUseCase } from '@session/application/use-cases/queries/list-session/list-session.use-case';
 import {
-  SESSION_ORCHESTRATOR_CONSUMER_SERVICE,
+  SESSION_DATA_MEDIATOR_SERVICE,
   SESSION_REPOSITORY,
 } from '@session/domain/constants/injection-tokens';
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';
@@ -39,7 +39,7 @@ import { TransitionDynamicStatusSessionController } from '@session/infrastructur
 import { ListSessionController } from '@session/infrastructure/controllers/queries/list-session/list-session.controller';
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { SessionTypeormRepository } from '@session/infrastructure/persistence/typeorm/repositories/session-typeorm.repository';
-import { SessionOrchestratorConsumerService } from '@session/infrastructure/services/session-orchestrator-consumer/session-orchestrator-consumer.service';
+import { SessionDataMediatorService } from '@session/infrastructure/services/session-data-mediator-service/session-data-mediator.service';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
 
 @Module({
@@ -106,18 +106,18 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     {
       provide: CreateInvalidSessionDomainService,
       useFactory: (
-        sessionOrchestratorConsumer: SessionOrchestratorConsumerService,
+        dataMediatorService: SessionDataMediatorService,
       ): CreateInvalidSessionDomainService =>
-        new CreateInvalidSessionDomainService(sessionOrchestratorConsumer),
-      inject: [SESSION_ORCHESTRATOR_CONSUMER_SERVICE],
+        new CreateInvalidSessionDomainService(dataMediatorService),
+      inject: [SESSION_DATA_MEDIATOR_SERVICE],
     },
     {
       provide: CreateActiveSessionDomainService,
       useFactory: (
-        sessionOrchestratorConsumer: SessionOrchestratorConsumerService,
+        dataMediatorService: SessionDataMediatorService,
       ): CreateActiveSessionDomainService =>
-        new CreateActiveSessionDomainService(sessionOrchestratorConsumer),
-      inject: [SESSION_ORCHESTRATOR_CONSUMER_SERVICE],
+        new CreateActiveSessionDomainService(dataMediatorService),
+      inject: [SESSION_DATA_MEDIATOR_SERVICE],
     },
     {
       provide: DestroySessionDomainService,
@@ -137,10 +137,10 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       useClass: SessionTypeormRepository,
     },
     // Infrastructure Services
-    SessionOrchestratorConsumerService,
+    SessionDataMediatorService,
     {
-      provide: SESSION_ORCHESTRATOR_CONSUMER_SERVICE,
-      useClass: SessionOrchestratorConsumerService,
+      provide: SESSION_DATA_MEDIATOR_SERVICE,
+      useClass: SessionDataMediatorService,
     },
   ],
   controllers: [

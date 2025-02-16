@@ -5,7 +5,7 @@ import { GetUserQuery } from '@user/application/use-cases/queries/get-user/get-u
 import { UserModel } from '@user/domain/models/user/user.model';
 
 @Injectable()
-export class UserOrchestratorProducerService {
+export class UserDataMediatorService {
   constructor(private readonly queryBus: QueryBus) {}
 
   async getByUUID(getRoleQuery: GetUserQuery): Promise<UserModel> {

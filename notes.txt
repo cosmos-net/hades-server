@@ -54,6 +54,7 @@ Que maneja la carpeta de persistencia
 - Repositorios > Interacciona con las operaciones que puede tener el ORM con la base de datos y se basa bajo una implementacion de una interfaz o una clase abstracta o un contrato
 
 
+docker-compose down
 docker stop hades-server
 docker rm hades-stack
 docker compose build --no-cache
