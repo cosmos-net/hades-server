@@ -4,7 +4,7 @@ import { Observable, from, throwError } from 'rxjs';
 import { mergeMap, catchError, map, delay, tap, retry } from 'rxjs/operators';
 
 // Comandos y tipos importados
-import { PolicyCreationProgramCommand } from '@shared/infrastructure/services/saga-orchestrator/policy/policy-creation-program.command';
+import { PolicyCreatorProgramCommand } from '@shared/infrastructure/services/saga-orchestrator/policy/policy-creator-program/policy-creator-program.command';
 
 /**
  * Service que orquesta el flujo de creación de políticas utilizando las Sagas de NestJS CQRS.
@@ -14,32 +14,32 @@ import { PolicyCreationProgramCommand } from '@shared/infrastructure/services/sa
  *   3. Ejecutar rollback en caso de error.
  */
 @Injectable()
-export class PolicyCreationProgramService {
-  private readonly logger = new Logger(PolicyCreationProgramService.name);
+export class PolicyCreatorProgramService {
+  private readonly logger = new Logger(PolicyCreatorProgramService.name);
 
   constructor(private readonly commandBus: CommandBus) {}
 
   /**
    * Saga que orquesta la creación de la política y su asignación.
-   * Se activa al recibir un PolicyCreationProgramCommand.
+   * Se activa al recibir un PolicyCreatorProgramCommand.
    *
    * Flujo:
    *  1. Crear la política.
    *  2. Asignar la política al rol.
    *  3. En caso de error, ejecutar rollback.
    *
-   * @param events$ Observable que emite comandos de tipo PolicyCreationProgramCommand.
+   * @param events$ Observable que emite comandos de tipo PolicyCreatorProgramCommand.
    * @returns Observable que emite el comando final (o error en caso de fallo).
    */
   @Saga()
-  public policyCreationSaga = (
-    events$: Observable<PolicyCreationProgramCommand>,
+  public policyCreatorSaga = (
+    events$: Observable<PolicyCreatorProgramCommand>,
   ): Observable<ICommand> => {
     return events$.pipe(
-      ofType(PolicyCreationProgramCommand),
+      ofType(PolicyCreatorProgramCommand),
       mergeMap(
-        (command: PolicyCreationProgramCommand): Observable<ICommand> =>
-          this.handlePolicyCreation(command),
+        (command: PolicyCreatorProgramCommand): Observable<ICommand> =>
+          this.handlePolicyCreator(command),
       ),
     );
   };
@@ -49,14 +49,14 @@ export class PolicyCreationProgramService {
    * @param command Datos para la creación de la política.
    * @returns Observable que emite el objeto policy (contiene policy.id) o lanza error.
    */
-  private handlePolicyCreation(command: PolicyCreationProgramCommand): Observable<ICommand> {
+  private handlePolicyCreator(command: PolicyCreatorProgramCommand): Observable<ICommand> {
     return this.safeExecute(this.createPolicy, command).pipe(
       mergeMap(
         (policy: { id: string }): Observable<ICommand> =>
           this.handlePolicyAssignment(command, policy),
       ),
       catchError(
-        (error): Observable<never> => this.handlePolicyCreationErrorAndRollback(command, error),
+        (error): Observable<never> => this.handlePolicyCreatorErrorAndRollback(command, error),
       ),
     );
   }
@@ -69,7 +69,7 @@ export class PolicyCreationProgramService {
    * @returns Observable que emite la política creada al finalizar la asignación.
    */
   private handlePolicyAssignment(
-    command: PolicyCreationProgramCommand,
+    command: PolicyCreatorProgramCommand,
     policy: { id: string },
   ): Observable<ICommand> {
     return this.safeExecute(
@@ -85,8 +85,8 @@ export class PolicyCreationProgramService {
    * @param error Error ocurrido durante el proceso.
    * @returns Observable que lanza el error tras intentar el rollback.
    */
-  private handlePolicyCreationErrorAndRollback(
-    command: PolicyCreationProgramCommand,
+  private handlePolicyCreatorErrorAndRollback(
+    command: PolicyCreatorProgramCommand,
     error: Error,
   ): Observable<never> {
     return this.safeExecute(this.rollbackPolicy, command).pipe(
@@ -117,10 +117,10 @@ export class PolicyCreationProgramService {
    * Ejecuta el comando para crear la política.
    * Convierte la ejecución del comando en un Observable para poder encadenarlo.
    *
-   * @param command PolicyCreationProgramCommand con los datos necesarios.
+   * @param command PolicyCreatorProgramCommand con los datos necesarios.
    * @returns Observable que emite el objeto policy (se espera que contenga policy.id).
    */
-  private createPolicy(command: PolicyCreationProgramCommand): Observable<{ id: string }> {
+  private createPolicy(command: PolicyCreatorProgramCommand): Observable<{ id: string }> {
     this.logger.log(`Creating policy for roleUUID: ${command.roleUUID}`);
     return from(
       this.commandBus.execute(
@@ -150,7 +150,7 @@ export class PolicyCreationProgramService {
    * @returns Observable que emite void.
    */
   private assignPolicy(
-    command: PolicyCreationProgramCommand,
+    command: PolicyCreatorProgramCommand,
     policy: { id: string },
   ): Observable<void> {
     this.logger.log(`Assigning policy ${policy.id} to role ${command.roleUUID}`);
@@ -165,10 +165,10 @@ export class PolicyCreationProgramService {
    * Ejecuta el comando de rollback para eliminar la política creada en caso de error.
    * Se invoca en caso de que falle alguno de los pasos previos en el flujo.
    *
-   * @param command PolicyCreationProgramCommand con los datos iniciales.
+   * @param command PolicyCreatorProgramCommand con los datos iniciales.
    * @returns Observable que emite void.
    */
-  private rollbackPolicy(command: PolicyCreationProgramCommand): Observable<void> {
+  private rollbackPolicy(command: PolicyCreatorProgramCommand): Observable<void> {
     this.logger.warn(`Rolling back policy creation for roleUUID: ${command.roleUUID}`);
     return from(this.commandBus.execute(new RollbackPolicyCommand(command.roleUUID)));
   }

@@ -1,6 +1,6 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export class PolicyCreationProgramCommand implements ICommand {
+export class PolicyCreatorProgramCommand implements ICommand {
   constructor(
     public readonly roleUUID: string,
     public readonly permissionUUIDs: string[],
