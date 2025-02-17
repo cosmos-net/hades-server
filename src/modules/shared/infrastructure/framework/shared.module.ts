@@ -7,6 +7,7 @@ import { DataMediatorService } from '@shared/infrastructure/services/data-mediat
 import { RoleDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/role-data-mediator.service';
 import { UserAggregateDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-aggregate-data-mediator.service';
 import { UserDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-data-mediator.service';
+import { PolicyCreationProgramService } from '@shared/infrastructure/services/saga-orchestrator/policy/policy-creation-program.service';
 import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
@@ -17,6 +18,7 @@ import { UserModule } from '@user/infrastructure/framework/user.module';
     UserAggregateDataMediatorService,
     UserDataMediatorService,
     AccountDataMediatorService,
+    PolicyCreationProgramService,
   ],
   controllers: [],
   exports: [DataMediatorService],
