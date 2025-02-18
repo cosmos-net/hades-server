@@ -1,9 +1,10 @@
 import { Length } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
 import { PERMISSION_RULES } from '@permission/domain/constants/permission-rules.constant';
 import { IPermissionSchemaPrimitivesWithoutChildren } from '@permission/domain/schemas/permission.schema-primitives';
+import { PolicyEntity } from '@policy/infrastructure/persistence/typeorm/entities/policy.entity';
 
 @Entity('assignments')
 export class PermissionEntity
@@ -57,4 +58,14 @@ export class PermissionEntity
     nullable: true,
   })
   submoduleId?: string | null;
+
+  @OneToMany(
+    (): typeof PolicyEntity => PolicyEntity,
+    (policy): PermissionEntity => policy.permission,
+    {
+      cascade: false,
+      eager: false,
+    },
+  )
+  policies: PolicyEntity[];
 }

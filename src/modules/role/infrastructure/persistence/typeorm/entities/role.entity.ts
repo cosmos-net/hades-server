@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany } from 'typeorm';
 
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
+import { PolicyEntity } from '@policy/infrastructure/persistence/typeorm/entities/policy.entity';
 import {
   MAX_ROLE_NAME_LENGTH,
   MAX_ROLE_DESCRIPTION_LENGTH,
@@ -44,4 +45,10 @@ export class RoleEntity extends TypeormBaseEntity implements IRoleSchemaPrimitiv
     },
   )
   assignment: AssignmentEntity;
+
+  @OneToMany((): typeof PolicyEntity => PolicyEntity, (policy): RoleEntity => policy.role, {
+    cascade: true,
+    eager: false,
+  })
+  policies: PolicyEntity[];
 }
