@@ -8,6 +8,7 @@ import { databasesLoader } from '@core/infrastructure/framework/loaders/database
 import { PostgresType } from '@core/infrastructure/framework/loaders/postgres.type';
 import { mainConfigOptions } from '@core/infrastructure/framework/options/config.options';
 import { PermissionModule } from '@permission/infrastructure/framework/permission.module';
+import { PolicyModule } from '@policy/infrastructure/framework/policy.module';
 import { RoleModule } from '@role/infrastructure/framework/role.module';
 import { SessionModule } from '@session/infrastructure/framework/session.module';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
@@ -21,6 +22,7 @@ import { UserModule } from '@user/infrastructure/framework/user.module';
     SessionModule,
     AssignmentModule,
     PermissionModule,
+    PolicyModule,
     ConfigModule.forRoot(mainConfigOptions),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forFeature(databasesLoader.postgres)],
