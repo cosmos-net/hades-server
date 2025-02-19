@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 
 import { IOptions } from '@common/domain/contracts/options.contract';
 import { Criteria } from '@common/domain/criteria/criteria';
@@ -52,6 +52,24 @@ export class PolicyTypeormRepository
     const model = new PolicyModel(entity);
 
     return model;
+  }
+
+  public async getByPermissionUUIDs(
+    permissionUUIDs: string[],
+    options?: IOptions,
+  ): Promise<ListPolicyModel> {
+    const entities = await this.repository.find({
+      where: { permission: In(permissionUUIDs) },
+      withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
+    });
+
+    const listModel = new ListPolicyModel({
+      items: entities,
+      total: entities.length,
+    });
+
+    return listModel;
   }
 
   public async getOneByTitle(title: string, options?: IOptions): Promise<PolicyModel | null> {
