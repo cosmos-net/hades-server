@@ -32,6 +32,7 @@ export class ListPermissionFilter {
 
     addFilter(filtersMapper, 'id', dto.id, OperatorsEnum.EQ);
     addFilter(filtersMapper, 'uuid', dto.uuid, OperatorsEnum.ILIKE);
+    addFilter(filtersMapper, 'uuids', dto.uuids, OperatorsEnum.IN);
     addFilter(filtersMapper, 'title', dto.title, OperatorsEnum.ILIKE);
     addFilter(filtersMapper, 'description', dto.description, OperatorsEnum.ILIKE);
 

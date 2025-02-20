@@ -33,6 +33,10 @@ export class ListPermissionInputDto extends InputPaginationDto {
   public readonly uuid?: string;
 
   @IsOptional()
+  @IsUUID(4, { each: true })
+  public readonly uuids?: string;
+
+  @IsOptional()
   @IsString()
   public readonly title?: string;
 
