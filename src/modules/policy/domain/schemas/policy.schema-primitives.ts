@@ -2,6 +2,13 @@ import { ListPermissionModel } from '@permission/domain/models/permission-list.m
 import { RoleModel } from '@role/domain/models/role.model';
 import { IRoleSchemaPrimitives } from '@role/domain/schemas/role.schema-primitives';
 
+export interface IPolicyBaseSchemaParams {
+  uuid: string;
+  description?: string | null;
+  roleUUID: string;
+  permissionUUIDs: string[];
+}
+
 export interface IPolicyBaseSchema {
   uuid: string;
   description: string | null;
