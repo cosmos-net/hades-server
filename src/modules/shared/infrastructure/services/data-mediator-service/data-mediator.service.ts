@@ -1,32 +1,45 @@
 import { Injectable } from '@nestjs/common';
 
-import { AccountDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/account-data-mediator.service';
-import { RoleDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/role-data-mediator.service';
-import { UserAggregateDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-aggregate-data-mediator.service';
-import { UserDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-data-mediator.service';
+import { PermissionFacadeService } from '@permission/infrastructure/services/facade/permission-facade.service';
+import { PolicyFacadeService } from '@policy/infrastructure/services/facade/policy-facade.service';
+import { RoleFacadeService } from '@role/infrastructure/services/facade/role-facade.service';
+import { IDataMediatorServiceContract } from '@shared/domain/contracts/data-mediator-service';
+import { AccountFacadeService } from '@user/infrastructure/services/facade/account-facade.service';
+import { UserAggregateFacadeService } from '@user/infrastructure/services/facade/user-aggregate-facade.service';
+import { UserFacadeService } from '@user/infrastructure/services/facade/user-facade.service';
 
 @Injectable()
-export class DataMediatorService {
+export class DataMediatorService implements IDataMediatorServiceContract {
   constructor(
-    private readonly roleDataMediatorService: RoleDataMediatorService,
-    private readonly userAggregateDataMediatorService: UserAggregateDataMediatorService,
-    private readonly userDataMediatorService: UserDataMediatorService,
-    private readonly accountDataMediatorService: AccountDataMediatorService,
+    private readonly userFacadeService: UserFacadeService,
+    private readonly userAggregateFacadeService: UserAggregateFacadeService,
+    private readonly accountFacadeService: AccountFacadeService,
+    private readonly roleFacadeService: RoleFacadeService,
+    private readonly permissionFacadeService: PermissionFacadeService,
+    private readonly policyFacadeService: PolicyFacadeService,
   ) {}
 
-  public get role(): RoleDataMediatorService {
-    return this.roleDataMediatorService;
+  public get userAggregate(): UserAggregateFacadeService {
+    return this.userAggregateFacadeService;
   }
 
-  public get userAggregate(): UserAggregateDataMediatorService {
-    return this.userAggregateDataMediatorService;
+  public get user(): UserFacadeService {
+    return this.userFacadeService;
   }
 
-  public get user(): UserDataMediatorService {
-    return this.userDataMediatorService;
+  public get account(): AccountFacadeService {
+    return this.accountFacadeService;
   }
 
-  public get account(): AccountDataMediatorService {
-    return this.accountDataMediatorService;
+  public get permission(): PermissionFacadeService {
+    return this.permissionFacadeService;
+  }
+
+  public get role(): RoleFacadeService {
+    return this.roleFacadeService;
+  }
+
+  public get policy(): PolicyFacadeService {
+    return this.policyFacadeService;
   }
 }
