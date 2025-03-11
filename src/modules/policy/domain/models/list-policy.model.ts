@@ -8,12 +8,68 @@ export class ListPolicyModel {
   private readonly items: PolicyModel[];
   private total: number;
 
-  constructor(listPolicy: IListPolicySchemaPrimitives) {
-    this.items = listPolicy.items.map((policy): PolicyModel => new PolicyModel(policy));
-    this.total = listPolicy.total;
+  constructor(listPolicy?: IListPolicySchemaPrimitives) {
+    this.items = [];
+    this.total = 0;
+
+    if (!listPolicy) {
+      return;
+    }
+
+    this.hydrate(listPolicy.items);
   }
 
-  public get getItems(): IPolicySchemaPrimitives[] {
+  private hydrate(policies: IPolicySchemaPrimitives[]): void {
+    this.setItems(policies);
+  }
+
+  private setItems(policies: IPolicySchemaPrimitives[]): void {
+    policies.forEach((policy): void => {
+      this.addItemFromPrimitives(policy);
+    });
+  }
+  private addItemFromPrimitives(item: IPolicySchemaPrimitives): void {
+    this.items.push(PolicyModel.fromPrimitives(item));
+    this.incrementTotal();
+  }
+
+  public add(policy: PolicyModel): void {
+    this.addItemFromModel(policy);
+  }
+
+  public remove(policy: PolicyModel): boolean {
+    let isPolicyRemoved = false;
+
+    const index = this.items.findIndex((item): boolean => item.uuid === policy.uuid);
+    if (index === -1) {
+      return isPolicyRemoved;
+    }
+
+    isPolicyRemoved = true;
+    this.removeItem(index);
+
+    return isPolicyRemoved;
+  }
+
+  private removeItem(index: number): void {
+    this.items.splice(index, 1);
+    this.decrementTotal();
+  }
+
+  private addItemFromModel(item: PolicyModel): void {
+    this.items.push(item);
+    this.incrementTotal();
+  }
+
+  private incrementTotal(): void {
+    this.total += 1;
+  }
+
+  private decrementTotal(): void {
+    this.total -= 1;
+  }
+
+  public get getItemsPrimitives(): IPolicySchemaPrimitives[] {
     return this.items.map((policy): IPolicySchemaPrimitives => policy.toPrimitives());
   }
 
@@ -25,20 +81,14 @@ export class ListPolicyModel {
     return this.total;
   }
 
-  public hydrate(policies: IPolicySchemaPrimitives[]): void {
-    this.setItems(policies);
+  public get toPrimitives(): IListPolicySchemaPrimitives {
+    return {
+      items: this.getItemsPrimitives,
+      total: this.total,
+    };
   }
 
-  private setTotal(total: number): void {
-    this.total = total;
-  }
-
-  private setItems(items: IPolicySchemaPrimitives[]): void {
-    items.forEach((item): void => this.addItems(item));
-    this.setTotal(items.length);
-  }
-
-  private addItems(item: IPolicySchemaPrimitives): void {
-    this.items.push(new PolicyModel(item));
+  public static fromPrimitives(listPolicy: IListPolicySchemaPrimitives): ListPolicyModel {
+    return new ListPolicyModel(listPolicy);
   }
 }
