@@ -3,7 +3,7 @@ import { PermissionModel } from '@permission/domain/models/permission.model';
 export class GetPermissionOutputDto {
   public readonly id?: number;
   public readonly uuid: string;
-  public readonly title: string;
+  public readonly path: string;
   public readonly description: string;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
@@ -12,7 +12,7 @@ export class GetPermissionOutputDto {
   constructor(root: PermissionModel) {
     this.id = root.id;
     this.uuid = root.uuid;
-    this.title = root.title;
+    this.path = root.path;
     this.description = root.description;
     this.createdAt = root.createdAt;
     this.updatedAt = root.updatedAt;

@@ -3,7 +3,7 @@ import { PaginationOutputDto } from '@common/infrastructure/dtos/pagination-opti
 interface IListPermissionOutputDto {
   id?: number;
   uuid: string;
-  title: string;
+  path: string;
   description?: string;
   createdAt: Date;
   updatedAt: Date;
