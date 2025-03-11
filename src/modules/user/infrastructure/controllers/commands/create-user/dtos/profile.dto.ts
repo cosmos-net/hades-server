@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   ArrayNotEmpty,
@@ -21,7 +22,6 @@ import {
   MIN_PROFILE_PHONE_NUMBER_LENGTH,
   ProfileGenderEnum,
 } from '@user/domain/constants/general-rules';
-import { Type } from 'class-transformer';
 import { AddressDTO } from '@user/infrastructure/controllers/commands/create-user/dtos/address.dto';
 
 export class ProfileDTO {

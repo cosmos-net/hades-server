@@ -4,9 +4,9 @@ import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
 import { ArchiveRoleCommand } from '@role/application/use-cases/commands/archive-role/archive-role.command';
+import { RoleModel } from '@role/domain/models/role.model';
 import { ArchiveRoleInputDto } from '@role/infrastructure/controllers/commands/archive-role/archive-role-input.dto';
 import { ArchiveRoleOutputDto } from '@role/infrastructure/controllers/commands/archive-role/archive-role-output.dto';
-import { RoleModel } from '@role/domain/models/role.model';
 
 @Controller()
 export class ArchiveRoleController {

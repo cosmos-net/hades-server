@@ -1,9 +1,9 @@
-import DomainException from '@common/domain/exceptions/domain.exception';
-import handleDomainException from '@helpers/exceptions/handle-domain-exception.helper';
 import { Catch, ArgumentsHost, Logger, RpcExceptionFilter } from '@nestjs/common';
-
 import { RpcException } from '@nestjs/microservices';
 import { Observable, throwError } from 'rxjs';
+
+import DomainException from '@common/domain/exceptions/domain.exception';
+import handleDomainException from '@helpers/exceptions/handle-domain-exception.helper';
 
 interface IError {
   message?: string;
