@@ -1,7 +1,6 @@
 import { IQuery } from '@nestjs/cqrs';
 
 import { OrderTypeEnum } from '@common/domain/criteria/orders/order-type-enum';
-import { PrimitivesType } from '@common/domain/value-object/types/value-object';
 
 export const PERMISSION_ORDER_BY_VALUES = [
   'id',
@@ -15,6 +14,20 @@ export const PERMISSION_ORDER_BY_VALUES = [
 
 export type ListPermissionOrderByTypes = (typeof PERMISSION_ORDER_BY_VALUES)[number];
 
+export interface IListPermissionParams {
+  id?: number;
+  uuid?: string;
+  uuids?: string[];
+  title?: string;
+  description?: string;
+  createdAtFrom?: string;
+  createdAtTo?: string;
+  updatedAtFrom?: string;
+  updatedAtTo?: string;
+  archivedAtFrom?: string;
+  archivedAtTo?: string;
+}
+
 export class ListPermissionQuery implements IQuery {
   public readonly orderType: OrderTypeEnum;
 
@@ -26,7 +39,7 @@ export class ListPermissionQuery implements IQuery {
 
   public readonly withArchived: boolean;
 
-  public readonly filtersMap: Array<Map<string, PrimitivesType>>;
+  public readonly params: IListPermissionParams;
 
   constructor(props: ListPermissionQuery) {
     this.orderType = props.orderType;
@@ -34,6 +47,6 @@ export class ListPermissionQuery implements IQuery {
     this.limit = props.limit;
     this.offset = props.offset;
     this.withArchived = props.withArchived;
-    this.filtersMap = props.filtersMap;
+    this.params = props.params;
   }
 }
