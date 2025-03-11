@@ -3,7 +3,7 @@ import { PermissionModel } from '@permission/domain/models/permission.model';
 export class UnarchivePermissionOutputDto {
   private readonly id: number;
   private readonly uuid: string;
-  private readonly title: string;
+  private readonly path: string;
   private readonly description: string;
   private readonly action: object;
   private readonly module: object;
@@ -15,7 +15,7 @@ export class UnarchivePermissionOutputDto {
   constructor(root: PermissionModel) {
     this.id = root.id;
     this.uuid = root.uuid;
-    this.title = root.title;
+    this.path = root.path;
     this.description = root.description;
     this.action = root.action;
     this.module = root.module;

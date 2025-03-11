@@ -1,10 +1,10 @@
-import { permissionCombinationType } from '@permission/application/use-cases/commands/create-permission/create-permission.command';
+import { permissionCombinationType } from '@permission/domain/constants/permission-combination-type.constant';
 import { PermissionModel } from '@permission/domain/models/permission.model';
 
 export class CreatePermissionOutputDto {
   private readonly id: number;
   private readonly uuid: string;
-  private readonly title: string;
+  private readonly path: string;
   private readonly description: string;
   private readonly action: permissionCombinationType['action'];
   private readonly module: permissionCombinationType['module'];
@@ -16,7 +16,7 @@ export class CreatePermissionOutputDto {
   constructor(public permission: PermissionModel) {
     this.id = permission.id;
     this.uuid = permission.uuid;
-    this.title = permission.title;
+    this.path = permission.path;
     this.description = permission.description;
     this.action = permission.action;
     this.module = permission.module;
