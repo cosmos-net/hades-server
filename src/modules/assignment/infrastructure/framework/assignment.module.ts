@@ -30,13 +30,21 @@ import { ArchiveAssignmentsHandler } from '@assignment/infrastructure/event-hand
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { AssignmentTypeormRepository } from '@assignment/infrastructure/persistence/typeorm/repositories/assignment-typeorm.repository';
 import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
+import { PermissionModule } from '@permission/infrastructure/framework/permission.module';
+import { PolicyModule } from '@policy/infrastructure/framework/policy.module';
+import { RoleModule } from '@role/infrastructure/framework/role.module';
 import { SHARED_DATA_MEDIATOR_SERVICE } from '@shared/domain/constants/shared-injection-tokens.constants';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
 import { DataMediatorService } from '@shared/infrastructure/services/data-mediator-service/data-mediator.service';
+import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
   imports: [
     SharedModule,
+    UserModule,
+    RoleModule,
+    PermissionModule,
+    PolicyModule,
     CqrsModule,
     TypeOrmModule.forFeature([AssignmentEntity]),
     EventEmitterModule.forRoot(),
@@ -133,6 +141,11 @@ import { DataMediatorService } from '@shared/infrastructure/services/data-mediat
     {
       provide: ASSIGNMENT_REPOSITORY,
       useClass: AssignmentTypeormRepository,
+    },
+    // Infrastructure Services
+    {
+      provide: SHARED_DATA_MEDIATOR_SERVICE,
+      useClass: DataMediatorService,
     },
     // Event Handlers
     ArchiveAssignmentsHandler,
