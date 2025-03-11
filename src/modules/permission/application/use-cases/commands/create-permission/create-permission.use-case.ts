@@ -20,9 +20,7 @@ export class CreatePermissionUseCase
   ) {}
 
   async execute(command: CreatePermissionCommand): Promise<PermissionModel> {
-    const permissionModel = this.publisher.mergeObjectContext(
-      await this.domainService.createPermission(command),
-    );
+    const permissionModel = this.publisher.mergeObjectContext(await this.domainService.go(command));
 
     await this.repository.persist(permissionModel);
 
