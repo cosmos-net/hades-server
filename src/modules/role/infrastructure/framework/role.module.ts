@@ -28,6 +28,7 @@ import { RoleArchivedEventHandler } from '@role/infrastructure/events-handler/su
 import { RoleReDescribedEventHandler } from '@role/infrastructure/events-handler/success/role-redescribed.event-handler';
 import { RoleEntity } from '@role/infrastructure/persistence/typeorm/entities/role.entity';
 import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/repositories/role-typeorm.repository';
+import { RoleFacadeService } from '@role/infrastructure/services/facade/role-facade.service';
 
 @Module({
   imports: [CqrsModule, EventEmitterModule.forRoot(), TypeOrmModule.forFeature([RoleEntity])],
@@ -103,6 +104,7 @@ import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/
     RoleArchivedEventHandler,
     // Services
     MediatorStoreService,
+    RoleFacadeService,
   ],
   controllers: [
     CreateRoleController,
@@ -112,6 +114,6 @@ import { RoleTypeormRepository } from '@role/infrastructure/persistence/typeorm/
     GetRoleController,
     ListRoleController,
   ],
-  exports: [],
+  exports: [RoleFacadeService],
 })
 export class RoleModule {}
