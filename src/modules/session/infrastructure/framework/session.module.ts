@@ -18,10 +18,7 @@ import { ActiveInvalidSessionUseCase } from '@session/application/use-cases/comm
 import { ActivatePendingSessionUseCase } from '@session/application/use-cases/commands/transition-status-session/from-pending/activate-pending-session/activate-pending-session.use-case';
 import { GetSessionUseCase } from '@session/application/use-cases/queries/get-session/get-session.use-case';
 import { ListSessionUseCase } from '@session/application/use-cases/queries/list-session/list-session.use-case';
-import {
-  SESSION_DATA_MEDIATOR_SERVICE,
-  SESSION_REPOSITORY,
-} from '@session/domain/constants/injection-tokens';
+import { SESSION_REPOSITORY } from '@session/domain/constants/injection-tokens';
 import { ActivateInvalidSessionDomainService } from '@session/domain/domain-services/activate-invalid-session.domain-service';
 import { CreateActiveSessionDomainService } from '@session/domain/domain-services/create-session-active.domain-service';
 import { CreateInvalidSessionDomainService } from '@session/domain/domain-services/create-session-invalid.domain-service';
@@ -36,11 +33,13 @@ import { DestroySessionController } from '@session/infrastructure/controllers/co
 import { IncrementFailedAttemptsSessionController } from '@session/infrastructure/controllers/commands/increment-failed-attempts-session/increment-failed-attempts-session.controller';
 import { ActivateInvalidSessionController } from '@session/infrastructure/controllers/commands/transition-status-session/activate-invalid-session/activate-invalid-session.controller';
 import { TransitionDynamicStatusSessionController } from '@session/infrastructure/controllers/commands/transition-status-session/transition-dynamic-status-session/transition-dynamic-status-session.controller';
+import { GetSessionController } from '@session/infrastructure/controllers/queries/get-session/get-session.controller';
 import { ListSessionController } from '@session/infrastructure/controllers/queries/list-session/list-session.controller';
 import { SessionEntity } from '@session/infrastructure/persistence/typeorm/entities/session.entity';
 import { SessionTypeormRepository } from '@session/infrastructure/persistence/typeorm/repositories/session-typeorm.repository';
-import { SessionDataMediatorService } from '@session/infrastructure/services/session-data-mediator-service/session-data-mediator.service';
+import { SHARED_DATA_MEDIATOR_SERVICE } from '@shared/domain/constants/shared-injection-tokens.constants';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
+import { DataMediatorService } from '@shared/infrastructure/services/data-mediator-service/data-mediator.service';
 
 @Module({
   imports: [SharedModule, TypeOrmModule.forFeature([SessionEntity]), CqrsModule],
@@ -105,19 +104,15 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     },
     {
       provide: CreateInvalidSessionDomainService,
-      useFactory: (
-        dataMediatorService: SessionDataMediatorService,
-      ): CreateInvalidSessionDomainService =>
+      useFactory: (dataMediatorService: DataMediatorService): CreateInvalidSessionDomainService =>
         new CreateInvalidSessionDomainService(dataMediatorService),
-      inject: [SESSION_DATA_MEDIATOR_SERVICE],
+      inject: [SHARED_DATA_MEDIATOR_SERVICE],
     },
     {
       provide: CreateActiveSessionDomainService,
-      useFactory: (
-        dataMediatorService: SessionDataMediatorService,
-      ): CreateActiveSessionDomainService =>
+      useFactory: (dataMediatorService: DataMediatorService): CreateActiveSessionDomainService =>
         new CreateActiveSessionDomainService(dataMediatorService),
-      inject: [SESSION_DATA_MEDIATOR_SERVICE],
+      inject: [SHARED_DATA_MEDIATOR_SERVICE],
     },
     {
       provide: DestroySessionDomainService,
@@ -137,10 +132,9 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       useClass: SessionTypeormRepository,
     },
     // Infrastructure Services
-    SessionDataMediatorService,
     {
-      provide: SESSION_DATA_MEDIATOR_SERVICE,
-      useClass: SessionDataMediatorService,
+      provide: SHARED_DATA_MEDIATOR_SERVICE,
+      useClass: DataMediatorService,
     },
   ],
   controllers: [
@@ -151,6 +145,7 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
     CreateInvalidSessionController,
     DestroySessionController,
     ListSessionController,
+    GetSessionController,
   ],
 })
 export class SessionModule {}
