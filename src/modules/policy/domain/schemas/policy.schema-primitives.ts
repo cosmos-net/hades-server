@@ -1,30 +1,43 @@
-import { ListPermissionModel } from '@permission/domain/models/permission-list.model';
+import { PermissionModel } from '@permission/domain/models/permission.model';
+import { IPermissionSchemaPrimitives } from '@permission/domain/schemas/permission.schema-primitives';
 import { RoleModel } from '@role/domain/models/role.model';
 import { IRoleSchemaPrimitives } from '@role/domain/schemas/role.schema-primitives';
 
-export interface IPolicyBaseSchemaParams {
+export interface IAttachPolicyParams {
   uuid: string;
   description?: string | null;
   roleUUID: string;
-  permissionUUIDs: string[];
+  permissionUUID: string;
 }
 
-export interface IPolicyBaseSchema {
+export interface IDetachPolicyParams {
+  roleUUID: string;
+  permissionUUID: string;
+}
+
+export interface ICreatePolicyPrimitives {
   uuid: string;
-  description: string | null;
-  permissionList: ListPermissionModel;
+  description?: string | null;
   role: RoleModel;
+  permission: PermissionModel;
+}
+
+export interface IPoliciesBaseSchemaParams {
+  uuid: string;
+  roleUUID: string;
+  permissionUUID: string;
 }
 
 export interface IPolicySchemaPrimitives {
+  id?: number;
   uuid: string;
-  id: number;
   title: string;
   description?: string | null;
   createdAt: Date;
   updatedAt: Date;
   archivedAt: Date | null;
   role: IRoleSchemaPrimitives;
+  permission: IPermissionSchemaPrimitives;
 }
 
 export interface IListPolicySchemaPrimitives {
