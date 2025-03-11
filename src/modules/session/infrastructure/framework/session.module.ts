@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { PermissionModule } from '@permission/infrastructure/framework/permission.module';
+import { PolicyModule } from '@policy/infrastructure/framework/policy.module';
+import { RoleModule } from '@role/infrastructure/framework/role.module';
 import { CreateActiveSessionUseCase } from '@session/application/use-cases/commands/create-active-session/create-active-session.use-case';
 import { CreateInvalidSessionUseCase } from '@session/application/use-cases/commands/create-invalid-session/create-invalid-session.use-case';
 import { DestroySessionUseCase } from '@session/application/use-cases/commands/destroy-session/destroy-session.use-case';
@@ -40,9 +43,18 @@ import { SessionTypeormRepository } from '@session/infrastructure/persistence/ty
 import { SHARED_DATA_MEDIATOR_SERVICE } from '@shared/domain/constants/shared-injection-tokens.constants';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
 import { DataMediatorService } from '@shared/infrastructure/services/data-mediator-service/data-mediator.service';
+import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
-  imports: [SharedModule, TypeOrmModule.forFeature([SessionEntity]), CqrsModule],
+  imports: [
+    SharedModule,
+    UserModule,
+    RoleModule,
+    PermissionModule,
+    PolicyModule,
+    TypeOrmModule.forFeature([SessionEntity]),
+    CqrsModule,
+  ],
   providers: [
     // UseCases
     ActiveInvalidSessionUseCase,
