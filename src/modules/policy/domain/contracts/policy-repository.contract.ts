@@ -7,6 +7,21 @@ export abstract class IPolicyRepositoryContract {
   abstract persist(policy: PolicyModel): Promise<PolicyModel>;
   abstract getOneByUUID(UUID: string, options?: IOptions): Promise<PolicyModel | null>;
   abstract getOneByRoleUUID(userUUID: string, options?: IOptions): Promise<PolicyModel | null>;
+  abstract getOneByPermissionUUID(
+    permissionUUID: string,
+    options?: IOptions,
+  ): Promise<PolicyModel | null>;
+  abstract getOneByCombination({
+    uuid,
+    roleUUID,
+    permissionUUID,
+    options,
+  }: {
+    uuid?: string;
+    roleUUID?: string;
+    permissionUUID?: string;
+    options?: IOptions;
+  }): Promise<PolicyModel | null>;
   abstract getByPermissionUUIDs(
     permissionUUIDs: string[],
     options?: IOptions,
