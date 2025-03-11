@@ -1,15 +1,15 @@
 import { IPermissionRepositoryContract } from '@permission/domain/contracts/permission-repository.contract';
 import { PermissionAlreadyExistsError } from '@permission/domain/exceptions/permission-already-exists.exception';
 import { PermissionModel } from '@permission/domain/models/permission.model';
-import { IPermissionBaseSchema } from '@permission/domain/schemas/permission.schema-primitives';
+import { ICreatePermissionType } from '@permission/domain/schemas/permission.schema-primitives';
 import { Module } from '@permission/domain/value-objects/module.vo';
 import { Submodule } from '@permission/domain/value-objects/submodule.vo';
 
 export class CreatePermissionDomainService {
   constructor(private readonly permissionRepository: IPermissionRepositoryContract) {}
 
-  async createPermission(permissionBaseSchema: IPermissionBaseSchema): Promise<PermissionModel> {
-    const { action, module, submodule } = permissionBaseSchema;
+  async go(params: ICreatePermissionType): Promise<PermissionModel> {
+    const { uuid, action, module, submodule, description } = params;
 
     const permissionModelExists = await this.permissionRepository.getOneBy(action.id, {
       withArchived: true,
@@ -23,17 +23,22 @@ export class CreatePermissionDomainService {
       }
 
       const moduleVo = new Module(module.id, module.name);
-      //TODO: Fix this maybe undefined value
-      const submoduleVo = new Submodule(submodule.id, submodule.name);
+      const submoduleVo = submodule ? new Submodule(submodule.id, submodule.name) : null;
 
-      permissionModelExists.replaceModule(moduleVo, submoduleVo);
+      permissionModelExists.replaceOrigin(moduleVo, submoduleVo);
 
-      if (!submodule) {
-        permissionModelExists.replaceSubmodule(submoduleVo);
+      if (description) {
+        permissionModelExists.redescribe(description);
       }
     }
 
-    const permissionModel = new PermissionModel(permissionBaseSchema);
+    const permissionModel = PermissionModel.create({
+      uuid,
+      action,
+      module,
+      submodule,
+      description,
+    });
 
     return permissionModel;
   }
