@@ -127,7 +127,6 @@ export class AssignmentModel extends AggregateRoot {
       ...(this.createdAt && { createdAt: this.createdAt }),
       ...(this.updatedAt && { updatedAt: this.updatedAt }),
       ...(this.archivedAt && { archivedAt: this.archivedAt }),
-      ...(this.archivedAt && { archivedAt: this.archivedAt }),
     };
   }
 
