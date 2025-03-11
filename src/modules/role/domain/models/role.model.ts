@@ -8,6 +8,10 @@ import Name from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
 import { validateNullishString } from '@helpers/string/validations.helper';
+import { PolicyNotFoundException } from '@policy/domain/exceptions/policy-not-found.exception';
+import { ListPolicyModel } from '@policy/domain/models/list-policy.model';
+import { PolicyModel } from '@policy/domain/models/policy.model';
+import { IPolicySchemaPrimitives } from '@policy/domain/schemas/policy.schema-primitives';
 import { RoleArchivedEvent } from '@role/domain/events/events-success-domain/role-archive.event';
 import { RoleCreatedEvent } from '@role/domain/events/events-success-domain/role-created.event';
 import { RoleDestroyedEvent } from '@role/domain/events/events-success-domain/role-destroyed.event';
@@ -65,6 +69,14 @@ export class RoleModel extends AggregateRoot {
     return this._entityRoot.archivedAt?._value;
   }
 
+  get listPolicie(): ListPolicyModel | undefined {
+    return this._entityRoot.policies;
+  }
+
+  get policies(): IPolicySchemaPrimitives[] {
+    return this._entityRoot.policies.getItemsPrimitives;
+  }
+
   public hydrate(entity: IRoleSchemaPrimitives): void {
     this._entityRoot.id = new Id(entity.id);
     this._entityRoot.uuid = new UUID(entity.uuid);
@@ -74,6 +86,12 @@ export class RoleModel extends AggregateRoot {
 
     if (entity.archivedAt) this._entityRoot.archivedAt = new ArchivedAt(entity.archivedAt);
     if (entity.description) this._entityRoot.description = new Description(entity.description);
+    if (entity.policies) {
+      this._entityRoot.policies = ListPolicyModel.fromPrimitives({
+        items: entity.policies,
+        total: entity.policies.length,
+      });
+    }
   }
 
   public toPrimitives(): IRoleSchemaPrimitives {
@@ -85,6 +103,7 @@ export class RoleModel extends AggregateRoot {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       archivedAt: this.archivedAt,
+      policies: this.policies,
     };
   }
 
@@ -97,7 +116,12 @@ export class RoleModel extends AggregateRoot {
       ...(this.createdAt && { createdAt: this.createdAt }),
       ...(this.updatedAt && { updatedAt: this.updatedAt }),
       ...(this.archivedAt && { archivedAt: this.archivedAt }),
+      ...(this.policies && { policies: this.policies }),
     };
+  }
+
+  public static fromPrimitives(entity: IRoleSchemaPrimitives): RoleModel {
+    return new RoleModel(entity);
   }
 
   public create(): void {
@@ -145,5 +169,29 @@ export class RoleModel extends AggregateRoot {
     }
 
     this.apply(new RoleDestroyedEvent(uuid, name, new Date()));
+  }
+
+  public attachPolicy(policy: PolicyModel): void {
+    const policies = this._entityRoot.policies || new ListPolicyModel();
+    policies.add(policy);
+    this._entityRoot.policies = policies;
+
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    // this.apply(new RolePolicyAttachedEvent(this.uuid, policy.uuid));
+  }
+
+  public detachPolicy(policy: PolicyModel): void {
+    const policies = this._entityRoot.policies || new ListPolicyModel();
+    const isPolicyRemoved = policies.remove(policy);
+
+    if (!isPolicyRemoved) {
+      throw new PolicyNotFoundException(
+        `Policy with uuid ${policy.uuid} not found in role with uuid ${this.uuid}`,
+      );
+    }
+
+    this._entityRoot.policies = policies;
+    this._entityRoot.updatedAt = new UpdatedAt(new Date());
+    // this.apply(new RolePolicyDetachedEvent(this.uuid, policy.uuid));
   }
 }
