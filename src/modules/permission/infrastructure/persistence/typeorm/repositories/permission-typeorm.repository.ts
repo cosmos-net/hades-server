@@ -33,21 +33,7 @@ export class PermissionTypeormRepository
       return null;
     }
 
-    const { title, actionId, moduleId, submoduleId } = entity;
-    const [actionName, moduleName, submoduleName] = title.split('-');
-
-    const action = { id: actionId, name: actionName };
-    const module = { id: moduleId, name: moduleName };
-    const submodule = { id: submoduleId, name: submoduleName };
-
-    const model = new PermissionModel({
-      ...entity,
-      action,
-      module,
-      ...(submodule.id ? { submodule } : {}),
-    });
-
-    return model;
+    return PermissionModel.fromPrimitives(entity);
   }
 
   public async getOneByCombination(
@@ -58,68 +44,33 @@ export class PermissionTypeormRepository
   ): Promise<PermissionModel> {
     const entity = await this.repository.findOne({
       where: {
-        actionId: actionId,
-        ...(moduleId && { moduleId }),
-        ...(submoduleId && { submoduleId }),
+        action: {
+          id: actionId,
+        },
+        ...(moduleId && {
+          module: {
+            id: moduleId,
+          },
+        }),
+        ...(submoduleId && {
+          submodule: {
+            id: submoduleId,
+          },
+        }),
       },
       withDeleted: options?.withArchived ?? false,
       relations: options?.relations,
     });
 
-    if (!entity) {
-      return null;
-    }
-
-    const {
-      title,
-      actionId: actionIdEntity,
-      moduleId: modelIdEntity,
-      submoduleId: subModelIdEntity,
-    } = entity;
-
-    const [actionName, moduleName, submoduleName] = title.split('-');
-
-    const action = { id: actionIdEntity, name: actionName };
-    const module = { id: modelIdEntity, name: moduleName };
-    const submodule = { id: subModelIdEntity, name: submoduleName };
-
-    const model = new PermissionModel({
-      ...entity,
-      action,
-      module,
-      ...(submodule.id ? { submodule } : {}),
-    });
-
-    return model;
+    return PermissionModel.fromPrimitives(entity);
   }
 
-  public async persist(model: PermissionModel): Promise<PermissionModel> {
-    const partialPrimitives = model.toPartialPrimitives();
+  public async persist(model: PermissionModel): Promise<void> {
+    const primitives = model.toPartialPrimitives();
 
-    const entity = await this.repository.save({
-      ...partialPrimitives,
-      ...{
-        actionId: model.action.id,
-        moduleId: model.module.id,
-        submoduleId: model.submodule.id,
-      },
-    });
+    const entity = await this.repository.save(primitives);
 
-    const { title, actionId, moduleId, submoduleId } = entity;
-    const [actionName, moduleName, submoduleName] = title.split('-');
-
-    const action = { id: actionId, name: actionName };
-    const module = { id: moduleId, name: moduleName };
-    const submodule = { id: submoduleId, name: submoduleName };
-
-    model.hydrate({
-      ...entity,
-      action,
-      module,
-      ...(submodule.id ? { submodule } : {}),
-    });
-
-    return model;
+    model.hydrateFromPrimitives(entity);
   }
 
   public async matching(criteria: Criteria): Promise<ListPermissionModel> {
@@ -127,25 +78,9 @@ export class PermissionTypeormRepository
 
     const [items, total] = await this.repository.findAndCount(query);
 
-    const models = items.map((entity): PermissionModel => {
-      const { title, actionId, moduleId, submoduleId } = entity;
-      const [actionName, moduleName, submoduleName] = title.split('-');
-
-      const action = { id: actionId, name: actionName };
-      const module = { id: moduleId, name: moduleName };
-      const submodule = { id: submoduleId, name: submoduleName };
-
-      return new PermissionModel({
-        ...entity,
-        action,
-        module,
-        submodule,
-      });
-    });
-
     return new ListPermissionModel({
-      items: models,
       total,
+      items,
     });
   }
 

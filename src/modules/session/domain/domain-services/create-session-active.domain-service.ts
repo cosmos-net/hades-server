@@ -1,14 +1,14 @@
 import { SessionStatusEnum } from '@session/domain/constants/session-status.enum';
-import { ISessionDataMediatorContract } from '@session/domain/contracts/session-data-mediator.contract';
 import { SessionNotValidException } from '@session/domain/exceptions/session-not-valid.exception';
 import { SessionModel } from '@session/domain/models/session.model';
 import { ISessionBaseSchema } from '@session/domain/schemas/session.schema-primitives';
+import { IDataMediatorServiceContract } from '@shared/domain/contracts/data-mediator-service.contract';
 
 export class CreateActiveSessionDomainService {
-  constructor(private readonly dataMediatorService: ISessionDataMediatorContract) {}
+  constructor(private readonly dataMediatorService: IDataMediatorServiceContract) {}
 
   async go(sessionBaseSchema: ISessionBaseSchema, accountUUID: string): Promise<SessionModel> {
-    const account = await this.dataMediatorService.account.getByUUID({
+    const account = await this.dataMediatorService.account.get({
       uuid: accountUUID,
       withArchived: true,
       failIfArchived: true,

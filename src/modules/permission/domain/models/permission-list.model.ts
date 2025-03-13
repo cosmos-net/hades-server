@@ -8,18 +8,69 @@ export class ListPermissionModel {
   private readonly items: PermissionModel[];
   private total: number;
 
-  constructor(listPermission: IListPermissionSchemaPrimitives) {
-    this.items = listPermission.items.map(
-      (permissions): PermissionModel => new PermissionModel(permissions),
-    );
-    this.total = listPermission.total;
+  constructor(listPermission?: IListPermissionSchemaPrimitives) {
+    this.items = [];
+    this.total = 0;
+
+    if (!listPermission) {
+      return;
+    }
+
+    this.hydrate(listPermission.items);
   }
 
-  public get getItems(): IPermissionSchemaPrimitives[] {
-    return this.items.map((permissions): IPermissionSchemaPrimitives => permissions.toPrimitives());
+  private hydrate(permissions: IPermissionSchemaPrimitives[]): void {
+    this.setItems(permissions);
   }
 
-  public get getItemsModel(): PermissionModel[] {
+  private setItems(permissions: IPermissionSchemaPrimitives[]): void {
+    permissions.forEach((permission): void => {
+      this.addItemFromPrimitives(permission);
+    });
+  }
+
+  private addItemFromPrimitives(item: IPermissionSchemaPrimitives): void {
+    this.items.push(PermissionModel.fromPrimitives(item));
+    this.incrementTotal();
+  }
+
+  public add(permission: PermissionModel): void {
+    this.addItemFromModel(permission);
+  }
+
+  public remove(permission: PermissionModel): boolean {
+    let isPermissionRemoved = false;
+
+    const index = this.items.findIndex((item): boolean => item.uuid === permission.uuid);
+    if (index === -1) {
+      return isPermissionRemoved;
+    }
+
+    isPermissionRemoved = true;
+    this.removeItem(index);
+
+    return isPermissionRemoved;
+  }
+
+  private removeItem(index: number): void {
+    this.items.splice(index, 1);
+    this.decrementTotal();
+  }
+
+  private addItemFromModel(item: PermissionModel): void {
+    this.items.push(item);
+    this.incrementTotal();
+  }
+
+  private incrementTotal(): void {
+    this.total += 1;
+  }
+
+  private decrementTotal(): void {
+    this.total -= 1;
+  }
+
+  public get getItems(): PermissionModel[] {
     return this.items;
   }
 
@@ -27,20 +78,40 @@ export class ListPermissionModel {
     return this.total;
   }
 
-  public hydrate(permissions: IPermissionSchemaPrimitives[]): void {
-    this.setItems(permissions);
+  public toPrimitives(): IListPermissionSchemaPrimitives {
+    return {
+      total: this.total,
+      items: this.items.map((item): IPermissionSchemaPrimitives => item.toPrimitives()),
+    };
   }
 
-  private setTotal(total: number): void {
-    this.total = total;
+  public toPartialPrimitives(): Partial<IListPermissionSchemaPrimitives> {
+    return {
+      total: this.total,
+      items: this.items.map((item): IPermissionSchemaPrimitives => item.toPrimitives()),
+    };
   }
 
-  private setItems(items: IPermissionSchemaPrimitives[]): void {
-    items.forEach((item): void => this.addItems(item));
-    this.setTotal(items.length);
+  public static fromPrimitives(
+    listPermission: IListPermissionSchemaPrimitives,
+  ): ListPermissionModel {
+    return new ListPermissionModel(listPermission);
   }
 
-  private addItems(item: IPermissionSchemaPrimitives): void {
-    this.items.push(new PermissionModel(item));
+  public static fromModel(permission: PermissionModel): ListPermissionModel {
+    return new ListPermissionModel({ items: [permission.toPrimitives()], total: 1 });
+  }
+
+  public static fromModels(permissions: PermissionModel[]): ListPermissionModel {
+    return new ListPermissionModel({
+      items: permissions.map(
+        (permission): IPermissionSchemaPrimitives => permission.toPrimitives(),
+      ),
+      total: permissions.length,
+    });
+  }
+
+  public static new(): ListPermissionModel {
+    return new ListPermissionModel();
   }
 }

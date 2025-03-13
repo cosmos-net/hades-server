@@ -11,10 +11,7 @@ import { UpdateAssignmentUseCase } from '@assignment/application/use-cases/comma
 import { UserRoleAssignmentUseCase } from '@assignment/application/use-cases/commands/user-role-assignment/user-role-assignment.use-case';
 import { GetAssignmentUseCase } from '@assignment/application/use-cases/queries/get-assignment/get-assignment.use-case';
 import { ListAssignmentUseCase } from '@assignment/application/use-cases/queries/list-assignment/list-assignment.use-case';
-import {
-  ASSIGNMENT_DATA_MEDIATOR_SERVICE,
-  ASSIGNMENT_REPOSITORY,
-} from '@assignment/domain/constants/assignment-injection-tokens.constants';
+import { ASSIGNMENT_REPOSITORY } from '@assignment/domain/constants/assignment-injection-tokens.constants';
 import { ArchiveAssignmentByUserDomainService } from '@assignment/domain/domain-services/archive-assignment-by-user.domain-service';
 import { ArchiveAssignmentDomainService } from '@assignment/domain/domain-services/archive-assignment.domain-service';
 import { ArchiveAssignmentsByRoleDomainService } from '@assignment/domain/domain-services/archive-assignments-by-role.domain-service';
@@ -32,14 +29,23 @@ import { ListAssignmentController } from '@assignment/infrastructure/controllers
 import { ArchiveAssignmentsHandler } from '@assignment/infrastructure/event-handlers/archive-assignments.handler';
 import { AssignmentEntity } from '@assignment/infrastructure/persistence/typeorm/entities/assignment.entity';
 import { AssignmentTypeormRepository } from '@assignment/infrastructure/persistence/typeorm/repositories/assignment-typeorm.repository';
-import { AssignmentDataMediatorService } from '@assignment/infrastructure/services/data-mediator-service/assignment-data-mediator.service';
 import { MediatorStoreService } from '@common/infrastructure/services/mediator-store-service/mediator-store.service';
+import { PermissionModule } from '@permission/infrastructure/framework/permission.module';
+import { PolicyModule } from '@policy/infrastructure/framework/policy.module';
+import { RoleModule } from '@role/infrastructure/framework/role.module';
+import { SHARED_DATA_MEDIATOR_SERVICE } from '@shared/domain/constants/shared-injection-tokens.constants';
 import { SharedModule } from '@shared/infrastructure/framework/shared.module';
+import { DataMediatorService } from '@shared/infrastructure/services/data-mediator-service/data-mediator.service';
+import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
   imports: [
-    CqrsModule,
     SharedModule,
+    UserModule,
+    RoleModule,
+    PermissionModule,
+    PolicyModule,
+    CqrsModule,
     TypeOrmModule.forFeature([AssignmentEntity]),
     EventEmitterModule.forRoot(),
   ],
@@ -67,7 +73,7 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
           assignmentDataMediatorService,
         );
       },
-      inject: [ASSIGNMENT_REPOSITORY, ASSIGNMENT_DATA_MEDIATOR_SERVICE],
+      inject: [ASSIGNMENT_REPOSITORY, SHARED_DATA_MEDIATOR_SERVICE],
     },
     UpdateAssignmentDomainService,
     {
@@ -81,7 +87,7 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
           assignmentDataMediatorService,
         );
       },
-      inject: [ASSIGNMENT_REPOSITORY, ASSIGNMENT_DATA_MEDIATOR_SERVICE],
+      inject: [ASSIGNMENT_REPOSITORY, SHARED_DATA_MEDIATOR_SERVICE],
     },
     ArchiveAssignmentByUserDomainService,
     {
@@ -136,9 +142,10 @@ import { SharedModule } from '@shared/infrastructure/framework/shared.module';
       provide: ASSIGNMENT_REPOSITORY,
       useClass: AssignmentTypeormRepository,
     },
+    // Infrastructure Services
     {
-      provide: ASSIGNMENT_DATA_MEDIATOR_SERVICE,
-      useClass: AssignmentDataMediatorService,
+      provide: SHARED_DATA_MEDIATOR_SERVICE,
+      useClass: DataMediatorService,
     },
     // Event Handlers
     ArchiveAssignmentsHandler,

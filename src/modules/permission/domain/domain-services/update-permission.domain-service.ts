@@ -12,7 +12,7 @@ export class UpdatePermissionDomainService {
       throw new PermissionNotFoundException(`Permission Not found`);
     }
 
-    permissionModel.redescribe({ description });
+    permissionModel.redescribe(description);
 
     return permissionModel;
   }

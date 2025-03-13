@@ -4,8 +4,8 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateRoleCommand } from '@role/application/use-cases/commands/update-role/update-role.command';
 import { ROLE_REPOSITORY } from '@role/domain/constants/injection-tokens';
 import { IRoleRepositoryContract } from '@role/domain/contracts/role-repository.contract';
-import { RoleModel } from '@role/domain/models/role.model';
 import { UpdateRoleDomainService } from '@role/domain/domain-service/update-role.domain-service';
+import { RoleModel } from '@role/domain/models/role.model';
 
 @Injectable()
 @CommandHandler(UpdateRoleCommand)

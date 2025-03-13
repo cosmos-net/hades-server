@@ -1,26 +1,24 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
+import { PermissionModule } from '@permission/infrastructure/framework/permission.module';
+import { PolicyModule } from '@policy/infrastructure/framework/policy.module';
 import { RoleModule } from '@role/infrastructure/framework/role.module';
-import { AccountDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/account-data-mediator.service';
 import { DataMediatorService } from '@shared/infrastructure/services/data-mediator-service/data-mediator.service';
-import { RoleDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/role-data-mediator.service';
-import { UserAggregateDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-aggregate-data-mediator.service';
-import { UserDataMediatorService } from '@shared/infrastructure/services/data-mediator-service/user-data-mediator.service';
-import { PolicyCreatorProgramService } from '@shared/infrastructure/services/saga-orchestrator/policy/policy-creator-program/policy-creator-program.service';
+import { PolicyAttacherProgramService } from '@shared/infrastructure/services/saga-orchestrator/policy/policy-attacher-program/policy-attacher-program.service';
+import { PolicyDetacherProgramService } from '@shared/infrastructure/services/saga-orchestrator/policy/policy-detacher-program/policy-detacher-program.service';
 import { UserModule } from '@user/infrastructure/framework/user.module';
 
 @Module({
-  imports: [CqrsModule, RoleModule, UserModule],
-  providers: [
-    DataMediatorService,
-    RoleDataMediatorService,
-    UserAggregateDataMediatorService,
-    UserDataMediatorService,
-    AccountDataMediatorService,
-    PolicyCreatorProgramService,
+  imports: [
+    CqrsModule,
+    RoleModule,
+    UserModule,
+    PermissionModule,
+    forwardRef((): typeof PolicyModule => PolicyModule),
   ],
+  providers: [DataMediatorService, PolicyAttacherProgramService, PolicyDetacherProgramService],
   controllers: [],
-  exports: [DataMediatorService],
+  exports: [DataMediatorService, PolicyAttacherProgramService, PolicyDetacherProgramService],
 })
 export class SharedModule {}

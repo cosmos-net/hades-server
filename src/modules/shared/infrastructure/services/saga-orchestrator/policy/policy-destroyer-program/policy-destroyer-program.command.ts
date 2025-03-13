@@ -1,5 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export class PolicyArchiverProgramCommand implements ICommand {
+export class PolicyDestoyerProgramCommand implements ICommand {
   constructor(public readonly policyUUID: string) {}
 }

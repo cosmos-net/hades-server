@@ -2,15 +2,13 @@ import { Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { TypeormBaseEntity } from '@common/infrastructure/persistence/typeorm/entities/typeorm-base.entity';
+import { permissionCombinationType } from '@permission/domain/constants/permission-combination-type.constant';
 import { PERMISSION_RULES } from '@permission/domain/constants/permission-rules.constant';
-import { IPermissionSchemaPrimitivesWithoutChildren } from '@permission/domain/schemas/permission.schema-primitives';
+import { IPermissionSchemaPrimitives } from '@permission/domain/schemas/permission.schema-primitives';
 import { PolicyEntity } from '@policy/infrastructure/persistence/typeorm/entities/policy.entity';
 
 @Entity('assignments')
-export class PermissionEntity
-  extends TypeormBaseEntity
-  implements IPermissionSchemaPrimitivesWithoutChildren
-{
+export class PermissionEntity extends TypeormBaseEntity implements IPermissionSchemaPrimitives {
   @PrimaryGeneratedColumn('identity', { name: 'id', type: 'int' })
   id: number;
 
@@ -22,13 +20,6 @@ export class PermissionEntity
   uuid: string;
 
   @Column({
-    name: 'title',
-    length: PERMISSION_RULES.TITLE.MAX_LENGTH,
-  })
-  @Length(PERMISSION_RULES.TITLE.MIN_LENGTH, PERMISSION_RULES.TITLE.MAX_LENGTH)
-  title: string;
-
-  @Column({
     name: 'description',
     type: 'varchar',
     nullable: true,
@@ -38,26 +29,25 @@ export class PermissionEntity
   description?: string | null;
 
   @Column({
-    name: 'action_id',
-    type: 'varchar',
-    nullable: false,
-    unique: true,
-  })
-  actionId: string;
-
-  @Column({
-    name: 'module_id',
-    type: 'varchar',
+    name: 'action',
+    type: 'jsonb',
     nullable: false,
   })
-  moduleId: string;
+  action: permissionCombinationType['action'];
 
   @Column({
-    name: 'submodule_id',
-    type: 'varchar',
+    name: 'module',
+    type: 'jsonb',
+    nullable: false,
+  })
+  module: permissionCombinationType['module'];
+
+  @Column({
+    name: 'submodule',
+    type: 'jsonb',
     nullable: true,
   })
-  submoduleId?: string | null;
+  submodule?: permissionCombinationType['submodule'] | null;
 
   @OneToMany(
     (): typeof PolicyEntity => PolicyEntity,

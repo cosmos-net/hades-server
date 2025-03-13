@@ -1,34 +1,21 @@
-export interface IPermissionBaseSchema {
+import { permissionCombinationType } from '@permission/domain/constants/permission-combination-type.constant';
+
+export interface IPermissionSchemaPrimitives {
+  id?: number | null;
   uuid: string;
   description?: string | null;
-  action: {
-    id: string;
-    name: string;
-  };
-  module: {
-    id: string;
-    name: string;
-  };
-  submodule?: {
-    id: string;
-    name: string;
-  };
-}
-
-export interface IPermissionSchemaPrimitives extends IPermissionBaseSchema {
-  id: number;
-  title: string;
+  action: permissionCombinationType['action'];
+  module: permissionCombinationType['module'];
+  submodule?: permissionCombinationType['submodule'] | null;
   createdAt: Date;
   updatedAt: Date;
-  archivedAt: Date | null;
+  archivedAt?: Date | null;
 }
 
-export interface IPermissionSchemaPrimitivesWithoutChildren
-  extends Omit<IPermissionSchemaPrimitives, 'action' | 'module' | 'submodule'> {
-  actionId: string;
-  moduleId: string;
-  submoduleId?: string | null;
-}
+export type ICreatePermissionType = Omit<
+  IPermissionSchemaPrimitives,
+  'id' | 'createdAt' | 'updatedAt' | 'archivedAt'
+>;
 
 export interface IListPermissionSchemaPrimitives {
   total: number;

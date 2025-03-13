@@ -50,5 +50,5 @@ export class RoleEntity extends TypeormBaseEntity implements IRoleSchemaPrimitiv
     cascade: true,
     eager: false,
   })
-  policies: PolicyEntity[];
+  policies?: PolicyEntity[] | null;
 }

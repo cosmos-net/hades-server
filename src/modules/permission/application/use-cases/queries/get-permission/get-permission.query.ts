@@ -7,7 +7,7 @@ export class GetPermissionQuery implements IQuery {
 
   constructor(root: GetPermissionQuery) {
     this.uuid = root.uuid;
-    this.withArchived = root.withArchived;
     this.failIfArchived = root.failIfArchived;
+    this.withArchived = root.withArchived || root.failIfArchived;
   }
 }

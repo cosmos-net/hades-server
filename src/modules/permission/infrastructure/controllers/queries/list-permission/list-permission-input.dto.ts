@@ -9,6 +9,7 @@ import {
   IsDefined,
   ValidateIf,
   IsUUID,
+  IsNumber,
 } from 'class-validator';
 
 import { InputPaginationDto } from '@common/infrastructure/dtos/pagination-options/input-pagination.dto';
@@ -25,8 +26,8 @@ export class ListPermissionInputDto extends InputPaginationDto {
   public readonly orderBy?: ListPermissionOrderByTypes = PERMISSION_ORDER_BY_VALUES[0];
 
   @IsOptional()
-  @IsUUID()
-  public readonly id?: string;
+  @IsNumber()
+  public readonly id?: number;
 
   @IsOptional()
   @IsUUID()
@@ -34,7 +35,7 @@ export class ListPermissionInputDto extends InputPaginationDto {
 
   @IsOptional()
   @IsUUID(4, { each: true })
-  public readonly uuids?: string;
+  public readonly uuids?: string[];
 
   @IsOptional()
   @IsString()

@@ -4,7 +4,7 @@ import { ListPermissionModel } from '@permission/domain/models/permission-list.m
 import { PermissionModel } from '@permission/domain/models/permission.model';
 
 export abstract class IPermissionRepositoryContract {
-  abstract persist(permission: PermissionModel): Promise<PermissionModel>;
+  abstract persist(permission: PermissionModel): Promise<void>;
   abstract getOneBy(UUID: string, options?: IOptions): Promise<PermissionModel>;
   abstract getOneByCombination(
     actionId: string,

@@ -1,12 +1,12 @@
-import { IAssignmentDataMediatorContract } from '@assignment/domain/contracts/assignment-data-mediator.contract';
 import { IAssignmentRepositoryContract } from '@assignment/domain/contracts/assignment-repository.contract';
 import { AssignmentNotFoundException } from '@assignment/domain/exceptions/assignment-not-found.exception';
 import { AssignmentModel } from '@assignment/domain/models/assignment.model';
+import { IDataMediatorServiceContract } from '@shared/domain/contracts/data-mediator-service.contract';
 
 export class UpdateAssignmentDomainService {
   constructor(
     private readonly repository: IAssignmentRepositoryContract,
-    private readonly dataMediatorService: IAssignmentDataMediatorContract,
+    private readonly dataMediatorService: IDataMediatorServiceContract,
   ) {}
 
   async go(uuid: string, roleUUID?: string, description?: string): Promise<AssignmentModel> {
@@ -27,7 +27,7 @@ export class UpdateAssignmentDomainService {
     }
 
     if (roleUUID) {
-      const roleModel = await this.dataMediatorService.role.getByUUID({
+      const roleModel = await this.dataMediatorService.role.get({
         uuid: roleUUID,
         withArchived: true,
         failIfArchived: true,

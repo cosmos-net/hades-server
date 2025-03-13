@@ -26,6 +26,7 @@ import { GetPermissionController } from '@permission/infrastructure/controllers/
 import { ListPermissionController } from '@permission/infrastructure/controllers/queries/list-permission/list-permission.controller';
 import { PermissionEntity } from '@permission/infrastructure/persistence/typeorm/entities/permission.entity';
 import { PermissionTypeormRepository } from '@permission/infrastructure/persistence/typeorm/repositories/permission-typeorm.repository';
+import { PermissionFacadeService } from '@permission/infrastructure/services/facade/permission-facade.service';
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([PermissionEntity])],
@@ -115,6 +116,7 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
       },
       inject: [PERMISSION_REPOSITORY],
     },
+    PermissionFacadeService,
   ],
   controllers: [
     CreatePermissionController,
@@ -125,6 +127,6 @@ import { PermissionTypeormRepository } from '@permission/infrastructure/persiste
     GetPermissionController,
     ListPermissionController,
   ],
-  exports: [],
+  exports: [PermissionFacadeService],
 })
 export class PermissionModule {}

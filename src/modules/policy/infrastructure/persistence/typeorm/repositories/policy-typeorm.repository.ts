@@ -33,7 +33,7 @@ export class PolicyTypeormRepository
       return null;
     }
 
-    const model = new PolicyModel(entity);
+    const model = PolicyModel.fromPrimitives(entity);
 
     return model;
   }
@@ -49,7 +49,60 @@ export class PolicyTypeormRepository
       return null;
     }
 
-    const model = new PolicyModel(entity);
+    const model = PolicyModel.fromPrimitives(entity);
+
+    return model;
+  }
+
+  public async getOneByPermissionUUID(
+    permissionUUID: string,
+    options?: IOptions,
+  ): Promise<PolicyModel | null> {
+    const entity = await this.repository.findOne({
+      where: {
+        permission: {
+          uuid: permissionUUID,
+        },
+      },
+      withDeleted: options?.withArchived ?? false,
+      relations: options?.relations,
+    });
+
+    if (!entity) {
+      return null;
+    }
+
+    const model = PolicyModel.fromPrimitives(entity);
+
+    return model;
+  }
+
+  public async getOneByCombination({
+    uuid,
+    roleUUID,
+    permissionUUID,
+  }: {
+    uuid?: string;
+    roleUUID?: string;
+    permissionUUID?: string;
+  }): Promise<PolicyModel | null> {
+    if (!uuid && !roleUUID && !permissionUUID) {
+      return null;
+    }
+
+    const entity = await this.repository.findOne({
+      where: {
+        ...(uuid && { uuid }),
+        ...(roleUUID && { role: { uuid: roleUUID } }),
+        ...(permissionUUID && { permission: { uuid: permissionUUID } }),
+      },
+    });
+
+    if (!entity) {
+      return null;
+    }
+
+    const model = PolicyModel.fromPrimitives(entity);
 
     return model;
   }
@@ -79,7 +132,7 @@ export class PolicyTypeormRepository
       relations: options?.relations,
     });
 
-    const model = new PolicyModel(entity);
+    const model = PolicyModel.fromPrimitives(entity);
 
     return model;
   }
@@ -96,7 +149,7 @@ export class PolicyTypeormRepository
       relations: options?.relations,
     });
 
-    const model = new PolicyModel(entity);
+    const model = PolicyModel.fromPrimitives(entity);
 
     return model;
   }
@@ -118,17 +171,15 @@ export class PolicyTypeormRepository
 
   public async persist(model: PolicyModel): Promise<PolicyModel> {
     const partialPrimitives = model.toPartialPrimitives();
-    const { permissionList, role } = model;
-
-    const permissions = permissionList.getItemsModel;
+    const { permission, role } = model;
 
     const entity = await this.repository.save({
       ...partialPrimitives,
-      permissions,
+      permission,
       role,
     });
 
-    model.hydrate(entity);
+    model.hydrateFromPrimitive(entity);
 
     return model;
   }

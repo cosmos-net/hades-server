@@ -7,7 +7,6 @@ import { ListPermissionQuery } from '@permission/application/use-cases/queries/l
 import { ListPermissionModel } from '@permission/domain/models/permission-list.model';
 import { ListPermissionInputDto } from '@permission/infrastructure/controllers/queries/list-permission/list-permission-input.dto';
 import { ListPermissionOutputDto } from '@permission/infrastructure/controllers/queries/list-permission/list-permission-output.dto';
-import { ListPermissionFilter } from '@permission/infrastructure/controllers/queries/list-permission/list-permission.filter-dto';
 
 @Controller()
 export class ListPermissionController {
@@ -18,8 +17,8 @@ export class ListPermissionController {
     @Payload() listPermissionDto: ListPermissionInputDto,
   ): Promise<ListPermissionOutputDto> {
     try {
-      const { orderType, orderBy, page, limit, offset, withArchived } = listPermissionDto;
-      const filtersMap = ListPermissionFilter.toFilterMap(listPermissionDto);
+      const { orderType, orderBy, page, limit, offset, withArchived, ...params } =
+        listPermissionDto;
 
       const result = await this.queryBus.execute<ListPermissionQuery, ListPermissionModel>(
         new ListPermissionQuery({
@@ -28,7 +27,7 @@ export class ListPermissionController {
           limit,
           offset,
           withArchived,
-          filtersMap,
+          params,
         }),
       );
 

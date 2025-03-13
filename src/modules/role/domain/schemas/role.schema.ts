@@ -5,6 +5,7 @@ import Id from '@common/domain/value-object/vos/id.vo';
 import Name from '@common/domain/value-object/vos/name.vo';
 import UpdatedAt from '@common/domain/value-object/vos/updated-at.vo';
 import UUID from '@common/domain/value-object/vos/uuid.vo';
+import { ListPolicyModel } from '@policy/domain/models/list-policy.model';
 
 export interface IRoleSchema {
   id: Id;
@@ -14,4 +15,5 @@ export interface IRoleSchema {
   createdAt: CreatedAt;
   updatedAt: UpdatedAt;
   archivedAt: ArchivedAt;
+  policies?: ListPolicyModel | null;
 }

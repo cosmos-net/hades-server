@@ -1,9 +1,6 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export type permissionCombinationType = Record<
-  'action' | 'module' | 'submodule',
-  { id: string; name: string }
->;
+import { permissionCombinationType } from '@permission/domain/constants/permission-combination-type.constant';
 
 export class CreatePermissionCommand implements ICommand {
   public readonly uuid: string;
@@ -14,10 +11,13 @@ export class CreatePermissionCommand implements ICommand {
 
   public readonly submodule?: permissionCombinationType['submodule'];
 
+  public readonly description?: string;
+
   constructor(props: CreatePermissionCommand) {
     this.uuid = props.uuid;
     this.action = props.action;
     this.module = props.module;
     this.submodule = props.submodule;
+    this.description = props.description;
   }
 }

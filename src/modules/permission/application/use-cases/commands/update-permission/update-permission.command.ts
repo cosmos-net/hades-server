@@ -1,10 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export type permissionCombinationType = Record<
-  'action' | 'module' | 'submodule',
-  { id: string; name: string }
->;
-
 export class UpdatePermissionCommand implements ICommand {
   public readonly uuid: string;
 

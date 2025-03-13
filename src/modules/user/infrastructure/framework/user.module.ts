@@ -38,6 +38,9 @@ import { UserEntity } from '@user/infrastructure/persistence/typeorm/entities/us
 import { AccountTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/account-typeorm.repository';
 import { ProfileTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/profile-typeorm.repository';
 import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/repositories/user-typeorm.repository';
+import { AccountFacadeService } from '@user/infrastructure/services/facade/account-facade.service';
+import { UserAggregateFacadeService } from '@user/infrastructure/services/facade/user-aggregate-facade.service';
+import { UserFacadeService } from '@user/infrastructure/services/facade/user-facade.service';
 
 @Module({
   imports: [
@@ -132,6 +135,9 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     UserArchivedEventHandler,
     // Services
     MediatorStoreService,
+    UserAggregateFacadeService,
+    UserFacadeService,
+    AccountFacadeService,
     // Repositories
     {
       provide: USER_REPOSITORY,
@@ -154,6 +160,11 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
     GetUserController,
     ListUserController,
   ],
-  exports: [ACCOUNT_REPOSITORY],
+  exports: [
+    ACCOUNT_REPOSITORY,
+    UserAggregateFacadeService,
+    UserFacadeService,
+    AccountFacadeService,
+  ],
 })
 export class UserModule {}

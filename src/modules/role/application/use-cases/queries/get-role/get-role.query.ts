@@ -7,7 +7,7 @@ export class GetRoleQuery implements IQuery {
 
   constructor(root: GetRoleQuery) {
     this.uuid = root.uuid;
-    this.withArchived = root.withArchived;
     this.failIfArchived = root.failIfArchived;
+    this.withArchived = root.withArchived || root.failIfArchived;
   }
 }
