@@ -6,7 +6,7 @@ import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { CoreModule } from '@core/infrastructure/framework/core.module';
 import { HttpExceptionFilter } from '@core/infrastructure/framework/exception-filters/http-exception.filter';
 import { MicroserviceExceptionFilter } from '@core/infrastructure/framework/exception-filters/microservice-exception.filter';
-import { TimeOutInterceptor } from '@core/infrastructure/framework/globals/timeout-interceptor';
+import { TimeOutInterceptor } from '@core/infrastructure/framework/globals/timeout-interceptor.global';
 import { TransformInterceptor } from '@core/infrastructure/framework/globals/transform-interceptor.global';
 import { ValidationPipeWithExceptionFactory } from '@core/infrastructure/framework/globals/validation-pipe.global';
 
