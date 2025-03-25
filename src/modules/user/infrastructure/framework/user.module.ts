@@ -12,6 +12,8 @@ import { GetAccountUseCase } from '@user/application/use-cases/queries/get-accou
 import { GetUserUseCase } from '@user/application/use-cases/queries/get-user/get-user.use-case';
 import { GetUserAggregateUseCase } from '@user/application/use-cases/queries/get-user-aggregate/get-user-aggregate.use-case';
 import { ListUserUseCase } from '@user/application/use-cases/queries/list-user/list-user.use-case';
+import { SearchAccountByEmailUseCase } from '@user/application/use-cases/queries/search-account-by-email/search-account-by-email.use-case';
+import { SearchAccountByUsernameUseCase } from '@user/application/use-cases/queries/search-account-by-username/search-account-by-username.use-case';
 import {
   ACCOUNT_REPOSITORY,
   PROFILE_REPOSITORY,
@@ -24,6 +26,8 @@ import { GetAccountDomainService } from '@user/domain/domain-services/get-accoun
 import { GetUserAggregateDomainService } from '@user/domain/domain-services/get-user-aggregate.domain-service';
 import { GetUserDomainService } from '@user/domain/domain-services/get-user.domain-service';
 import { ListUserDomainService } from '@user/domain/domain-services/list-user.domain-service';
+import { SearchAccountByEmailDomainService } from '@user/domain/domain-services/search-account-by-email.domain-service';
+import { SearchAccountByUsernameDomainService } from '@user/domain/domain-services/search-account-by-username.domain-service';
 import { UpdateUserDomainService } from '@user/domain/domain-services/update-user.domain-service';
 import { ArchiveUserController } from '@user/infrastructure/controllers/commands/archive-user/archive-user.controller';
 import { CreateUserController } from '@user/infrastructure/controllers/commands/create-user/create-user.controller';
@@ -31,6 +35,8 @@ import { DestroyUserController } from '@user/infrastructure/controllers/commands
 import { UpdateUserController } from '@user/infrastructure/controllers/commands/update-user/update-user.controller';
 import { GetUserController } from '@user/infrastructure/controllers/queries/get-user/get-user.controller';
 import { ListUserController } from '@user/infrastructure/controllers/queries/list-user/list-user.controller';
+import { SearchAccountByEmailController } from '@user/infrastructure/controllers/queries/search-account-by-email/search-account-by-email.controller';
+import { SearchAccountByUsernameController } from '@user/infrastructure/controllers/queries/search-account-by-username/search-account-by-username.controller';
 import { UserArchivedEventHandler } from '@user/infrastructure/event-handlers/success/user-archived.event-handler';
 import { AccountEntity } from '@user/infrastructure/persistence/typeorm/entities/account.entity';
 import { ProfileEntity } from '@user/infrastructure/persistence/typeorm/entities/profile.entity';
@@ -41,7 +47,6 @@ import { UserTypeormRepository } from '@user/infrastructure/persistence/typeorm/
 import { AccountFacadeService } from '@user/infrastructure/services/facade/account-facade.service';
 import { UserAggregateFacadeService } from '@user/infrastructure/services/facade/user-aggregate-facade.service';
 import { UserFacadeService } from '@user/infrastructure/services/facade/user-facade.service';
-
 @Module({
   imports: [
     CqrsModule,
@@ -58,6 +63,8 @@ import { UserFacadeService } from '@user/infrastructure/services/facade/user-fac
     ListUserUseCase,
     GetAccountUseCase,
     GetUserUseCase,
+    SearchAccountByEmailUseCase,
+    SearchAccountByUsernameUseCase,
     // Domain Services
     CreateUserDomainService,
     UpdateUserDomainService,
@@ -67,6 +74,8 @@ import { UserFacadeService } from '@user/infrastructure/services/facade/user-fac
     ListUserDomainService,
     GetAccountDomainService,
     GetUserDomainService,
+    SearchAccountByEmailDomainService,
+    SearchAccountByUsernameDomainService,
     // Inversion of dependencies, Control principle (IoC) to domain services
     {
       provide: CreateUserDomainService,
@@ -131,6 +140,24 @@ import { UserFacadeService } from '@user/infrastructure/services/facade/user-fac
       },
       inject: [USER_REPOSITORY],
     },
+    {
+      provide: SearchAccountByEmailDomainService,
+      useFactory: (
+        accountRepository: AccountTypeormRepository,
+      ): SearchAccountByEmailDomainService => {
+        return new SearchAccountByEmailDomainService(accountRepository);
+      },
+      inject: [ACCOUNT_REPOSITORY],
+    },
+    {
+      provide: SearchAccountByUsernameDomainService,
+      useFactory: (
+        accountRepository: AccountTypeormRepository,
+      ): SearchAccountByUsernameDomainService => {
+        return new SearchAccountByUsernameDomainService(accountRepository);
+      },
+      inject: [ACCOUNT_REPOSITORY],
+    },
     // Event Handlers
     UserArchivedEventHandler,
     // Services
@@ -159,6 +186,8 @@ import { UserFacadeService } from '@user/infrastructure/services/facade/user-fac
     DestroyUserController,
     GetUserController,
     ListUserController,
+    SearchAccountByEmailController,
+    SearchAccountByUsernameController,
   ],
   exports: [
     ACCOUNT_REPOSITORY,
