@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 
 import { CMDS_HADES } from '@common/infrastructure/controllers/constants';
@@ -9,31 +9,28 @@ import { SearchAccountByEmailOutputDto } from '@user/infrastructure/controllers/
 
 @Controller()
 export class SearchAccountByEmailController {
-  constructor(
-    private readonly queryBus: QueryBus,
-    private readonly commandBus: CommandBus,
-  ) {}
+  constructor(private readonly queryBus: QueryBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.USER.SEARCH_ACCOUNT_BY_EMAIL })
+  @MessagePattern({ cmd: CMDS_HADES.USER.ACCOUNT.SEARCH_ACCOUNT_BY_EMAIL })
   async execute(
     @Payload() dto: SearchAccountByEmailInputDto,
   ): Promise<SearchAccountByEmailOutputDto> {
     try {
       const { email, withArchived, failIfArchived, includeSessions } = dto;
+
       const query = new SearchAccountByEmailQuery(
         email,
         withArchived,
         failIfArchived,
         includeSessions,
       );
+
       const accountModel = await this.queryBus.execute(query);
       const outputDto = new SearchAccountByEmailOutputDto(accountModel);
+
       return outputDto;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new RpcException(error.message);
-      }
-      throw new RpcException('An unexpected error occurred');
+      throw new RpcException(error as Error);
     }
   }
 }

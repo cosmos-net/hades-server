@@ -11,7 +11,7 @@ import { SearchAccountByUsernameOutputDto } from '@user/infrastructure/controlle
 export class SearchAccountByUsernameController {
   constructor(private readonly queryBus: QueryBus) {}
 
-  @MessagePattern({ cmd: CMDS_HADES.USER.SEARCH_ACCOUNT_BY_USERNAME })
+  @MessagePattern({ cmd: CMDS_HADES.USER.ACCOUNT.SEARCH_ACCOUNT_BY_USERNAME })
   async execute(
     @Payload() dto: SearchAccountByUsernameInputDto,
   ): Promise<SearchAccountByUsernameOutputDto> {
