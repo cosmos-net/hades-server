@@ -1,4 +1,5 @@
 import { DeepPartial } from '@helpers/types/partials.helper';
+import { ISessionSchemaPrimitives } from '@session/domain/schemas/session.schema-primitives';
 import { AccountModel } from '@user/domain/models/account/account.model';
 import { IAccountSchemaPrimitives } from '@user/domain/schemas/account/account.schema-primitive';
 
@@ -10,6 +11,7 @@ export class SearchAccountByUsernameOutputDto implements DeepPartial<IAccountSch
   createdAt: Date;
   updatedAt: Date;
   archivedAt?: Date;
+  sessions?: ISessionSchemaPrimitives[];
 
   constructor(accountModel: AccountModel) {
     this.id = accountModel.id;
@@ -19,5 +21,6 @@ export class SearchAccountByUsernameOutputDto implements DeepPartial<IAccountSch
     this.createdAt = accountModel.createdAt;
     this.updatedAt = accountModel.updatedAt;
     this.archivedAt = accountModel.archivedAt;
+    this.sessions = accountModel.sessions.getItems;
   }
 }
