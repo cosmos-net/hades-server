@@ -27,10 +27,7 @@ export class SearchAccountByUsernameController {
       const outputDto = new SearchAccountByUsernameOutputDto(accountModel);
       return outputDto;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new RpcException(error.message);
-      }
-      throw new RpcException('An unexpected error occurred');
+      throw new RpcException(error as Error);
     }
   }
 }
