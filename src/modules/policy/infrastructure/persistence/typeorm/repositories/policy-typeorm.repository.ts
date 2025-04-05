@@ -81,10 +81,12 @@ export class PolicyTypeormRepository
     uuid,
     roleUUID,
     permissionUUID,
+    options,
   }: {
     uuid?: string;
     roleUUID?: string;
     permissionUUID?: string;
+    options?: IOptions;
   }): Promise<PolicyModel | null> {
     if (!uuid && !roleUUID && !permissionUUID) {
       return null;
@@ -96,6 +98,7 @@ export class PolicyTypeormRepository
         ...(roleUUID && { role: { uuid: roleUUID } }),
         ...(permissionUUID && { permission: { uuid: permissionUUID } }),
       },
+      withDeleted: options?.withArchived ?? false,
     });
 
     if (!entity) {

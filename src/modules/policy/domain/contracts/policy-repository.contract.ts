@@ -31,6 +31,7 @@ export abstract class IPolicyRepositoryContract {
     description: string,
     options?: IOptions,
   ): Promise<PolicyModel | null>;
+  abstract listByRoleUUID(roleUUID: string, options?: IOptions): Promise<ListPolicyModel>;
   abstract destroy(UUID: string): Promise<boolean>;
   abstract matching(criteria: Criteria): Promise<ListPolicyModel>;
 }
